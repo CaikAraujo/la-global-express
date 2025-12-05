@@ -25,11 +25,11 @@ const Hero = () => {
                         </p>
 
                         <div className="flex flex-wrap gap-4 reveal-text" style={{ animationDelay: '0.4s' }}>
-                            <button className="group bg-brand-dark text-white px-8 py-4 text-sm font-bold uppercase tracking-wider hover:bg-brand-red transition-all duration-300 flex items-center gap-2">
+                            <button className="group bg-brand-dark text-white px-8 py-4 text-sm font-bold uppercase tracking-wider hover:bg-brand-red transition-all duration-300 flex items-center gap-2 rounded-lg">
                                 Agendar Consultoria
                                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                             </button>
-                            <button className="px-8 py-4 text-sm font-bold uppercase tracking-wider text-brand-dark border border-gray-200 hover:bg-brand-dark hover:text-white hover:border-brand-dark transition-all duration-300">
+                            <button className="px-8 py-4 text-sm font-bold uppercase tracking-wider text-brand-dark border border-gray-200 hover:bg-brand-dark hover:text-white hover:border-brand-dark transition-all duration-300 rounded-lg">
                                 Baixar Apresentação
                             </button>
                         </div>
@@ -37,7 +37,7 @@ const Hero = () => {
 
                     <div className="relative reveal-text" style={{ animationDelay: '0.5s' }}>
                         {/* Abstract composition representing structure/building */}
-                        <div className="relative aspect-[4/5] bg-gray-100 overflow-hidden group">
+                        <div className="relative aspect-[4/5] bg-gray-100 overflow-hidden group rounded-2xl">
                             {/* Decorative Red Line */}
                             <div className="absolute top-10 right-10 w-24 h-24 border-t-4 border-r-4 border-brand-red z-20"></div>
 

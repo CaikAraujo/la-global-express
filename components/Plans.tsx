@@ -1,78 +1,67 @@
-import React from 'react';
-import { Check, Star } from 'lucide-react';
+import React, { useState } from 'react';
+import { PLANS } from './pricing/constants';
+import { PricingCard } from './pricing/PricingCard';
+import { Switch } from './pricing/Switch';
+import { ArrowRight } from 'lucide-react';
 
 const Plans: React.FC = () => {
-  return (
-    <section className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <span className="text-brand-600 font-bold uppercase tracking-widest text-xs">Assinaturas</span>
-          <h2 className="text-3xl font-extrabold text-gray-900 mt-2">Planos de Manutenção Continuada</h2>
-        </div>
+   const [isYearly, setIsYearly] = useState(false);
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-           
-           {/* Plan 1 */}
-           <div className="bg-white p-10 border border-gray-200 hover:border-brand-600 transition-colors group">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Essential</h3>
-              <p className="text-gray-500 text-sm mb-6 h-10">Para manutenção básica semanal de residências compactas.</p>
-              <div className="text-3xl font-bold text-gray-900 mb-8">R$ 500<span className="text-sm font-normal text-gray-400">/mês</span></div>
-              
-              <ul className="space-y-4 text-sm text-gray-600 mb-8">
-                 <li className="flex gap-3"><Check size={16} className="text-brand-600 mt-0.5"/> 4 Visitas Mensais</li>
-                 <li className="flex gap-3"><Check size={16} className="text-brand-600 mt-0.5"/> Limpeza Padrão</li>
-                 <li className="flex gap-3"><Check size={16} className="text-brand-600 mt-0.5"/> Produtos Inclusos</li>
-                 <li className="flex gap-3 text-gray-400 line-through"><Check size={16} className="text-gray-300 mt-0.5"/> Passadoria</li>
-              </ul>
-              
-              <button className="w-full bg-gray-100 text-gray-900 font-bold py-3 text-xs uppercase tracking-widest hover:bg-gray-200 transition-colors">
-                  Selecionar
-              </button>
-           </div>
+   return (
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white via-gray-50 to-white">
+         <div className="max-w-7xl mx-auto">
 
-           {/* Plan 2 - Featured */}
-           <div className="bg-gray-900 p-10 text-white transform md:-translate-y-4 shadow-2xl relative">
-              <div className="absolute top-0 right-0 bg-brand-600 text-white text-[10px] font-bold px-3 py-1 uppercase tracking-widest">
-                  Mais Escolhido
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">Premium Swiss</h3>
-              <p className="text-gray-400 text-sm mb-6 h-10">Cuidado completo para residências e escritórios de médio porte.</p>
-              <div className="text-3xl font-bold text-white mb-8">R$ 1.200<span className="text-sm font-normal text-gray-500">/mês</span></div>
-              
-              <ul className="space-y-4 text-sm text-gray-300 mb-8">
-                 <li className="flex gap-3"><Check size={16} className="text-brand-600 mt-0.5"/> 8 Visitas Mensais</li>
-                 <li className="flex gap-3"><Check size={16} className="text-brand-600 mt-0.5"/> Limpeza Profunda</li>
-                 <li className="flex gap-3"><Check size={16} className="text-brand-600 mt-0.5"/> Passadoria Premium</li>
-                 <li className="flex gap-3"><Check size={16} className="text-brand-600 mt-0.5"/> Produtos Ecológicos</li>
-              </ul>
-              
-              <button className="w-full bg-brand-600 text-white font-bold py-3 text-xs uppercase tracking-widest hover:bg-brand-500 transition-colors">
-                  Assinar Agora
-              </button>
-           </div>
+            {/* Section Header */}
+            <div className="text-center max-w-3xl mx-auto mb-16">
+               <h2 className="text-brand-red font-bold text-xs tracking-[0.2em] uppercase mb-4">
+                  Assinaturas Exclusivas
+               </h2>
+               <h1 className="text-4xl md:text-5xl font-serif font-medium text-brand-dark mb-6 leading-tight">
+                  Planos de Manutenção Continuada <br className="hidden md:block" /> para quem exige excelência.
+               </h1>
+               <p className="text-gray-500 text-lg font-light leading-relaxed">
+                  Garanta a valorização do seu patrimônio com a nossa gestão de facilities.
+                  Escolha o nível de cuidado que sua residência ou empresa merece.
+               </p>
+            </div>
 
-           {/* Plan 3 */}
-           <div className="bg-white p-10 border border-gray-200 hover:border-brand-600 transition-colors group">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Global Elite</h3>
-              <p className="text-gray-500 text-sm mb-6 h-10">Gestão total de facilities com concierge dedicado.</p>
-              <div className="text-3xl font-bold text-gray-900 mb-8">Sob Consulta</div>
-              
-              <ul className="space-y-4 text-sm text-gray-600 mb-8">
-                 <li className="flex gap-3"><Check size={16} className="text-brand-600 mt-0.5"/> Visitas Ilimitadas</li>
-                 <li className="flex gap-3"><Check size={16} className="text-brand-600 mt-0.5"/> Equipe Fixa</li>
-                 <li className="flex gap-3"><Check size={16} className="text-brand-600 mt-0.5"/> Manutenção Predial</li>
-                 <li className="flex gap-3"><Check size={16} className="text-brand-600 mt-0.5"/> Gestor de Conta</li>
-              </ul>
-              
-              <button className="w-full bg-gray-100 text-gray-900 font-bold py-3 text-xs uppercase tracking-widest hover:bg-gray-200 transition-colors">
-                  Contatar
-              </button>
-           </div>
+            {/* Controls */}
+            <Switch
+               checked={isYearly}
+               onChange={setIsYearly}
+               leftLabel="Mensal"
+               rightLabel="Anual"
+            />
 
-        </div>
-      </div>
-    </section>
-  );
+            {/* Cards Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 items-start relative">
+               {/* Decorative background blob */}
+               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[80%] bg-gradient-to-r from-red-50/50 via-blue-50/30 to-gray-50/50 blur-3xl rounded-full -z-10 pointer-events-none opacity-60" />
+
+               {PLANS.map((plan) => (
+                  <PricingCard key={plan.id} plan={plan} isYearly={isYearly} />
+               ))}
+            </div>
+
+            {/* Enterprise Banner / Footer of section */}
+            <div className="mt-24 bg-brand-dark rounded-2xl p-8 md:p-12 relative overflow-hidden group cursor-pointer">
+               <div className="absolute top-0 right-0 w-64 h-64 bg-brand-red/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-brand-red/20 transition-colors duration-500"></div>
+
+               <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+                  <div className="text-center md:text-left">
+                     <h3 className="text-2xl md:text-3xl font-serif text-white mb-2">Precisa de uma solução para grandes corporações?</h3>
+                     <p className="text-gray-400 font-sans">Desenvolvemos projetos personalizados para indústrias, condomínios e redes de varejo.</p>
+                  </div>
+                  <button className="flex items-center gap-2 bg-white/10 hover:bg-white text-white hover:text-brand-dark px-8 py-4 rounded-lg font-bold text-sm uppercase tracking-wider transition-all duration-300 backdrop-blur-sm border border-white/20">
+                     Falar com Consultor Corporativo
+                     <ArrowRight size={16} />
+                  </button>
+               </div>
+            </div>
+
+         </div>
+      </section>
+   );
 };
 
 export default Plans;

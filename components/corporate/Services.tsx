@@ -16,7 +16,7 @@ const Services = () => {
             id: "02",
             title: "Limpeza Corporativa",
             desc: "Protocolos hospitalares aplicados a escritórios. Produtos ecológicos e equipes treinadas para ambientes de alto tráfego.",
-            image: "https://images.unsplash.com/photo-1527513232057-9679117f35a5?q=80&w=1000&auto=format&fit=crop" // Bright clean office
+            image: "/corporate-cleaning.png" // Generated image
         },
         {
             id: "03",
@@ -94,7 +94,7 @@ const Services = () => {
                     </div>
 
                     {/* Right: Dynamic Image Display */}
-                    <div className="lg:w-1/2 relative h-[500px] lg:h-[600px] bg-gray-100 hidden lg:block overflow-hidden">
+                    <div className="lg:w-1/2 relative h-[500px] lg:h-[600px] bg-gray-100 hidden lg:block overflow-hidden rounded-2xl">
                         {services.map((service, index) => (
                             <div
                                 key={index}

@@ -59,7 +59,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
             </a>
             <button
               onClick={() => handleNav('contact')}
-              className="px-6 py-2.5 bg-brand-600 text-white text-sm font-bold uppercase tracking-wider hover:bg-black transition-all"
+              className="px-6 py-2.5 bg-brand-600 text-white text-sm font-bold uppercase tracking-wider hover:bg-black transition-all rounded-lg"
             >
               Orçamento
             </button>
@@ -86,7 +86,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
             <span onClick={() => handleNav('about')} className="font-bold text-gray-900 uppercase tracking-wider cursor-pointer">Sobre Nós</span>
             <span onClick={() => handleNav('contact')} className="font-bold text-gray-900 uppercase tracking-wider cursor-pointer">Contato</span>
             <hr className="border-gray-200" />
-            <button onClick={() => handleNav('contact')} className="w-full text-center px-6 py-3 bg-brand-600 text-white font-bold uppercase">Solicitar Orçamento</button>
+            <button onClick={() => handleNav('contact')} className="w-full text-center px-6 py-3 bg-brand-600 text-white font-bold uppercase rounded-lg">Solicitar Orçamento</button>
           </div>
         </div>
       )}

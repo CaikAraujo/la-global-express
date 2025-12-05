@@ -34,25 +34,25 @@ const Methodology = () => {
                     {/* Image Grid */}
                     <div className="lg:col-span-7 grid grid-cols-2 gap-4">
                         <img
-                            src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1000&auto=format&fit=crop"
+                            src="/quality-standard-1.png"
                             loading="lazy"
-                            className="w-full h-64 object-cover grayscale hover:grayscale-0 transition-all duration-500"
+                            className="w-full h-64 object-cover grayscale hover:grayscale-0 transition-all duration-500 rounded-2xl"
                             alt="Team meeting"
                         />
-                        <div className="bg-brand-red p-8 flex flex-col justify-center text-white relative overflow-hidden group">
+                        <div className="bg-brand-red p-8 flex flex-col justify-center text-white relative overflow-hidden group rounded-2xl">
                             <Briefcase className="w-12 h-12 mb-4 opacity-80 group-hover:scale-110 transition-transform duration-300" />
                             <h4 className="font-display text-2xl font-bold mb-2">Processos Certificados</h4>
                             <p className="text-sm opacity-80">ISO 9001 e 14001 em todas as operações.</p>
                             <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
                         </div>
-                        <div className="bg-white p-8 flex flex-col justify-center border border-gray-200 hover:border-brand-dark transition-colors duration-300">
+                        <div className="bg-white p-8 flex flex-col justify-center border border-gray-200 hover:border-brand-dark transition-colors duration-300 rounded-2xl">
                             <h4 className="font-display text-4xl font-bold text-brand-dark mb-1">0%</h4>
                             <p className="text-xs uppercase tracking-widest text-gray-400">Tolerância a falhas</p>
                         </div>
                         <img
-                            src="https://images.unsplash.com/photo-1581094794329-cd56b5099950?q=80&w=1000&auto=format&fit=crop"
+                            src="/quality-standard-2.png"
                             loading="lazy"
-                            className="w-full h-64 object-cover grayscale hover:grayscale-0 transition-all duration-500"
+                            className="w-full h-64 object-cover grayscale hover:grayscale-0 transition-all duration-500 rounded-2xl"
                             alt="Technical inspection"
                         />
                     </div>
@@ -60,9 +60,9 @@ const Methodology = () => {
                     {/* Content */}
                     <div className="lg:col-span-5">
                         <div className="border-l-4 border-brand-red pl-6 py-2 mb-8">
-                            <h2 className="font-display text-4xl font-bold text-brand-dark">Padrão Suíço de Qualidade</h2>
+                            <h2 className="font-display text-4xl font-bold text-white">Padrão Suíço de Qualidade</h2>
                         </div>
-                        <p className="text-gray-600 text-lg mb-8 leading-relaxed">
+                        <p className="text-gray-300 text-lg mb-8 leading-relaxed">
                             Não entregamos apenas serviços, entregamos tranquilidade. Nossa metodologia proprietária combina rigorosos protocolos de execução com uma cultura de hospitalidade.
                         </p>
 
@@ -77,7 +77,7 @@ const Methodology = () => {
                                     <div className="w-6 h-6 rounded-full bg-white border border-gray-200 flex items-center justify-center shrink-0 group-hover:border-brand-red group-hover:scale-110 transition-all duration-300">
                                         <CheckCircle2 className="w-3 h-3 text-brand-red" />
                                     </div>
-                                    <span className="text-brand-dark font-medium group-hover:text-brand-red transition-colors">{item}</span>
+                                    <span className="text-gray-200 font-medium group-hover:text-brand-red transition-colors">{item}</span>
                                 </li>
                             ))}
                         </ul>
