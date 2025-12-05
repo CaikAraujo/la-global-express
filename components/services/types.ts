@@ -1,3 +1,5 @@
+import { StaticImageData } from 'next/image';
+
 export enum Category {
     RESIDENCIAL = 'RESIDENCIAL',
     CORPORATIVO = 'CORPORATIVO'
@@ -8,7 +10,7 @@ export interface ServiceItem {
     title: string;
     description: string;
     tag: string;
-    imageUrl: string;
+    imageUrl: string | StaticImageData;
     category: Category;
 }
 

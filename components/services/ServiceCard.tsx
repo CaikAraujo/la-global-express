@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { ServiceItem } from './types';
 import { ArrowRightIcon } from './Icons';
 
@@ -21,10 +22,12 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, isHighlighted
             {/* Image Container */}
             <div className="relative aspect-[4/5] overflow-hidden">
                 <div className={`absolute inset-0 bg-brand-dark/20 transition-opacity duration-500 group-hover:opacity-0 z-10`}></div>
-                <img
+                <Image
                     src={service.imageUrl}
                     alt={service.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
 
                 {/* Tag Overlay */}

@@ -5,7 +5,7 @@ export const findBestService = async (userQuery: string): Promise<{ serviceId: s
     try {
         // For now, using a mock response or checking if key exists.
         // In a real scenario, this would use import.meta.env.VITE_GEMINI_API_KEY
-        const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+        const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
 
         if (!apiKey) {
             console.warn("API Key missing");
@@ -77,7 +77,7 @@ export const findBestService = async (userQuery: string): Promise<{ serviceId: s
             }
         });
 
-        const resultText = response.text();
+        const resultText = response?.text || null;
         if (!resultText) throw new Error("No response from AI");
 
         const parsed = JSON.parse(resultText);

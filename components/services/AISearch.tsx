@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useRef, useEffect } from 'react';
 import { SparklesIcon, SearchIcon, LoaderIcon, XIcon, ArrowRightIcon } from './Icons';
 import { findBestService } from './geminiService';

@@ -1,23 +1,19 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
-interface NavbarProps {
-  currentPage: string;
-  onNavigate: (page: string) => void;
-}
-
-const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
+const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
-  const navLinkClass = (page: string) =>
-    `text-sm font-medium uppercase tracking-wide transition-colors cursor-pointer ${currentPage === page ? 'text-brand-600 font-bold' : 'text-gray-600 hover:text-brand-600'
+  const navLinkClass = (path: string) =>
+    `text-sm font-medium uppercase tracking-wide transition-colors cursor-pointer ${pathname === path ? 'text-brand-600 font-bold' : 'text-gray-600 hover:text-brand-600'
     }`;
 
-  const handleNav = (page: string) => {
-    onNavigate(page);
-    setMobileMenuOpen(false);
-    window.scrollTo(0, 0);
-  };
+  const closeMenu = () => setMobileMenuOpen(false);
 
   return (
     <nav className="bg-white py-5 sticky top-0 z-50 border-b-2 border-brand-600 shadow-sm">
@@ -25,8 +21,9 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
         <div className="flex justify-between items-center h-12">
 
           {/* Logo */}
-          <div
-            onClick={() => handleNav('home')}
+          <Link
+            href="/"
+            onClick={closeMenu}
             className="flex items-center gap-3 cursor-pointer group"
           >
             <div className="relative w-10 h-10 flex-shrink-0">
@@ -42,14 +39,14 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
               <span className="text-lg font-black tracking-widest text-gray-900">LA GLOBAL</span>
               <span className="text-[10px] font-bold tracking-[0.2em] text-gray-500 uppercase">EXPRESS</span>
             </div>
-          </div>
+          </Link>
 
           {/* Desktop Links */}
           <div className="hidden md:flex items-center space-x-10">
-            <span onClick={() => handleNav('home')} className={navLinkClass('home')}>Soluções</span>
-            <span onClick={() => handleNav('corporate')} className={navLinkClass('corporate')}>Corporativo</span>
-            <span onClick={() => handleNav('about')} className={navLinkClass('about')}>Sobre Nós</span>
-            <span onClick={() => handleNav('contact')} className={navLinkClass('contact')}>Contato</span>
+            <Link href="/" className={navLinkClass('/')}>Soluções</Link>
+            <Link href="/corporate" className={navLinkClass('/corporate')}>Corporativo</Link>
+            <Link href="/about" className={navLinkClass('/about')}>Sobre Nós</Link>
+            <Link href="/contact" className={navLinkClass('/contact')}>Contato</Link>
           </div>
 
           {/* CTA Buttons */}
@@ -57,12 +54,12 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
             <a href="#" className="text-sm font-bold text-gray-900 hover:text-brand-600 transition-colors">
               Área do Cliente
             </a>
-            <button
-              onClick={() => handleNav('contact')}
+            <Link
+              href="/contact"
               className="px-6 py-2.5 bg-brand-600 text-white text-sm font-bold uppercase tracking-wider hover:bg-black transition-all rounded-lg"
             >
               Orçamento
-            </button>
+            </Link>
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -81,12 +78,12 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
       {mobileMenuOpen && (
         <div className="absolute top-full left-0 right-0 bg-white border-b border-gray-100 p-6 md:hidden shadow-xl z-50">
           <div className="flex flex-col space-y-6">
-            <span onClick={() => handleNav('home')} className="font-bold text-gray-900 uppercase tracking-wider cursor-pointer">Soluções</span>
-            <span onClick={() => handleNav('corporate')} className="font-bold text-gray-900 uppercase tracking-wider cursor-pointer">Corporativo</span>
-            <span onClick={() => handleNav('about')} className="font-bold text-gray-900 uppercase tracking-wider cursor-pointer">Sobre Nós</span>
-            <span onClick={() => handleNav('contact')} className="font-bold text-gray-900 uppercase tracking-wider cursor-pointer">Contato</span>
+            <Link href="/" onClick={closeMenu} className="font-bold text-gray-900 uppercase tracking-wider cursor-pointer">Soluções</Link>
+            <Link href="/corporate" onClick={closeMenu} className="font-bold text-gray-900 uppercase tracking-wider cursor-pointer">Corporativo</Link>
+            <Link href="/about" onClick={closeMenu} className="font-bold text-gray-900 uppercase tracking-wider cursor-pointer">Sobre Nós</Link>
+            <Link href="/contact" onClick={closeMenu} className="font-bold text-gray-900 uppercase tracking-wider cursor-pointer">Contato</Link>
             <hr className="border-gray-200" />
-            <button onClick={() => handleNav('contact')} className="w-full text-center px-6 py-3 bg-brand-600 text-white font-bold uppercase rounded-lg">Solicitar Orçamento</button>
+            <Link href="/contact" onClick={closeMenu} className="w-full text-center px-6 py-3 bg-brand-600 text-white font-bold uppercase rounded-lg">Solicitar Orçamento</Link>
           </div>
         </div>
       )}

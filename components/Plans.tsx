@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { PLANS } from './pricing/constants';
 import { PricingCard } from './pricing/PricingCard';

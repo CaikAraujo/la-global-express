@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Leaf, Users, Scale, ArrowUpRight, LucideIcon } from 'lucide-react';

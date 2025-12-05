@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useMemo } from 'react';
 import { Category } from './services/types';
 import { SERVICES } from './services/data';
