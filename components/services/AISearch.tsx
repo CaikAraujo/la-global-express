@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { SparklesIcon, SearchIcon, LoaderIcon, XIcon, ArrowRightIcon } from './Icons';
-import { findBestService } from './geminiService';
+import { findBestServiceAction } from '@/app/actions/aiSearch';
 
 interface AISearchProps {
     onServiceFound: (serviceId: string) => void;
@@ -30,7 +30,7 @@ export const AISearch: React.FC<AISearchProps> = ({ onServiceFound, onReset }) =
         setResultMessage(null);
         onReset();
 
-        const result = await findBestService(query);
+        const result = await findBestServiceAction(query);
 
         setLoading(false);
         setResultMessage(result.message);

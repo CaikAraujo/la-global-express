@@ -1,15 +1,20 @@
-import { GoogleGenAI, Type, Schema } from "@google/genai";
-import { SERVICES } from "./data";
+'use server';
 
-export const findBestService = async (userQuery: string): Promise<{ serviceId: string | null; message: string }> => {
+import { GoogleGenAI, Schema, Type } from "@google/genai";
+import { SERVICES } from "@/components/services/data";
+
+export interface AIResponse {
+    serviceId: string | null;
+    message: string;
+}
+
+export async function findBestServiceAction(userQuery: string): Promise<AIResponse> {
     try {
-        // For now, using a mock response or checking if key exists.
-        // In a real scenario, this would use import.meta.env.VITE_GEMINI_API_KEY
-        const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+        const apiKey = process.env.GEMINI_API_KEY;
 
         if (!apiKey) {
-            console.warn("API Key missing");
-            // Mock simple keyword matching for demo purposes if no key
+            console.warn("Server Action: GEMINI_API_KEY missing");
+            // Fallback mock logic if no key
             const lowerQuery = userQuery.toLowerCase();
             const match = SERVICES.find(s =>
                 s.title.toLowerCase().includes(lowerQuery) ||
@@ -23,7 +28,6 @@ export const findBestService = async (userQuery: string): Promise<{ serviceId: s
                     message: `Com base na sua busca por "${userQuery}", recomendamos o serviço ${match.title}.`
                 };
             }
-
             return { serviceId: null, message: "Não encontrei um serviço exato, mas nossos consultores podem ajudar." };
         }
 
@@ -49,7 +53,7 @@ export const findBestService = async (userQuery: string): Promise<{ serviceId: s
         };
 
         const response = await ai.models.generateContent({
-            model: "gemini-2.0-flash-exp", // Updated model name if needed, or stick to flash
+            model: "gemini-2.0-flash-exp",
             contents: [
                 {
                     role: "user",
@@ -91,4 +95,4 @@ export const findBestService = async (userQuery: string): Promise<{ serviceId: s
         console.error("Gemini Error:", error);
         return { serviceId: null, message: "Ocorreu um erro ao processar sua busca." };
     }
-};
+}
