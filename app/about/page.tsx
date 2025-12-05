@@ -1,6 +1,14 @@
 import React from 'react';
-import About from '../../pages/About';
+import { HeroSection } from '@/components/about/HeroSection';
+import { ContentSection } from '@/components/about/ContentSection';
+import { Stats } from '@/components/about/Stats';
 
 export default function AboutPage() {
-    return <About />;
+    return (
+        <main className="min-h-screen bg-white">
+            <HeroSection />
+            <ContentSection />
+            <Stats />
+        </main>
+    );
 }

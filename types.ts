@@ -23,3 +23,26 @@ export interface BookingIntent {
   estimatedPrice?: string;
   confidence: number;
 }
+
+export interface ContactFormState {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  interest: string;
+  message: string;
+}
+
+export interface ValidationErrors {
+  firstName?: string;
+  email?: string;
+  message?: string;
+}
+
+export enum InterestType {
+  CORPORATE = "Consultoria Corporativa",
+  LOGISTICS = "Soluções Logísticas",
+  SUPPORT = "Suporte Técnico",
+  PARTNERSHIP = "Parcerias",
+  OTHER = "Outros Assuntos"
+}

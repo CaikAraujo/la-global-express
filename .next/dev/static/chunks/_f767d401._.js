@@ -369,23 +369,9 @@ const findBestService = async (userQuery)=>{
     try {
         // For now, using a mock response or checking if key exists.
         // In a real scenario, this would use import.meta.env.VITE_GEMINI_API_KEY
-        const apiKey = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_GEMINI_API_KEY;
-        if (!apiKey) {
-            console.warn("API Key missing");
-            // Mock simple keyword matching for demo purposes if no key
-            const lowerQuery = userQuery.toLowerCase();
-            const match = __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$services$2f$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SERVICES"].find((s)=>s.title.toLowerCase().includes(lowerQuery) || s.description.toLowerCase().includes(lowerQuery) || s.tag.toLowerCase().includes(lowerQuery));
-            if (match) {
-                return {
-                    serviceId: match.id,
-                    message: `Com base na sua busca por "${userQuery}", recomendamos o serviço ${match.title}.`
-                };
-            }
-            return {
-                serviceId: null,
-                message: "Não encontrei um serviço exato, mas nossos consultores podem ajudar."
-            };
-        }
+        const apiKey = ("TURBOPACK compile-time value", "AIzaSyCvs0ENNLWbIDO0RU6x--_LafUYjehG4L4");
+        if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+        ;
         const ai = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$google$2f$genai$2f$dist$2f$web$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["GoogleGenAI"]({
             apiKey
         });

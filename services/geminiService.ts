@@ -1,9 +1,16 @@
 import { GoogleGenAI, Type } from "@google/genai";
-import { BookingIntent } from "../types";
+import { BookingIntent, InterestType } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const getAi = () => {
+  const apiKey = process.env.API_KEY;
+  if (!apiKey) return null;
+  return new GoogleGenAI({ apiKey });
+};
 
 export const parseBookingIntent = async (prompt: string): Promise<BookingIntent | null> => {
+  const ai = getAi();
+  if (!ai) return null;
+
   try {
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
@@ -36,6 +43,47 @@ export const parseBookingIntent = async (prompt: string): Promise<BookingIntent 
 
   } catch (error) {
     console.error("Error parsing booking intent:", error);
+    return null;
+  }
+};
+
+export const analyzeIntent = async (message: string): Promise<string | null> => {
+  const ai = getAi();
+  if (!ai || !message || message.length < 10) return null;
+
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: `Analyze the following user message and categorize it into one of these exact categories: 
+      "${InterestType.CORPORATE}", "${InterestType.LOGISTICS}", "${InterestType.SUPPORT}", "${InterestType.PARTNERSHIP}", "${InterestType.OTHER}".
+      
+      Message: "${message}"`,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            category: {
+              type: Type.STRING,
+              enum: Object.values(InterestType),
+            },
+            confidence: {
+              type: Type.NUMBER
+            }
+          },
+          required: ["category"]
+        }
+      }
+    });
+
+    const text = response.text;
+    if (!text) return null;
+
+    const result = JSON.parse(text);
+    return result.category;
+
+  } catch (error) {
+    console.error("Gemini analysis failed:", error);
     return null;
   }
 };
