@@ -137,11 +137,13 @@ export default function BookingPage() {
                                 </button>
                             )}
 
-                            <BookingForm
-                                currentStep={step}
-                                onUpdate={handleFormUpdate}
-                                showExtras={subStep === 2}
-                            />
+                            <React.Suspense fallback={<div className="flex justify-center items-center h-64"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-red"></div></div>}>
+                                <BookingForm
+                                    currentStep={step}
+                                    onUpdate={handleFormUpdate}
+                                    showExtras={subStep === 2}
+                                />
+                            </React.Suspense>
                         </div>
                     </div>
 
