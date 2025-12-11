@@ -19,6 +19,7 @@ interface DateTimeSelectionProps {
     frequency: string;
     duration: number;
     address: string;
+    canton?: string;
     onUpdate: (field: string, value: any) => void;
     hideFrequency?: boolean;
 }
@@ -96,6 +97,15 @@ const TIME_SLOTS = [
     { id: '15:00', label: '15:00', range: 'até 19:00' },
 ];
 
+const CANTONS = [
+    { id: 'GE', name: 'Genève' },
+    { id: 'VD', name: 'Vaud (Lausanne)' },
+    { id: 'FR', name: 'Fribourg' },
+    { id: 'NE', name: 'Neuchâtel' },
+    { id: 'VS', name: 'Valais (Sion)' },
+    { id: 'JU', name: 'Jura' }
+];
+
 export const DateTimeSelection: React.FC<DateTimeSelectionProps> = ({
     date,
     time,
@@ -103,7 +113,8 @@ export const DateTimeSelection: React.FC<DateTimeSelectionProps> = ({
     duration,
     address,
     onUpdate,
-    hideFrequency = false
+    hideFrequency = false,
+    canton
 }) => {
     const dateInputRef = useRef<HTMLInputElement>(null);
 
@@ -386,15 +397,34 @@ export const DateTimeSelection: React.FC<DateTimeSelectionProps> = ({
             {/* 3. Address Section */}
             <section>
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">Onde será o serviço?</h2>
-                <div className="relative group">
-                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-red transition-colors" size={20} />
-                    <input
-                        type="text"
-                        value={address}
-                        onChange={(e) => onUpdate('address', e.target.value)}
-                        placeholder="Digite o CEP ou endereço completo"
-                        className="w-full bg-white border border-gray-200 text-gray-900 rounded-xl py-4 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all shadow-sm hover:border-gray-300"
-                    />
+
+                <div className="grid md:grid-cols-12 gap-4">
+                    <div className="md:col-span-4 relative group">
+                        <select
+                            value={canton}
+                            onChange={(e) => onUpdate('canton', e.target.value)}
+                            className="w-full bg-white border border-gray-200 text-gray-900 rounded-xl py-4 pl-4 pr-8 focus:outline-none focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all shadow-sm hover:border-gray-300 appearance-none cursor-pointer"
+                        >
+                            <option value="">Selecione o Cantão</option>
+                            {CANTONS.map(c => (
+                                <option key={c.id} value={c.id}>{c.name}</option>
+                            ))}
+                        </select>
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                        </div>
+                    </div>
+
+                    <div className="md:col-span-8 relative group">
+                        <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-red transition-colors" size={20} />
+                        <input
+                            type="text"
+                            value={address}
+                            onChange={(e) => onUpdate('address', e.target.value)}
+                            placeholder="Digite o CEP ou endereço completo"
+                            className="w-full bg-white border border-gray-200 text-gray-900 rounded-xl py-4 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all shadow-sm hover:border-gray-300"
+                        />
+                    </div>
                 </div>
             </section>
 

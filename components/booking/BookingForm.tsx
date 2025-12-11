@@ -1,10 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, MapPin, User, CheckCircle2 } from 'lucide-react';
 import { TruckRentalForm } from './TruckRentalForm';
+import { MaterialSupplyForm } from './MaterialSupplyForm';
+import { AssemblyForm } from './AssemblyForm';
 import { CleaningForm } from './CleaningForm';
 import { DateTimeSelection } from './DateTimeSelection';
 interface BookingFormProps {
@@ -23,7 +25,7 @@ const SERVICE_OPTIONS = [
     { id: 'res-truck-rental', label: 'Aluguel de Caminhão', basePrice: 450 },
     { id: 'res-material', label: 'Fornecimento de Material', basePrice: 200 },
     { id: 'res-cleaning', label: 'Limpeza Executiva', basePrice: 180 },
-    { id: 'res-maint', label: 'Manutenção Predial', basePrice: 150 },
+    { id: 'res-assembly', label: 'Montagem Técnica', basePrice: 150 },
 ];
 
 export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep, showExtras }) => {
@@ -40,9 +42,22 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
         name: '',
         email: '',
         phone: '',
+        canton: '',
         observations: '',
-        acceptedTerms: false
+        acceptedTerms: false,
+        materialsTotal: 0,
+        price: 0,
+        serviceDetails: {}
     });
+
+    const DELIVERY_FEES: Record<string, number> = {
+        'GE': 30,
+        'VD': 70,
+        'VS': 100,
+        'FR': 80,
+        'NE': 100,
+        'JU': 120
+    };
 
     const [isEditingAddress, setIsEditingAddress] = useState(false);
 
@@ -65,9 +80,38 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
     // Lift state up whenever it changes
     useEffect(() => {
         if (formData.serviceId === 'res-cleaning') {
-            // For cleaning, we trust the price coming from CleaningForm (already in formData via setFormData)
-            // We ensure we pass the data up, but carefully to not cause loops if onUpdate triggers re-renders that don't change data
             onUpdate(formData);
+            return;
+        }
+
+        if (formData.serviceId === 'res-truck-rental') {
+            // Truck rental handles its own price via TruckRentalForm -> onUpdate (via prop or local wrapper?)
+            // Actually, TruckRentalForm calls onUpdate which updates local state? 
+            // Wait, I didn't change TruckRentalForm handler yet. It still calls prop onUpdate.
+            // But let's assume it works for now or change it later.
+            // For now, prevent generic calc overwriting it.
+            onUpdate(formData);
+            return;
+        }
+
+        if (formData.serviceId === 'res-material') {
+            const deliveryFee = DELIVERY_FEES[formData.canton] || 0;
+            const finalPrice = (formData.materialsTotal || 0) + deliveryFee;
+
+            // Only update if price changed to avoid loops
+            if (finalPrice !== formData.price) {
+                onUpdate({
+                    ...formData,
+                    price: finalPrice
+                });
+            } else {
+                onUpdate(formData);
+            }
+            return;
+        }
+
+        if (formData.serviceId === 'res-assembly') {
+            onUpdate(formData); // Trust AssemblyForm price
             return;
         }
 
@@ -87,6 +131,44 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
     const handleInputChange = (field: string, value: any) => {
         setFormData(prev => ({ ...prev, [field]: value }));
     };
+
+    const handleAssemblyUpdate = useCallback((data: any) => {
+        setFormData(prev => {
+            if (prev.price === data.price && prev.duration === data.duration && JSON.stringify(prev.serviceDetails) === JSON.stringify(data.serviceDetails)) return prev;
+            return {
+                ...prev,
+                serviceDetails: data.serviceDetails,
+                price: data.price,
+                duration: data.duration
+            };
+        });
+    }, []);
+
+    const handleMaterialUpdate = useCallback((data: any) => {
+        setFormData(prev => {
+            // Avoid loop if price is same
+            if (prev.materialsTotal === data.price && JSON.stringify(prev.serviceDetails) === JSON.stringify(data.serviceDetails)) return prev;
+            return {
+                ...prev,
+                serviceDetails: data.serviceDetails,
+                price: data.price,
+                materialsTotal: data.price,
+                duration: 1
+            };
+        });
+    }, []);
+
+    const handleTruckUpdate = useCallback((data: any) => {
+        setFormData(prev => {
+            if (prev.price === data.price && prev.duration === data.duration && JSON.stringify(prev.serviceDetails) === JSON.stringify(data.serviceDetails)) return prev;
+            return {
+                ...prev,
+                serviceDetails: data.serviceDetails,
+                price: data.price,
+                duration: data.duration
+            };
+        });
+    }, []);
 
     if (currentStep === 1) {
         // Exclusive view for Cleaning Service
@@ -131,14 +213,53 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
                 >
                     <TruckRentalForm
                         showExtras={showExtras}
-                        onUpdate={(data) => {
-                            onUpdate({
-                                ...formData,
-                                serviceDetails: data.serviceDetails,
-                                price: data.price,
-                                duration: data.duration
-                            });
-                        }}
+                        onUpdate={handleTruckUpdate}
+                    />
+
+                    {/* Option to switch service */}
+                    <button
+                        onClick={() => handleInputChange('serviceId', '')}
+                        className="text-sm text-gray-400 hover:text-brand-dark underline block mx-auto pt-4"
+                    >
+                        Escolher outro serviço
+                    </button>
+                </motion.div>
+            );
+        }
+
+        // Exclusive view for Material Supply
+        if (formData.serviceId === 'res-material') {
+            return (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="space-y-6"
+                >
+                    <MaterialSupplyForm
+                        onUpdate={handleMaterialUpdate}
+                    />
+
+                    {/* Option to switch service */}
+                    <button
+                        onClick={() => handleInputChange('serviceId', '')}
+                        className="text-sm text-gray-400 hover:text-brand-dark underline block mx-auto pt-4"
+                    >
+                        Escolher outro serviço
+                    </button>
+                </motion.div>
+            );
+        }
+
+        // Exclusive view for Technical Assembly
+        if (formData.serviceId === 'res-assembly') {
+            return (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="space-y-6"
+                >
+                    <AssemblyForm
+                        onUpdate={handleAssemblyUpdate}
                     />
 
                     {/* Option to switch service */}
@@ -175,7 +296,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
                                 `}
                             >
                                 <span className="font-bold block">{option.label}</span>
-                                <span className="text-xs text-gray-400 mt-1">A partir de R$ {option.basePrice},00</span>
+                                <span className="text-xs text-gray-400 mt-1">A partir de CHF {option.basePrice}</span>
                             </button>
                         ))}
                     </div>
@@ -213,8 +334,9 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
                     frequency={formData.frequency}
                     duration={formData.duration}
                     address={formData.address}
+                    canton={formData.canton}
                     onUpdate={handleInputChange}
-                    hideFrequency={formData.serviceId === 'res-truck-rental'}
+                    hideFrequency={formData.serviceId === 'res-truck-rental' || formData.serviceId === 'res-material' || formData.serviceId === 'res-assembly'}
                 />
             </div>
         );

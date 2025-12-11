@@ -10,38 +10,40 @@ interface TruckOption {
     hourlyRate: number;
 }
 
-const TRUCK_OPTIONS: TruckOption[] = [
+const TRUCK_OPTIONS = [
     {
         id: 'small',
-        name: 'Utilitário / Fiorino',
+        name: 'Furgão / Utilitário',
         description: 'Ideal para pequenas cargas e caixas.',
         capacity: 'Até 600kg • 3m³',
-        basePrice: 150,
-        hourlyRate: 80
+        price4h: 80,
+        price8h: 120
     },
     {
         id: 'medium',
-        name: 'VUC / Caminhão 3/4',
+        name: 'Caminhão 3/4',
         description: 'Mudanças de apartamentos médios.',
         capacity: 'Até 3.500kg • 15m³',
-        basePrice: 350,
-        hourlyRate: 120
+        price4h: 120,
+        price8h: 220
     },
     {
         id: 'large',
         name: 'Caminhão Toco',
         description: 'Grandes mudanças e móveis pesados.',
         capacity: 'Até 6.000kg • 35m³',
-        basePrice: 600,
-        hourlyRate: 180
+        price4h: 150,
+        price8h: 280
     }
 ];
 
 const TRUCK_EXTRAS_OPTIONS = [
-    { id: 'helper', label: 'Ajudante Extra (Turno)', price: 150, icon: User, description: 'Profissional para carga e descarga' },
-    { id: 'trolley', label: 'Carrinho de Mão', price: 50, icon: ShoppingCart, description: 'Facilita o transporte de caixas' },
-    { id: 'bubble_wrap', label: 'Rolo de Plástico Bolha', price: 80, icon: Package, description: 'Proteção para móveis e eletrônicos' },
-    { id: 'boxes', label: 'Kit 10 Caixas de Mudança', price: 120, icon: Box, description: 'Caixas reforçadas 60x40x40' },
+    { id: 'driver', label: 'Motorista Profissional (8h)', price: 320, icon: User, description: 'Motorista especializado' },
+    { id: 'assembler', label: 'Montador e Embalador (8h)', price: 270, icon: Package, description: 'Mão de obra para montagem' },
+    { id: 'helper', label: 'Ajudante (8h)', price: 240, icon: User, description: 'Auxiliar para carga e descarga' },
+    { id: 'trolley', label: 'Carrinho de Mão', price: 50, icon: ShoppingCart, description: 'Facilita o transporte' },
+    { id: 'bubble_wrap', label: 'Plástico Bolha', price: 80, icon: Package, description: 'Proteção extra' },
+    { id: 'boxes', label: 'Kit 10 Caixas', price: 120, icon: Box, description: 'Caixas 60x40x40' },
 ];
 
 interface TruckRentalFormProps {
@@ -51,28 +53,36 @@ interface TruckRentalFormProps {
 
 export const TruckRentalForm: React.FC<TruckRentalFormProps> = ({ onUpdate, showExtras = false }) => {
     const [selectedTruck, setSelectedTruck] = useState<string>('medium');
-    const [duration, setDuration] = useState<number>(4);
+    const [period, setPeriod] = useState<number>(8); // 4 or 8
+    const [extraHours, setExtraHours] = useState<number>(0);
     const [extras, setExtras] = useState<string[]>([]);
 
     useEffect(() => {
         const truck = TRUCK_OPTIONS.find(t => t.id === selectedTruck);
         if (!truck) return;
 
-        let totalPrice = truck.basePrice + (truck.hourlyRate * duration);
+        // Base price from pack
+        let totalPrice = period === 4 ? truck.price4h : truck.price8h;
+
+        // Extra hours (30 CHF)
+        totalPrice += extraHours * 30;
 
         // Add extras cost
         const selectedExtras = TRUCK_EXTRAS_OPTIONS.filter(e => extras.includes(e.id));
         const extrasCost = selectedExtras.reduce((acc, curr) => acc + curr.price, 0);
         totalPrice += extrasCost;
 
-        let details = `Transporte: ${truck.name} - ${duration}h`;
+        const totalDuration = period + extraHours;
+
+        let details = `Veículo: ${truck.name} (${period}h)`;
+        if (extraHours > 0) details += ` + ${extraHours}h extras`;
         if (selectedExtras.length > 0) {
-            details += ` + Extras: ${selectedExtras.map(e => e.label).join(', ')}`;
+            details += `\nExtras: ${selectedExtras.map(e => e.label).join(', ')}`;
         }
 
         onUpdate({
             price: totalPrice,
-            duration: duration,
+            duration: totalDuration,
             serviceDetails: {
                 type: 'Truck Rental',
                 truckName: truck.name,
@@ -81,7 +91,7 @@ export const TruckRentalForm: React.FC<TruckRentalFormProps> = ({ onUpdate, show
                 extras: selectedExtras.map(e => e.label)
             }
         });
-    }, [selectedTruck, duration, extras, onUpdate]);
+    }, [selectedTruck, period, extraHours, extras, onUpdate]);
 
     const toggleExtra = (id: string) => {
         setExtras(prev =>
@@ -94,7 +104,7 @@ export const TruckRentalForm: React.FC<TruckRentalFormProps> = ({ onUpdate, show
             <div className="space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
                 <div>
                     <h2 className="text-2xl font-bold text-brand-dark mb-2">Itens Opcionais</h2>
-                    <p className="text-gray-500 text-sm">Adicione facilidades para sua mudança ou transporte.</p>
+                    <p className="text-gray-500 text-sm">Adicione profissionais e equipamentos.</p>
                 </div>
 
                 <div className="grid grid-cols-1 gap-4">
@@ -119,7 +129,7 @@ export const TruckRentalForm: React.FC<TruckRentalFormProps> = ({ onUpdate, show
                                     <div className="flex justify-between items-start">
                                         <h3 className="font-bold text-sm">{extra.label}</h3>
                                         <span className={`text-sm font-bold ${isSelected ? 'text-brand-red' : 'text-gray-400'}`}>
-                                            +R$ {extra.price}
+                                            +CHF {extra.price}
                                         </span>
                                     </div>
                                     <p className="text-xs text-gray-400 mt-1">{extra.description}</p>
@@ -140,11 +150,11 @@ export const TruckRentalForm: React.FC<TruckRentalFormProps> = ({ onUpdate, show
         <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
             <div>
                 <h2 className="text-2xl font-bold text-brand-dark mb-2">Configure o Transporte</h2>
-                <p className="text-gray-500 text-sm">Escolha o veículo ideal e o tempo necessário.</p>
+                <p className="text-gray-500 text-sm">Escolha o tamanho e o período.</p>
             </div>
 
             <div className="space-y-4">
-                <label className="text-xs font-bold uppercase tracking-widest text-gray-500">Tipo de Veículo</label>
+                <label className="text-xs font-bold uppercase tracking-widest text-gray-500">1. Escolha o Veículo</label>
                 <div className="grid grid-cols-1 gap-4">
                     {TRUCK_OPTIONS.map(truck => (
                         <div
@@ -166,18 +176,19 @@ export const TruckRentalForm: React.FC<TruckRentalFormProps> = ({ onUpdate, show
                                         <h3 className={`font-bold ${selectedTruck === truck.id ? 'text-brand-dark' : 'text-gray-700'}`}>
                                             {truck.name}
                                         </h3>
-                                        <span className="text-sm font-bold text-brand-red">
-                                            R$ {truck.basePrice}
-                                            <span className="text-gray-400 text-xs font-normal"> base</span>
-                                        </span>
+                                        <div className="text-right">
+                                            <span className="block text-sm font-bold text-brand-red">
+                                                CHF {truck.price4h} <span className="text-xs font-normal text-gray-500">/ 4h</span>
+                                            </span>
+                                            <span className="block text-xs text-gray-400">
+                                                CHF {truck.price8h} / 8h
+                                            </span>
+                                        </div>
                                     </div>
                                     <p className="text-sm text-gray-500 mt-1">{truck.description}</p>
                                     <div className="flex items-center gap-4 mt-3 text-xs text-gray-400 font-medium">
                                         <span className="flex items-center gap-1">
                                             <Box size={14} /> {truck.capacity}
-                                        </span>
-                                        <span className="flex items-center gap-1">
-                                            <Fuel size={14} /> +R$ {truck.hourlyRate}/h
                                         </span>
                                     </div>
                                 </div>
@@ -187,28 +198,50 @@ export const TruckRentalForm: React.FC<TruckRentalFormProps> = ({ onUpdate, show
                 </div>
             </div>
 
-            <div className="space-y-4">
-                <div className="flex justify-between">
-                    <label className="text-xs font-bold uppercase tracking-widest text-gray-500">Tempo de Uso</label>
-                    <span className="font-bold text-brand-red">{duration} horas</span>
+            <div className="space-y-6">
+                <div>
+                    <label className="text-xs font-bold uppercase tracking-widest text-gray-500 block mb-3">2. Período de Uso</label>
+                    <div className="grid grid-cols-2 gap-4">
+                        <button
+                            onClick={() => setPeriod(4)}
+                            className={`p-4 rounded-xl border-2 transition-all ${period === 4 ? 'border-brand-red bg-red-50 text-brand-dark font-bold' : 'border-gray-100 text-gray-600'}`}
+                        >
+                            Meia Diária (4h)
+                        </button>
+                        <button
+                            onClick={() => setPeriod(8)}
+                            className={`p-4 rounded-xl border-2 transition-all ${period === 8 ? 'border-brand-red bg-red-50 text-brand-dark font-bold' : 'border-gray-100 text-gray-600'}`}
+                        >
+                            Diária Completa (8h)
+                        </button>
+                    </div>
                 </div>
-                <input
-                    type="range"
-                    min="2"
-                    max="12"
-                    step="1"
-                    value={duration}
-                    onChange={(e) => setDuration(parseInt(e.target.value))}
-                    className="w-full h-2 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-brand-red"
-                />
-                <div className="flex justify-between text-xs text-gray-400">
-                    <span>2h (Mínimo)</span>
-                    <span>12h (Turno)</span>
+
+                <div>
+                    <div className="flex justify-between mb-3">
+                        <label className="text-xs font-bold uppercase tracking-widest text-gray-500">3. Horas Extras (+30 CHF/h)</label>
+                        {extraHours > 0 && <span className="text-brand-red font-bold">+{extraHours}h</span>}
+                    </div>
+                    <div className="flex items-center gap-4 bg-white border border-gray-200 p-2 rounded-xl w-fit">
+                        <button
+                            onClick={() => setExtraHours(Math.max(0, extraHours - 1))}
+                            className="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-600 font-bold text-lg"
+                        >
+                            -
+                        </button>
+                        <span className="w-12 text-center font-bold text-lg">{extraHours}</span>
+                        <button
+                            onClick={() => setExtraHours(extraHours + 1)}
+                            className="w-10 h-10 flex items-center justify-center rounded-lg bg-brand-red text-white font-bold text-lg shadow-sm hover:shadow-md transition-all"
+                        >
+                            +
+                        </button>
+                    </div>
                 </div>
 
                 <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 flex gap-3 text-blue-800 text-xs leading-relaxed">
                     <Info className="shrink-0 w-4 h-4 mt-0.5" />
-                    <p>O tempo de uso começa a contar na chegada do veículo. Considere o tempo de carga, trânsito e descarga.</p>
+                    <p>O tempo começa a contar na chegada. Motorista e ajudantes (se contratados) cumprem o turno selecionado.</p>
                 </div>
             </div>
         </div>

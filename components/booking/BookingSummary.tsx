@@ -60,7 +60,7 @@ export const BookingSummary: React.FC<BookingSummaryProps> = ({
                         <p className="text-sm font-bold text-gray-500">Total Estimado</p>
                         <div className="text-right">
                             <p className="text-3xl font-display font-bold text-brand-dark">
-                                R$ {price.toFixed(2).replace('.', ',')}
+                                CHF {price.toFixed(2)}
                             </p>
                             {frequency !== 'Uma vez' && (
                                 <p className="text-xs text-green-600 font-bold bg-green-50 px-2 py-1 rounded-full inline-block mt-1">
