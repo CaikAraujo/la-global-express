@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ServiceItem } from './types';
 import { ArrowRightIcon } from './Icons';
 
@@ -52,10 +53,13 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, isHighlighted
                 </p>
 
                 <div className="mt-auto">
-                    <button className="flex items-center gap-2 text-xs font-bold tracking-widest text-brand-dark group-hover:text-brand-red transition-all duration-300 uppercase group/btn">
+                    <Link
+                        href={`/agendar?service=${encodeURIComponent(service.title)}`}
+                        className="flex items-center gap-2 text-xs font-bold tracking-widest text-brand-dark group-hover:text-brand-red transition-all duration-300 uppercase group/btn"
+                    >
                         Solicitar Proposta
                         <ArrowRightIcon className="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform" />
-                    </button>
+                    </Link>
                 </div>
             </div>
         </div>

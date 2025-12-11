@@ -1,6 +1,6 @@
 import { Category, ServiceItem } from './types';
-import manutencaoImg from '../../assets/manutencao_predial.png';
-import enxovalImg from '../../assets/gestao_enxoval.png';
+
+
 
 export const SERVICES: ServiceItem[] = [
     // Residencial
@@ -13,19 +13,19 @@ export const SERVICES: ServiceItem[] = [
         category: Category.RESIDENCIAL
     },
     {
-        id: 'res-maint',
-        title: 'Manutenção Predial',
-        description: 'Reparos elétricos, hidráulicos e estruturais com laudo técnico detalhado e garantia de serviço.',
-        tag: 'Técnicos Certificados',
-        imageUrl: manutencaoImg,
+        id: 'res-truck-rental',
+        title: 'Aluguel de Caminhão',
+        description: 'Frota moderna para transporte de cargas e mudanças. Motoristas habilitados e seguro total.',
+        tag: 'Frota Própria',
+        imageUrl: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?q=80&w=1000&auto=format&fit=crop',
         category: Category.RESIDENCIAL
     },
     {
-        id: 'res-laundry',
-        title: 'Gestão de Enxoval',
-        description: 'Passadoria e organização de rouparia com técnicas de hotelaria 5 estrelas. Delivery incluso.',
-        tag: 'Delivery Incluso',
-        imageUrl: enxovalImg,
+        id: 'res-material',
+        title: 'Fornecimento de Material',
+        description: 'Materiais de construção e acabamento de alta qualidade para sua obra. Entrega agendada.',
+        tag: 'Pronta Entrega',
+        imageUrl: 'https://images.unsplash.com/photo-1581094288338-2314dddb7ece?q=80&w=1000&auto=format&fit=crop',
         category: Category.RESIDENCIAL
     },
     {
