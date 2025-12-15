@@ -39,35 +39,35 @@ export const SERVICES: ServiceItem[] = [
 
     // Corporativo
     {
-        id: 'corp-facilities',
-        title: 'Facilities Management',
-        description: 'Gestão completa de instalações corporativas, focada em eficiência operacional e redução de custos.',
-        tag: 'B2B Exclusivo',
-        imageUrl: 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000&auto=format&fit=crop',
-        category: Category.CORPORATIVO
-    },
-    {
-        id: 'corp-security',
-        title: 'Segurança Inteligente',
-        description: 'Monitoramento 24h com inteligência artificial e controle de acesso biométrico avançado.',
-        tag: 'Alta Tecnologia',
-        imageUrl: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=1000&auto=format&fit=crop',
+        id: 'corp-concierge',
+        title: 'Concierge',
+        description: 'Serviços de recepção executiva, gestão de acessos e suporte administrativo premium para seu escritório.',
+        tag: 'Atendimento Premium',
+        imageUrl: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1000&auto=format&fit=crop',
         category: Category.CORPORATIVO
     },
     {
         id: 'corp-cleaning',
         title: 'Limpeza Industrial',
-        description: 'Equipes especializadas para grandes áreas, galpões e escritórios de grande porte.',
+        description: 'Equipes especializadas para grandes áreas, galpões e escritórios de grande porte com maquinário específico.',
         tag: 'Equipes Dedicadas',
         imageUrl: '/corporate-cleaning.png',
         category: Category.CORPORATIVO
     },
     {
-        id: 'corp-catering',
-        title: 'Corporate Catering',
-        description: 'Soluções de alimentação para eventos corporativos e gestão de refeitórios executivos.',
-        tag: 'Chef Assinado',
-        imageUrl: 'https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=1000&auto=format&fit=crop',
+        id: 'corp-waste',
+        title: 'Déchetterie',
+        description: 'Gestão sustentável de resíduos, coleta seletiva e descarte certificado de materiais corporativos.',
+        tag: 'Sustentabilidade',
+        imageUrl: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?q=80&w=1000&auto=format&fit=crop',
+        category: Category.CORPORATIVO
+    },
+    {
+        id: 'corp-office-staff',
+        title: 'Profissionais para Escritório',
+        description: 'Suporte diário para copa, organização de mesas, limpeza de banheiros e manutenção da ordem no ambiente de trabalho.',
+        tag: 'Suporte Operacional',
+        imageUrl: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1000&auto=format&fit=crop',
         category: Category.CORPORATIVO
     }
 ];

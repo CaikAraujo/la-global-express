@@ -64,9 +64,8 @@ export const CleaningForm: React.FC<CleaningFormProps> = ({ onUpdate, showExtras
             detailsText = `Passadoria - ${state.ironingHours}h (Estimado ${minPieces}-${maxPieces} peças)`;
         } else {
             // Cleaning Logic
-            let basePrice = 120;
-            if (state.serviceCategory === 'heavy') basePrice = 200;
-
+            let basePrice = 560;
+            if (state.serviceCategory === 'heavy') basePrice = 640;
             if (state.serviceCategory === 'heavy') {
                 if (state.heavyType === 'move') basePrice += 100;
                 if (state.heavyType === 'construction') basePrice += 150;
@@ -74,12 +73,12 @@ export const CleaningForm: React.FC<CleaningFormProps> = ({ onUpdate, showExtras
 
             if (state.propertyType === 'house') basePrice *= 1.3;
 
-            const roomCost = (state.bedrooms * 40) + (state.bathrooms * 30);
-            total = basePrice + roomCost;
-
             const extraBedrooms = Math.max(0, state.bedrooms - 1);
             const extraBathrooms = Math.max(0, state.bathrooms - 1);
-            duration = 3 + extraBedrooms + extraBathrooms;
+
+            const roomCost = (extraBedrooms * 60) + (extraBathrooms * 70);
+            total = basePrice + roomCost;
+            duration = 4 + extraBedrooms + extraBathrooms;
 
             description = `${state.serviceCategory === 'standard' ? 'Limpeza Padrão' :
                 `Limpeza Pesada (${state.heavyType === 'routine' ? 'Rotina' : state.heavyType === 'move' ? 'Pré-mudança' : 'Pós-obra'})`} - ${state.propertyType === 'studio' ? 'Studio' : state.propertyType === 'apartment' ? 'Apartamento' : 'Casa'} (${state.bedrooms} quartos, ${state.bathrooms} banheiros)`;
@@ -148,7 +147,7 @@ export const CleaningForm: React.FC<CleaningFormProps> = ({ onUpdate, showExtras
 
         const extraBedrooms = Math.max(0, state.bedrooms - 1);
         const extraBathrooms = Math.max(0, state.bathrooms - 1);
-        let d = 3 + extraBedrooms + extraBathrooms;
+        let d = 4 + extraBedrooms + extraBathrooms;
         const extrasDuration = EXTRAS_OPTIONS.filter(e => state.extras.includes(e.id)).reduce((a, b) => a + b.duration, 0);
         return d + extrasDuration;
     };

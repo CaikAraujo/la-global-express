@@ -17,8 +17,8 @@ interface BookingFormProps {
 
 const FREQUENCY_OPTIONS = [
     { id: 'once', label: 'Uma vez', discount: 0 },
-    { id: 'weekly', label: 'Semanal', discount: 0.15 },
-    { id: 'biweekly', label: 'Quinzenal', discount: 0.10 },
+    { id: 'weekly', label: 'Semanal', discount: 0.20 },
+    { id: 'biweekly', label: 'Quinzenal', discount: 0.15 },
 ];
 
 const SERVICE_OPTIONS = [
@@ -80,7 +80,12 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
     // Lift state up whenever it changes
     useEffect(() => {
         if (formData.serviceId === 'res-cleaning') {
-            onUpdate(formData);
+            const discount = FREQUENCY_OPTIONS.find(f => f.id === formData.frequency)?.discount || 0;
+            const finalPrice = formData.price * (1 - discount);
+            onUpdate({
+                ...formData,
+                price: finalPrice
+            });
             return;
         }
 
@@ -170,6 +175,19 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
         });
     }, []);
 
+    const handleCleaningUpdate = useCallback((data: any) => {
+        setFormData(prev => {
+            if (prev.price === data.price && prev.duration === data.duration && JSON.stringify(prev.serviceDetails) === JSON.stringify(data.serviceDetails)) return prev;
+            return {
+                ...prev,
+                serviceDetails: data.serviceDetails,
+                price: data.price,
+                duration: data.duration,
+                isIroning: data.isIroning
+            };
+        });
+    }, []);
+
     if (currentStep === 1) {
         // Exclusive view for Cleaning Service
         if (formData.serviceId === 'res-cleaning') {
@@ -181,15 +199,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
                 >
                     <CleaningForm
                         showExtras={showExtras}
-                        onUpdate={(data) => {
-                            onUpdate({
-                                ...formData,
-                                serviceDetails: data.serviceDetails,
-                                price: data.price,
-                                duration: data.duration,
-                                isIroning: data.isIroning
-                            });
-                        }}
+                        onUpdate={handleCleaningUpdate}
                     />
 
                     {/* Option to switch service */}

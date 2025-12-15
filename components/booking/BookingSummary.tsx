@@ -64,7 +64,7 @@ export const BookingSummary: React.FC<BookingSummaryProps> = ({
                             </p>
                             {frequency !== 'Uma vez' && (
                                 <p className="text-xs text-green-600 font-bold bg-green-50 px-2 py-1 rounded-full inline-block mt-1">
-                                    {frequency === 'Semanal' ? '15%' : '10%'} OFF aplicado
+                                    {frequency === 'Semanal' ? '20%' : frequency === 'Quinzenal' ? '15%' : '10%'} OFF aplicado
                                 </p>
                             )}
                         </div>

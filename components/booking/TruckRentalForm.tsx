@@ -170,7 +170,13 @@ export const TruckRentalForm: React.FC<TruckRentalFormProps> = ({ onUpdate, show
                     {TRUCK_OPTIONS.map(truck => (
                         <div
                             key={truck.id}
-                            onClick={() => setSelectedTruck(truck.id)}
+                            onClick={() => {
+                                if (selectedTruck === truck.id && !truck.isFixedPrice) {
+                                    setPeriod(prev => prev === 4 ? 8 : 4);
+                                } else {
+                                    setSelectedTruck(truck.id);
+                                }
+                            }}
                             className={`
                                 relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-200
                                 ${selectedTruck === truck.id
@@ -194,10 +200,10 @@ export const TruckRentalForm: React.FC<TruckRentalFormProps> = ({ onUpdate, show
                                                 </span>
                                             ) : (
                                                 <>
-                                                    <span className="block text-sm font-bold text-brand-red">
-                                                        CHF {truck.price4h} <span className="text-xs font-normal text-gray-500">/ 4h</span>
+                                                    <span className={`block ${selectedTruck === truck.id ? (period === 4 ? 'text-sm font-bold text-brand-red' : 'text-xs text-gray-400') : 'text-sm font-bold text-brand-red'}`}>
+                                                        CHF {truck.price4h} <span className={`text-xs font-normal ${selectedTruck === truck.id ? (period === 4 ? 'text-gray-500' : 'text-gray-400') : 'text-gray-500'}`}>/ 4h</span>
                                                     </span>
-                                                    <span className="block text-xs text-gray-400">
+                                                    <span className={`block ${selectedTruck === truck.id ? (period === 8 ? 'text-sm font-bold text-brand-red' : 'text-xs text-gray-400') : 'text-xs text-gray-400'}`}>
                                                         CHF {truck.price8h} / 8h
                                                     </span>
                                                 </>
@@ -218,26 +224,7 @@ export const TruckRentalForm: React.FC<TruckRentalFormProps> = ({ onUpdate, show
             </div>
 
             <div className="space-y-6">
-                {/* Hide period selector for fixed price items (like Car 24h) */}
-                {!TRUCK_OPTIONS.find(t => t.id === selectedTruck)?.isFixedPrice && (
-                    <div>
-                        <label className="text-xs font-bold uppercase tracking-widest text-gray-500 block mb-3">2. Período de Uso</label>
-                        <div className="grid grid-cols-2 gap-4">
-                            <button
-                                onClick={() => setPeriod(4)}
-                                className={`p-4 rounded-xl border-2 transition-all ${period === 4 ? 'border-brand-red bg-red-50 text-brand-dark font-bold' : 'border-gray-100 text-gray-600'}`}
-                            >
-                                Meia Diária (4h)
-                            </button>
-                            <button
-                                onClick={() => setPeriod(8)}
-                                className={`p-4 rounded-xl border-2 transition-all ${period === 8 ? 'border-brand-red bg-red-50 text-brand-dark font-bold' : 'border-gray-100 text-gray-600'}`}
-                            >
-                                Diária Completa (8h)
-                            </button>
-                        </div>
-                    </div>
-                )}
+
 
                 <div>
                     <div className="flex justify-between mb-3">

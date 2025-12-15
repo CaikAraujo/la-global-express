@@ -310,19 +310,7 @@ export const DateTimeSelection: React.FC<DateTimeSelectionProps> = ({
                         </div>
                     </div>
 
-                    <div className="bg-blue-50 text-blue-800 text-sm p-4 rounded-xl flex gap-3 items-start border border-blue-100">
-                        <Info size={18} className="shrink-0 mt-0.5 text-blue-600" />
-                        <p className="text-xs leading-relaxed">
-                            Agendamentos para <strong>{format(selectedDateObj, "dd 'de' MMMM", { locale: ptBR })}</strong>
-                            {isSameDay(selectedDateObj, startOfToday())
-                                ? ' possuem taxa de urgência.'
-                                : ' estão com preço normal.'
-                            }
-                            <span className="block mt-1 text-blue-600 underline cursor-pointer font-bold hover:text-blue-800 text-[10px] uppercase tracking-wide">
-                                Ver política de reagendamento
-                            </span>
-                        </p>
-                    </div>
+
                 </div>
 
                 {/* Time Picker */}
