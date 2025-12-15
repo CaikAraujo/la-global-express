@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Truck, Box, Clock, Fuel, Info, CheckCircle2, User, Package, ShoppingCart } from 'lucide-react';
+import { Truck, Box, Clock, Fuel, Info, CheckCircle2, User, Package, ShoppingCart, Car } from 'lucide-react';
 
 interface TruckOption {
     id: string;
@@ -8,32 +8,38 @@ interface TruckOption {
     capacity: string;
     basePrice: number;
     hourlyRate: number;
+    icon: any;
+    isFixedPrice?: boolean;
 }
 
 const TRUCK_OPTIONS = [
     {
-        id: 'small',
-        name: 'Furgão / Utilitário',
+        id: 'car',
+        name: 'Carro',
+        description: 'Pequenos volumes e caixas.',
+        capacity: 'Até 400kg • 1.5m³',
+        price4h: 80,
+        price8h: 80,
+        isFixedPrice: true,
+        icon: Car
+    },
+    {
+        id: 'van',
+        name: 'Furgão',
         description: 'Ideal para pequenas cargas e caixas.',
         capacity: 'Até 600kg • 3m³',
-        price4h: 80,
-        price8h: 120
+        price4h: 120,
+        price8h: 220,
+        icon: Truck
     },
     {
-        id: 'medium',
-        name: 'Caminhão 3/4',
+        id: 'truck',
+        name: 'Caminhão',
         description: 'Mudanças de apartamentos médios.',
         capacity: 'Até 3.500kg • 15m³',
-        price4h: 120,
-        price8h: 220
-    },
-    {
-        id: 'large',
-        name: 'Caminhão Toco',
-        description: 'Grandes mudanças e móveis pesados.',
-        capacity: 'Até 6.000kg • 35m³',
         price4h: 150,
-        price8h: 280
+        price8h: 280,
+        icon: Truck
     }
 ];
 
@@ -52,7 +58,7 @@ interface TruckRentalFormProps {
 }
 
 export const TruckRentalForm: React.FC<TruckRentalFormProps> = ({ onUpdate, showExtras = false }) => {
-    const [selectedTruck, setSelectedTruck] = useState<string>('medium');
+    const [selectedTruck, setSelectedTruck] = useState<string>('car');
     const [period, setPeriod] = useState<number>(8); // 4 or 8
     const [extraHours, setExtraHours] = useState<number>(0);
     const [extras, setExtras] = useState<string[]>([]);
@@ -62,7 +68,12 @@ export const TruckRentalForm: React.FC<TruckRentalFormProps> = ({ onUpdate, show
         if (!truck) return;
 
         // Base price from pack
-        let totalPrice = period === 4 ? truck.price4h : truck.price8h;
+        let totalPrice = 0;
+        if (truck.isFixedPrice) {
+            totalPrice = truck.price4h; // Fixed price uses price4h field
+        } else {
+            totalPrice = period === 4 ? truck.price4h : truck.price8h;
+        }
 
         // Extra hours (30 CHF)
         totalPrice += extraHours * 30;
@@ -72,9 +83,9 @@ export const TruckRentalForm: React.FC<TruckRentalFormProps> = ({ onUpdate, show
         const extrasCost = selectedExtras.reduce((acc, curr) => acc + curr.price, 0);
         totalPrice += extrasCost;
 
-        const totalDuration = period + extraHours;
+        const totalDuration = truck.isFixedPrice ? 24 + extraHours : period + extraHours;
 
-        let details = `Veículo: ${truck.name} (${period}h)`;
+        let details = `Veículo: ${truck.name} (${truck.isFixedPrice ? '24h' : period + 'h'})`;
         if (extraHours > 0) details += ` + ${extraHours}h extras`;
         if (selectedExtras.length > 0) {
             details += `\nExtras: ${selectedExtras.map(e => e.label).join(', ')}`;
@@ -169,7 +180,7 @@ export const TruckRentalForm: React.FC<TruckRentalFormProps> = ({ onUpdate, show
                         >
                             <div className="flex items-start gap-4">
                                 <div className={`p-3 rounded-lg ${selectedTruck === truck.id ? 'bg-brand-red text-white' : 'bg-gray-100 text-gray-400'}`}>
-                                    <Truck size={24} />
+                                    <truck.icon size={24} />
                                 </div>
                                 <div className="flex-1">
                                     <div className="flex justify-between items-start">
@@ -177,12 +188,20 @@ export const TruckRentalForm: React.FC<TruckRentalFormProps> = ({ onUpdate, show
                                             {truck.name}
                                         </h3>
                                         <div className="text-right">
-                                            <span className="block text-sm font-bold text-brand-red">
-                                                CHF {truck.price4h} <span className="text-xs font-normal text-gray-500">/ 4h</span>
-                                            </span>
-                                            <span className="block text-xs text-gray-400">
-                                                CHF {truck.price8h} / 8h
-                                            </span>
+                                            {truck.isFixedPrice ? (
+                                                <span className="block text-sm font-bold text-brand-red">
+                                                    CHF {truck.price4h} <span className="text-xs font-normal text-gray-500">/ 24h</span>
+                                                </span>
+                                            ) : (
+                                                <>
+                                                    <span className="block text-sm font-bold text-brand-red">
+                                                        CHF {truck.price4h} <span className="text-xs font-normal text-gray-500">/ 4h</span>
+                                                    </span>
+                                                    <span className="block text-xs text-gray-400">
+                                                        CHF {truck.price8h} / 8h
+                                                    </span>
+                                                </>
+                                            )}
                                         </div>
                                     </div>
                                     <p className="text-sm text-gray-500 mt-1">{truck.description}</p>
@@ -199,23 +218,26 @@ export const TruckRentalForm: React.FC<TruckRentalFormProps> = ({ onUpdate, show
             </div>
 
             <div className="space-y-6">
-                <div>
-                    <label className="text-xs font-bold uppercase tracking-widest text-gray-500 block mb-3">2. Período de Uso</label>
-                    <div className="grid grid-cols-2 gap-4">
-                        <button
-                            onClick={() => setPeriod(4)}
-                            className={`p-4 rounded-xl border-2 transition-all ${period === 4 ? 'border-brand-red bg-red-50 text-brand-dark font-bold' : 'border-gray-100 text-gray-600'}`}
-                        >
-                            Meia Diária (4h)
-                        </button>
-                        <button
-                            onClick={() => setPeriod(8)}
-                            className={`p-4 rounded-xl border-2 transition-all ${period === 8 ? 'border-brand-red bg-red-50 text-brand-dark font-bold' : 'border-gray-100 text-gray-600'}`}
-                        >
-                            Diária Completa (8h)
-                        </button>
+                {/* Hide period selector for fixed price items (like Car 24h) */}
+                {!TRUCK_OPTIONS.find(t => t.id === selectedTruck)?.isFixedPrice && (
+                    <div>
+                        <label className="text-xs font-bold uppercase tracking-widest text-gray-500 block mb-3">2. Período de Uso</label>
+                        <div className="grid grid-cols-2 gap-4">
+                            <button
+                                onClick={() => setPeriod(4)}
+                                className={`p-4 rounded-xl border-2 transition-all ${period === 4 ? 'border-brand-red bg-red-50 text-brand-dark font-bold' : 'border-gray-100 text-gray-600'}`}
+                            >
+                                Meia Diária (4h)
+                            </button>
+                            <button
+                                onClick={() => setPeriod(8)}
+                                className={`p-4 rounded-xl border-2 transition-all ${period === 8 ? 'border-brand-red bg-red-50 text-brand-dark font-bold' : 'border-gray-100 text-gray-600'}`}
+                            >
+                                Diária Completa (8h)
+                            </button>
+                        </div>
                     </div>
-                </div>
+                )}
 
                 <div>
                     <div className="flex justify-between mb-3">
