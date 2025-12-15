@@ -29,9 +29,7 @@ const Hero = () => {
                                 Agendar Consultoria
                                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                             </button>
-                            <button className="px-8 py-4 text-sm font-bold uppercase tracking-wider text-brand-dark border border-gray-200 hover:bg-brand-dark hover:text-white hover:border-brand-dark transition-all duration-300 rounded-lg">
-                                Baixar Apresentação
-                            </button>
+
                         </div>
                     </div>
 
