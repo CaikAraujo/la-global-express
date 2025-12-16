@@ -10,27 +10,27 @@ const Services = () => {
     const services = [
         {
             id: "01",
-            title: "Gestão Técnica Predial",
-            desc: "Manutenção preventiva e corretiva de sistemas elétricos, hidráulicos e HVAC com relatórios em tempo real via app proprietário.",
-            image: "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=1000&auto=format&fit=crop" // Industrial/Technical
+            title: "Concierge",
+            desc: "Serviços de recepção executiva, gestão de acessos e suporte administrativo premium para seu escritório.",
+            image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1000&auto=format&fit=crop"
         },
         {
             id: "02",
-            title: "Limpeza Corporativa",
-            desc: "Protocolos hospitalares aplicados a escritórios. Produtos ecológicos e equipes treinadas para ambientes de alto tráfego.",
-            image: "/corporate-cleaning.png" // Generated image
+            title: "Limpeza Industrial",
+            desc: "Equipes especializadas para grandes áreas, galpões e escritórios de grande porte com maquinário específico.",
+            image: "/corporate-cleaning.png"
         },
         {
             id: "03",
-            title: "Segurança & Acesso",
-            desc: "Portaria remota e presencial, monitoramento 24/7 e análise de risco patrimonial com integração tecnológica.",
-            image: "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=1000&auto=format&fit=crop" // Surveillance/Tech
+            title: "Déchetterie",
+            desc: "Gestão sustentável de resíduos, coleta seletiva e descarte certificado de materiais corporativos.",
+            image: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?q=80&w=1000&auto=format&fit=crop"
         },
         {
             id: "04",
-            title: "Consultoria de Eficiência",
-            desc: "Análise profunda dos custos operacionais da sua planta e implementação de planos de redução de desperdícios (Lean FM).",
-            image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1000&auto=format&fit=crop" // Strategy/Planning
+            title: "Profissionais para Escritório",
+            desc: "Suporte diário para copa, organização de mesas, limpeza de banheiros e manutenção da ordem no ambiente de trabalho.",
+            image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1000&auto=format&fit=crop"
         }
     ];
 
@@ -40,7 +40,7 @@ const Services = () => {
         if (!isPaused) {
             interval = setInterval(() => {
                 setActiveService((prev) => (prev + 1) % services.length);
-            }, 1500);
+            }, 5000);
         }
 
         return () => clearInterval(interval);
@@ -118,7 +118,7 @@ const Services = () => {
 
                                 {/* Progress Bar for Auto Play */}
                                 {!isPaused && activeService === index && (
-                                    <div className="absolute bottom-0 left-0 h-1 bg-brand-red animate-[width_1.5s_linear_forwards] w-full origin-left"></div>
+                                    <div className="absolute bottom-0 left-0 h-1 bg-brand-red animate-[width_5s_linear_forwards] w-full origin-left"></div>
                                 )}
                             </div>
                         ))}

@@ -48,6 +48,12 @@ export default {
             animation: {
                 'infinite-scroll': 'scroll 30s linear infinite',
             },
+            keyframes: {
+                width: {
+                    '0%': { width: '0%' },
+                    '100%': { width: '100%' },
+                }
+            },
         }
     },
     plugins: [],

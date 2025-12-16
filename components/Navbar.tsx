@@ -26,18 +26,12 @@ const Navbar: React.FC = () => {
             onClick={closeMenu}
             className="flex items-center gap-3 cursor-pointer group"
           >
-            <div className="relative w-10 h-10 flex-shrink-0">
-              <div className="absolute top-0 left-0 w-3 h-3 border-t-4 border-l-4 border-brand-600"></div>
-              <div className="absolute top-0 right-0 w-3 h-3 border-t-4 border-r-4 border-brand-600"></div>
-              <div className="absolute bottom-0 left-0 w-3 h-3 border-b-4 border-l-4 border-brand-600"></div>
-              <div className="absolute bottom-0 right-0 w-3 h-3 border-b-4 border-r-4 border-brand-600"></div>
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="w-2 h-2 bg-brand-600 rounded-full"></div>
-              </div>
+            <div className="relative w-12 h-12 flex-shrink-0">
+              <img src="/icon-express.svg" alt="La Global Express" className="w-full h-full object-contain" />
             </div>
-            <div className="flex flex-col leading-none">
-              <span className="text-lg font-black tracking-widest text-gray-900">LA GLOBAL</span>
-              <span className="text-[10px] font-bold tracking-[0.2em] text-gray-500 uppercase">EXPRESS</span>
+            <div className="flex flex-col leading-none justify-center">
+              <span className="text-2xl font-black tracking-widest text-gray-900">LA GLOBAL</span>
+              <span className="text-xs font-bold tracking-[0.2em] text-brand-600 uppercase">EXPRESS</span>
             </div>
           </Link>
 
@@ -83,7 +77,10 @@ const Navbar: React.FC = () => {
             <Link href="/about" onClick={closeMenu} className="font-bold text-gray-900 uppercase tracking-wider cursor-pointer">Sobre Nós</Link>
             <Link href="/contact" onClick={closeMenu} className="font-bold text-gray-900 uppercase tracking-wider cursor-pointer">Contato</Link>
             <hr className="border-gray-200" />
-            <Link href="/contact" onClick={closeMenu} className="w-full text-center px-6 py-3 bg-brand-600 text-white font-bold uppercase rounded-lg">Solicitar Orçamento</Link>
+            <Link href="/contact" onClick={closeMenu} className="w-full text-center px-6 py-3 bg-brand-600 text-white font-bold uppercase rounded-lg">
+              <img src="/icon-express.svg" alt="La Global Express" className="w-full h-full object-contain" />
+              Solicitar Orçamento
+            </Link>
           </div>
         </div>
       )}
