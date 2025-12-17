@@ -134,6 +134,7 @@ export const DateTimeSelection: React.FC<DateTimeSelectionProps> = ({
     }, [date]);
 
     // Fetch availability when date OR service changes
+    // Fetch availability when date OR service changes
     React.useEffect(() => {
         const fetchSlots = async () => {
             if (!date) return;
@@ -144,6 +145,24 @@ export const DateTimeSelection: React.FC<DateTimeSelectionProps> = ({
         };
         fetchSlots();
     }, [date, serviceName]);
+
+    // Auto-scroll effect (Top level)
+    React.useEffect(() => {
+        if (!date) return;
+        const dateId = `date-card-${date}`;
+        // Small timeout to allow DOM to settle
+        const timer = setTimeout(() => {
+            const el = document.getElementById(dateId);
+            if (el) {
+                el.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest',
+                    inline: 'center'
+                });
+            }
+        }, 100);
+        return () => clearTimeout(timer);
+    }, [date]);
 
     // Logic: "One team for each time slot".
     // This means bookings are independent. A 4h job at 08:00 blocks ONLY 08:00.
@@ -174,9 +193,23 @@ export const DateTimeSelection: React.FC<DateTimeSelectionProps> = ({
     const currentPlan = FREQUENCY_OPTIONS.find(f => f.id === frequency);
 
     const handleCustomDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value) {
-            onUpdate('date', e.target.value);
+        const val = e.target.value;
+        if (!val) return;
+
+        // Prevent selecting past dates manually
+        const [y, m, d] = val.split('-').map(Number);
+        const selected = new Date(y, m - 1, d); // Construct Local Date
+        const today = startOfToday();
+
+        // Reset time parts for comparison just to be safe (though startOfToday is 00:00)
+        // If selected is before today, do nothing or alert? 
+        // Better to just not update or reset to today.
+        if (selected < today) {
+            // Optional: alert("Não é possível agendar para datas passadas.");
+            return;
         }
+
+        onUpdate('date', val);
     };
 
     const handleDateClick = (d: Date) => {
@@ -259,6 +292,7 @@ export const DateTimeSelection: React.FC<DateTimeSelectionProps> = ({
 
                 {/* Date Picker */}
                 <div className="md:col-span-7 space-y-4">
+
                     <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
                             <CalendarIcon className="text-brand-red" size={20} />
@@ -273,7 +307,7 @@ export const DateTimeSelection: React.FC<DateTimeSelectionProps> = ({
                             <input
                                 ref={dateInputRef}
                                 type="date"
-                                min={format(new Date(), 'yyyy-MM-dd')}
+                                min={format(startOfToday(), 'yyyy-MM-dd')}
                                 className="absolute inset-0 opacity-0 pointer-events-none"
                                 onChange={handleCustomDateChange}
                             />
@@ -321,13 +355,18 @@ export const DateTimeSelection: React.FC<DateTimeSelectionProps> = ({
                             )}
 
                             {/* Standard List */}
+                            {/* Standard List */}
                             {next14Days.map((d, index) => {
                                 const isSelected = isSameDay(d, selectedDateObj);
                                 const isToday = isSameDay(d, startOfToday());
+                                const dateId = `date-card-${format(d, 'yyyy-MM-dd')}`;
+
+
 
                                 return (
                                     <button
                                         key={index}
+                                        id={dateId}
                                         onClick={() => handleDateClick(d)}
                                         className={`
                       shrink-0 flex flex-col items-center justify-center rounded-2xl border transition-all duration-300
@@ -362,7 +401,14 @@ export const DateTimeSelection: React.FC<DateTimeSelectionProps> = ({
                         </div>
                         {time && (
                             <span className="text-xs font-medium text-brand-red animate-in fade-in bg-red-50 px-2 py-1 rounded-md">
-                                {TIME_SLOTS.find(t => t.id === time)?.range}
+                                {(() => {
+                                    const [h] = time.split(':').map(Number);
+                                    const endTotal = h + duration;
+                                    const endH = Math.floor(endTotal);
+                                    const endM = Math.round((endTotal % 1) * 60);
+                                    const endMStr = endM.toString().padStart(2, '0');
+                                    return `até ${endH}:${endMStr}`;
+                                })()}
                             </span>
                         )}
                     </div>
@@ -382,7 +428,7 @@ export const DateTimeSelection: React.FC<DateTimeSelectionProps> = ({
                                             ? 'bg-red-50 border-brand-red ring-1 ring-brand-red shadow-sm'
                                             : isBlocked
                                                 ? 'bg-gray-100 border-gray-100 opacity-50 cursor-not-allowed' // Disabled style
-                                                : 'bg-white border-gray-100 hover:border-brand-red/30 hover:shadow-sm'
+                                                : 'bg-white border-gray-100 hover:border-green-500/50 hover:bg-green-500/10 hover:shadow-sm'
                                         }
                   `}
                                 >
@@ -392,7 +438,7 @@ export const DateTimeSelection: React.FC<DateTimeSelectionProps> = ({
                                         </span>
                                         {isActive
                                             ? <div className="w-2 h-2 rounded-full bg-brand-red transition-transform" />
-                                            : <div className="w-2 h-2 rounded-full bg-gray-200 group-hover:bg-brand-red/30 transition-colors" />
+                                            : <div className="w-2 h-2 rounded-full bg-gray-200 group-hover:bg-green-500/30 transition-colors" />
                                         }
                                     </div>
 
@@ -440,23 +486,7 @@ export const DateTimeSelection: React.FC<DateTimeSelectionProps> = ({
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">Onde será o serviço?</h2>
 
                 <div className="grid md:grid-cols-12 gap-4">
-                    <div className="md:col-span-4 relative group">
-                        <select
-                            value={canton}
-                            onChange={(e) => onUpdate('canton', e.target.value)}
-                            className="w-full bg-white border border-gray-200 text-gray-900 rounded-xl py-4 pl-4 pr-8 focus:outline-none focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all shadow-sm hover:border-gray-300 appearance-none cursor-pointer"
-                        >
-                            <option value="">Selecione o Cantão</option>
-                            {CANTONS.map(c => (
-                                <option key={c.id} value={c.id}>{c.name}</option>
-                            ))}
-                        </select>
-                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                        </div>
-                    </div>
-
-                    <div className="md:col-span-8 relative group">
+                    <div className="md:col-span-12 relative group">
                         <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-red transition-colors" size={20} />
                         <input
                             type="text"

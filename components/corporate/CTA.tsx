@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Phone, ArrowRight, Mail, Send } from 'lucide-react';
+import Link from 'next/link';
 
 const CTA: React.FC = () => {
     return (
@@ -55,10 +56,10 @@ const CTA: React.FC = () => {
                             </div>
 
                             {/* Main CTA Button */}
-                            <button className="flex-1 sm:flex-none px-8 py-4 bg-brand-red text-white font-bold rounded-lg hover:bg-red-600 transition-colors shadow-lg shadow-brand-red/25 flex items-center justify-center gap-2 group">
+                            <Link href="/contact" className="flex-1 sm:flex-none px-8 py-4 bg-brand-red text-white font-bold rounded-lg hover:bg-red-600 transition-colors shadow-lg shadow-brand-red/25 flex items-center justify-center gap-2 group">
                                 SOLICITAR ORÇAMENTO
                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                            </button>
+                            </Link>
                         </motion.div>
                     </div>
 

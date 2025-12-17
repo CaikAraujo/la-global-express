@@ -9,6 +9,13 @@ interface BookingSummaryProps {
     step: number;
     onNext: () => void;
     canProceed: boolean;
+    items?: {
+        id: string;
+        name: string;
+        price: number;
+        duration: number;
+        description?: string;
+    }[];
 }
 
 export const BookingSummary: React.FC<BookingSummaryProps> = ({
@@ -18,55 +25,83 @@ export const BookingSummary: React.FC<BookingSummaryProps> = ({
     price,
     step,
     onNext,
-    canProceed
+    canProceed,
+    items = []
 }) => {
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sticky top-24">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sticky top-24 max-h-[calc(100vh-120px)] overflow-y-auto">
             <h3 className="font-bold text-gray-900 mb-6 flex items-center gap-2">
                 <span className="w-1 h-6 bg-brand-red rounded-full"></span>
                 Resumo do Pedido
             </h3>
 
-            <div className="space-y-4 mb-8">
-                {/* Service */}
-                <div className="flex justify-between items-start pb-4 border-b border-gray-50">
-                    <div>
-                        <p className="text-xs text-gray-400 uppercase font-bold tracking-wider mb-1">Serviço</p>
-                        <p className="font-medium text-gray-900">{serviceName || 'Selecione...'}</p>
-                    </div>
+            <div className="space-y-6 mb-8">
+                {/* Services List */}
+                <div className="space-y-4">
+                    {items && items.length > 0 ? (
+                        items.map((item, idx) => (
+                            <div key={item.id + idx} className="flex flex-col gap-1 pb-4 border-b border-gray-50 last:border-0 last:pb-0">
+                                <div className="flex justify-between items-start">
+                                    <p className="font-bold text-gray-900 text-sm">{item.name}</p>
+                                    <p className="font-bold text-gray-900 text-sm">CHF {item.price}</p>
+                                </div>
+                                {item.description && (
+                                    <div className="text-xs text-gray-500 mt-1 space-y-1">
+                                        {item.description.split(/(?:\n \+ |\n\+ | \+ )/g).map((part, i) => (
+                                            <p key={i} className="leading-relaxed">
+                                                {part.trim().startsWith('+') ? part.trim().substring(1).trim() : part.trim()}
+                                            </p>
+                                        ))}
+                                    </div>
+                                )}
+                                {item.duration > 0 && (
+                                    <div className="flex items-center gap-1.5 text-xs text-brand-red font-medium mt-1">
+                                        <Clock size={12} />
+                                        <span>{item.duration}h estimado</span>
+                                    </div>
+                                )}
+                            </div>
+                        ))
+                    ) : (
+                        <div className="flex justify-between items-start pb-4 border-b border-gray-50">
+                            <div>
+                                <p className="text-xs text-gray-400 uppercase font-bold tracking-wider mb-1">Serviço</p>
+                                <p className="font-medium text-gray-900">{serviceName || 'Selecione...'}</p>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
-                {/* Duration/Frequency */}
-                <div className="flex justify-between items-start pb-4 border-b border-gray-50">
-                    <div>
-                        <p className="text-xs text-gray-400 uppercase font-bold tracking-wider mb-1">Duração</p>
-                        <div className="flex items-center gap-2 text-gray-700">
-                            <Clock size={16} className="text-brand-red" />
-                            <span>{duration} horas</span>
+                {/* Totals Section */}
+                <div className="bg-gray-50 rounded-xl p-4 space-y-3">
+                    {duration > 0 && (
+                        <div className="flex justify-between items-center text-sm">
+                            <span className="text-gray-500">Duração Total</span>
+                            <span className="font-bold text-gray-900 flex items-center gap-1">
+                                <Clock size={14} className="text-brand-red" />
+                                {duration} horas
+                            </span>
                         </div>
-                    </div>
-                    <div className="text-right">
-                        <p className="text-xs text-gray-400 uppercase font-bold tracking-wider mb-1">Frequência</p>
-                        <div className="flex items-center gap-2 justify-end text-gray-700">
-                            <Calendar size={16} className="text-brand-red" />
-                            <span>{frequency}</span>
-                        </div>
-                    </div>
-                </div>
+                    )}
 
-                {/* Total */}
-                <div className="pt-2">
-                    <div className="flex justify-between items-end mb-1">
-                        <p className="text-sm font-bold text-gray-500">Total Estimado</p>
-                        <div className="text-right">
-                            <p className="text-3xl font-display font-bold text-brand-dark">
-                                CHF {price.toFixed(2)}
-                            </p>
-                            {frequency !== 'Uma vez' && (
-                                <p className="text-xs text-green-600 font-bold bg-green-50 px-2 py-1 rounded-full inline-block mt-1">
-                                    {frequency === 'Semanal' ? '20%' : frequency === 'Quinzenal' ? '15%' : '10%'} OFF aplicado
+                    <div className="flex justify-between items-center text-sm">
+                        <span className="text-gray-500">Frequência</span>
+                        <span className="font-bold text-gray-900">{frequency}</span>
+                    </div>
+
+                    <div className="pt-3 border-t border-gray-200 mt-2">
+                        <div className="flex justify-between items-end">
+                            <span className="text-sm font-bold text-gray-600">Total Estimado</span>
+                            <div className="text-right">
+                                <p className="text-2xl font-display font-bold text-brand-dark">
+                                    CHF {price.toFixed(2)}
                                 </p>
-                            )}
+                                {frequency !== 'Uma vez' && (
+                                    <p className="text-[10px] text-green-600 font-bold bg-green-100 px-2 py-0.5 rounded-full inline-block mt-1">
+                                        {frequency === 'Semanal' ? '20%' : frequency === 'Quinzenal' ? '15%' : '10%'} OFF
+                                    </p>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -22,10 +22,10 @@ const FREQUENCY_OPTIONS = [
 ];
 
 const SERVICE_OPTIONS = [
-    { id: 'res-truck-rental', label: 'Aluguel de Caminhão', basePrice: 450 },
-    { id: 'res-material', label: 'Fornecimento de Material', basePrice: 200 },
-    { id: 'res-cleaning', label: 'Limpeza Executiva', basePrice: 180 },
-    { id: 'res-assembly', label: 'Montagem Técnica', basePrice: 150 },
+    { id: 'res-truck-rental', label: 'Veículos para Mudança', basePrice: 80, description: 'Carros, Furgões e Caminhões' },
+    { id: 'res-material', label: 'Fornecimento de Material', basePrice: 10, description: 'Caixas, Fitas e Proteção' },
+    { id: 'res-cleaning', label: 'Limpeza Executiva', basePrice: 180, description: 'Residencial e Comercial' },
+    { id: 'res-assembly', label: 'Montagem Técnica', basePrice: 150, description: 'Móveis e Equipamentos' },
 ];
 
 export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep, showExtras }) => {
@@ -59,285 +59,269 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
         'JU': 120
     };
 
+    const [activeServices, setActiveServices] = useState<string[]>([]);
+    const [servicesData, setServicesData] = useState<Record<string, any>>({});
+    const [isAddingService, setIsAddingService] = useState(false);
     const [isEditingAddress, setIsEditingAddress] = useState(false);
-
-    useEffect(() => {
-        const serviceParam = searchParams?.get('service');
-        if (serviceParam) {
-            // Simple match logic
-            const found = SERVICE_OPTIONS.find(s => s.label.toLowerCase() === serviceParam.toLowerCase())
-                || SERVICE_OPTIONS.find(s => serviceParam.toLowerCase().includes(s.label.toLowerCase()));
-
-            if (found) {
-                setFormData(prev => ({ ...prev, serviceId: found.id, serviceName: found.label }));
-            } else {
-                // Default fallback if param exists but no match
-                setFormData(prev => ({ ...prev, serviceName: serviceParam }));
-            }
-        }
-    }, [searchParams]);
-
-    // Lift state up whenever it changes
-    useEffect(() => {
-        if (formData.serviceId === 'res-cleaning') {
-            const discount = FREQUENCY_OPTIONS.find(f => f.id === formData.frequency)?.discount || 0;
-            const finalPrice = formData.price * (1 - discount);
-            onUpdate({
-                ...formData,
-                price: finalPrice
-            });
-            return;
-        }
-
-        if (formData.serviceId === 'res-truck-rental') {
-            // Truck rental handles its own price via TruckRentalForm -> onUpdate (via prop or local wrapper?)
-            // Actually, TruckRentalForm calls onUpdate which updates local state? 
-            // Wait, I didn't change TruckRentalForm handler yet. It still calls prop onUpdate.
-            // But let's assume it works for now or change it later.
-            // For now, prevent generic calc overwriting it.
-            onUpdate(formData);
-            return;
-        }
-
-        if (formData.serviceId === 'res-material') {
-            const deliveryFee = DELIVERY_FEES[formData.canton] || 0;
-            const finalPrice = (formData.materialsTotal || 0) + deliveryFee;
-
-            // Only update if price changed to avoid loops
-            if (finalPrice !== formData.price) {
-                onUpdate({
-                    ...formData,
-                    price: finalPrice
-                });
-            } else {
-                onUpdate(formData);
-            }
-            return;
-        }
-
-        if (formData.serviceId === 'res-assembly') {
-            onUpdate(formData); // Trust AssemblyForm price
-            return;
-        }
-
-        const selectedService = SERVICE_OPTIONS.find(s => s.id === formData.serviceId);
-        const basePrice = selectedService ? selectedService.basePrice : 150;
-        const discount = FREQUENCY_OPTIONS.find(f => f.id === formData.frequency)?.discount || 0;
-
-        // Simple logic: Base + (Duration * Hourly Rate) - Discount
-        const finalPrice = (basePrice + (formData.duration * 50)) * (1 - discount);
-
-        onUpdate({
-            ...formData,
-            price: finalPrice
-        });
-    }, [formData, onUpdate]);
 
     const handleInputChange = (field: string, value: any) => {
         setFormData(prev => ({ ...prev, [field]: value }));
     };
 
-    const handleAssemblyUpdate = useCallback((data: any) => {
-        setFormData(prev => {
-            if (prev.price === data.price && prev.duration === data.duration && JSON.stringify(prev.serviceDetails) === JSON.stringify(data.serviceDetails)) return prev;
-            return {
-                ...prev,
-                serviceDetails: data.serviceDetails,
-                price: data.price,
-                duration: data.duration
-            };
+    useEffect(() => {
+        const serviceParam = searchParams?.get('service');
+        if (serviceParam && activeServices.length === 0) {
+            const found = SERVICE_OPTIONS.find(s => s.label.toLowerCase() === serviceParam.toLowerCase())
+                || SERVICE_OPTIONS.find(s => serviceParam.toLowerCase().includes(s.label.toLowerCase()));
+
+            if (found) {
+                setActiveServices([found.id]);
+                setFormData(prev => ({ ...prev, serviceId: found.id, serviceName: found.label }));
+            }
+        }
+    }, [searchParams]);
+
+    // Aggregate Data
+    useEffect(() => {
+        let totalPrice = 0;
+        let totalDuration = 0;
+        let allDetails: any[] = [];
+        let items: any[] = [];
+        let primaryService = activeServices[0];
+
+        activeServices.forEach(serviceId => {
+            const data = servicesData[serviceId];
+            if (!data) return;
+
+            let servicePrice = data.price || 0;
+            const originalPrice = servicePrice;
+
+            // Apply specific logic (moved from previous useEffect)
+            if (serviceId === 'res-cleaning') {
+                const discount = FREQUENCY_OPTIONS.find(f => f.id === formData.frequency)?.discount || 0;
+                servicePrice = servicePrice * (1 - discount);
+            }
+
+            if (serviceId === 'res-material') {
+                const deliveryFee = DELIVERY_FEES[formData.canton] || 0;
+                // Avoid double counting delivery if needed? 
+                // Logic: Material price + Delivery.
+                // If Cleaning is also present, maybe delivery is shared?
+                // For now, keep it simple: Add delivery fee.
+                servicePrice = (data.price || 0) + deliveryFee;
+            }
+
+            totalPrice += servicePrice;
+
+            // Exclude Truck Rental and Material Supply validation from main schedule duration
+            // These services run in parallel or are deliveries, not main appointments
+            if (serviceId !== 'res-truck-rental' && serviceId !== 'res-material') {
+                const rawDuration = data.duration || 0;
+                const numericDuration = typeof rawDuration === 'string'
+                    ? parseFloat(rawDuration.replace(',', '.'))
+                    : Number(rawDuration);
+
+                totalDuration += isNaN(numericDuration) ? 0 : numericDuration;
+            }
+
+            if (data.serviceDetails) {
+                // Format detail
+                allDetails.push(data.serviceDetails);
+            }
+
+            // [NEW] Add to items list
+            const serviceLabel = SERVICE_OPTIONS.find(s => s.id === serviceId)?.label || serviceId;
+            items.push({
+                id: serviceId,
+                name: serviceLabel,
+                price: servicePrice,
+                duration: data.duration || 0,
+                // Optional: add description from details if string
+                description: typeof data.serviceDetails === 'string' ? data.serviceDetails : data.serviceDetails?.description
+            });
         });
-    }, []);
 
-    const handleMaterialUpdate = useCallback((data: any) => {
-        setFormData(prev => {
-            // Avoid loop if price is same
-            if (prev.materialsTotal === data.price && JSON.stringify(prev.serviceDetails) === JSON.stringify(data.serviceDetails)) return prev;
-            return {
-                ...prev,
-                serviceDetails: data.serviceDetails,
-                price: data.price,
-                materialsTotal: data.price,
-                duration: 1
-            };
-        });
-    }, []);
-
-    const handleTruckUpdate = useCallback((data: any) => {
-        setFormData(prev => {
-            if (prev.price === data.price && prev.duration === data.duration && JSON.stringify(prev.serviceDetails) === JSON.stringify(data.serviceDetails)) return prev;
-            return {
-                ...prev,
-                serviceDetails: data.serviceDetails,
-                price: data.price,
-                duration: data.duration
-            };
-        });
-    }, []);
-
-    const handleCleaningUpdate = useCallback((data: any) => {
-        setFormData(prev => {
-            if (prev.price === data.price && prev.duration === data.duration && JSON.stringify(prev.serviceDetails) === JSON.stringify(data.serviceDetails)) return prev;
-            return {
-                ...prev,
-                serviceDetails: data.serviceDetails,
-                price: data.price,
-                duration: data.duration,
-                isIroning: data.isIroning
-            };
-        });
-    }, []);
-
-    if (currentStep === 1) {
-        // Exclusive view for Cleaning Service
-        if (formData.serviceId === 'res-cleaning') {
-            return (
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="space-y-6"
-                >
-                    <CleaningForm
-                        showExtras={showExtras}
-                        onUpdate={handleCleaningUpdate}
-                    />
-
-                    {/* Option to switch service */}
-                    <button
-                        onClick={() => handleInputChange('serviceId', '')}
-                        className="text-sm text-gray-400 hover:text-brand-dark underline block mx-auto pt-4"
-                    >
-                        Escolher outro serviço
-                    </button>
-                </motion.div>
-            );
+        // Ensure minimum duration of 1 hour if valid services are selected but duration is 0 (e.g. only Truck)
+        if (activeServices.length > 0 && totalDuration === 0) {
+            totalDuration = 1;
         }
 
-        // Exclusive view for Truck Rental
-        if (formData.serviceId === 'res-truck-rental') {
-            return (
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="space-y-6"
-                >
-                    <TruckRentalForm
-                        showExtras={showExtras}
-                        onUpdate={handleTruckUpdate}
-                    />
+        // Update FormData
+        // We defer updates to avoid render loops, only if changed
+        // But here we depend on servicesData which updates on child update.
+        // We need to be careful.
+        // Actually, just calling onUpdate from here is safer than child calling parent directly with total.
 
-                    {/* Option to switch service */}
-                    <button
-                        onClick={() => handleInputChange('serviceId', '')}
-                        className="text-sm text-gray-400 hover:text-brand-dark underline block mx-auto pt-4"
-                    >
-                        Escolher outro serviço
-                    </button>
-                </motion.div>
-            );
+        // Construct composite details string
+        let compositeDetails = "";
+        if (typeof allDetails[0] === 'string') {
+            compositeDetails = allDetails.join('\n + ');
+        } else {
+            // If objects, stringify or map
+            // Assuming child forms return string or object. 
+            // Cleaning returns string. Truck returns object.
+            // We should standardize or handle both.
+            compositeDetails = allDetails.map(d => typeof d === 'string' ? d : (d.description || JSON.stringify(d))).join('\n + ');
         }
 
-        // Exclusive view for Material Supply
-        if (formData.serviceId === 'res-material') {
-            return (
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="space-y-6"
-                >
-                    <MaterialSupplyForm
-                        onUpdate={handleMaterialUpdate}
-                    />
+        const valid = activeServices.length > 0 && activeServices.every(id => servicesData[id]); // rudimentary validation
 
-                    {/* Option to switch service */}
-                    <button
-                        onClick={() => handleInputChange('serviceId', '')}
-                        className="text-sm text-gray-400 hover:text-brand-dark underline block mx-auto pt-4"
-                    >
-                        Escolher outro serviço
-                    </button>
-                </motion.div>
-            );
+        // Rudimentary deep check to avoid loop, including items
+        const newPayload = {
+            ...formData,
+            price: totalPrice,
+            duration: totalDuration,
+            serviceDetails: compositeDetails,
+            serviceId: primaryService || '',
+            serviceName: SERVICE_OPTIONS.find(s => s.id === primaryService)?.label || '',
+            items: items // [NEW] Pass items
+        };
+
+        if (JSON.stringify(newPayload) !== JSON.stringify(formData)) {
+            // Update Parent
+            if (totalPrice !== formData.price || totalDuration !== formData.duration || JSON.stringify(items) !== JSON.stringify((formData as any).items)) {
+                onUpdate(newPayload);
+            }
+
+            // [FIX] Update local state so internal components (DateTimeSelection) see the new duration
+            setFormData(prev => ({
+                ...prev,
+                price: totalPrice,
+                duration: totalDuration,
+                serviceDetails: compositeDetails,
+                serviceId: primaryService || '',
+                serviceName: SERVICE_OPTIONS.find(s => s.id === primaryService)?.label || '',
+                items: items
+            }));
         }
 
-        // Exclusive view for Technical Assembly
-        if (formData.serviceId === 'res-assembly') {
-            return (
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="space-y-6"
-                >
-                    <AssemblyForm
-                        onUpdate={handleAssemblyUpdate}
-                    />
+    }, [servicesData, activeServices, formData.frequency, formData.canton, onUpdate]);
 
-                    {/* Option to switch service */}
-                    <button
-                        onClick={() => handleInputChange('serviceId', '')}
-                        className="text-sm text-gray-400 hover:text-brand-dark underline block mx-auto pt-4"
-                    >
-                        Escolher outro serviço
-                    </button>
-                </motion.div>
-            );
+
+    const handleChildUpdate = (serviceId: string, data: any) => {
+        setServicesData(prev => {
+            // Only update if different to avoid loop?
+            // Deep compare or simple check
+            if (JSON.stringify(prev[serviceId]) === JSON.stringify(data)) return prev;
+            return { ...prev, [serviceId]: data };
+        });
+    };
+
+    const handleAddService = (id: string) => {
+        if (!activeServices.includes(id)) {
+            setActiveServices(prev => [...prev, id]);
         }
+        setIsAddingService(false);
+    };
 
-        return (
-            <div className="space-y-8 animate-in fade-in slide-in-from-left-4 duration-500">
-                <div>
-                    <h2 className="text-2xl font-bold text-brand-dark mb-2">O que você precisa?</h2>
-                    <p className="text-gray-500 text-sm">Personalize o serviço ideal para sua necessidade.</p>
-                </div>
+    const handleRemoveService = (id: string) => {
+        setActiveServices(prev => prev.filter(s => s !== id));
+        setServicesData(prev => {
+            const next = { ...prev };
+            delete next[id];
+            return next;
+        });
+    };
 
-                {/* Service Selection */}
-                <div className="space-y-3">
-                    <label className="text-xs font-bold uppercase tracking-widest text-gray-500">Tipo de Serviço</label>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {SERVICE_OPTIONS.map(option => (
-                            <button
-                                key={option.id}
-                                onClick={() => handleInputChange('serviceId', option.id)}
-                                className={`
-                                    p-4 text-left rounded-xl border-2 transition-all duration-200
-                                    ${formData.serviceId === option.id
-                                        ? 'border-brand-red bg-red-50 text-brand-dark'
-                                        : 'border-gray-100 hover:border-gray-200 text-gray-600'}
-                                `}
+    return (
+        <>
+            {/* Step 1: Services */}
+            <div className={currentStep === 1 ? 'space-y-8 animate-in fade-in slide-in-from-left-4 duration-500' : 'hidden'}>
+                {activeServices.length === 0 && (
+                    <div>
+                        <h2 className="text-2xl font-bold text-brand-dark mb-2">O que você precisa?</h2>
+                        <p className="text-gray-500 text-sm">Personalize o serviço ideal para sua necessidade.</p>
+                    </div>
+                )}
+
+                {/* Active Services Render */}
+                <div className="space-y-8">
+                    {activeServices.map((serviceId, index) => {
+                        return (
+                            <motion.div
+                                key={serviceId}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="relative bg-white/50 rounded-2xl"
                             >
-                                <span className="font-bold block">{option.label}</span>
-                                <span className="text-xs text-gray-400 mt-1">A partir de CHF {option.basePrice}</span>
-                            </button>
-                        ))}
-                    </div>
+                                {index > 0 && <div className="border-t border-gray-200 my-8"></div>}
+
+                                <div className="flex justify-end mb-2">
+                                    <button
+                                        onClick={() => handleRemoveService(serviceId)}
+                                        className="text-xs text-red-500 hover:text-red-700 underline"
+                                    >
+                                        Remover serviço
+                                    </button>
+                                </div>
+
+                                {serviceId === 'res-cleaning' && (
+                                    <CleaningForm showExtras={showExtras} onUpdate={(d) => handleChildUpdate(serviceId, d)} />
+                                )}
+                                {serviceId === 'res-truck-rental' && (
+                                    <TruckRentalForm showExtras={showExtras} onUpdate={(d) => handleChildUpdate(serviceId, d)} />
+                                )}
+                                {serviceId === 'res-material' && (
+                                    <MaterialSupplyForm onUpdate={(d) => handleChildUpdate(serviceId, d)} />
+                                )}
+                                {serviceId === 'res-assembly' && (
+                                    <AssemblyForm onUpdate={(d) => handleChildUpdate(serviceId, d)} />
+                                )}
+                            </motion.div>
+                        );
+                    })}
                 </div>
 
-                <div className="space-y-4">
-                    <div className="flex justify-between">
-                        <label className="text-xs font-bold uppercase tracking-widest text-gray-500">Duração Estimada</label>
-                        <span className="font-bold text-brand-red">{formData.duration} horas</span>
-                    </div>
-                    <input
-                        type="range"
-                        min="2"
-                        max="10"
-                        step="1"
-                        value={formData.duration}
-                        onChange={(e) => handleInputChange('duration', parseInt(e.target.value))}
-                        className="w-full h-2 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-brand-red"
-                    />
-                    <div className="flex justify-between text-xs text-gray-400">
-                        <span>2h (Mínimo)</span>
-                        <span>10h (Máximo)</span>
-                    </div>
-                </div>
+                {/* Service Picker */}
+                {(activeServices.length === 0 || isAddingService) && (
+                    <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        className="space-y-3"
+                    >
+                        {activeServices.length > 0 && (
+                            <div className="flex justify-between items-center mb-4">
+                                <h3 className="font-bold text-gray-700">Adicionar mais serviços</h3>
+                                <button onClick={() => setIsAddingService(false)} className="text-sm text-gray-500">Cancelar</button>
+                            </div>
+                        )}
+
+                        <label className="text-xs font-bold uppercase tracking-widest text-gray-500">
+                            {activeServices.length === 0 ? 'Tipo de Serviço' : 'Serviços Disponíveis'}
+                        </label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {SERVICE_OPTIONS.filter(s => !activeServices.includes(s.id)).map(option => (
+                                <button
+                                    key={option.id}
+                                    onClick={() => handleAddService(option.id)}
+                                    className={`
+                                        p-4 text-left rounded-xl border-2 transition-all duration-200 border-gray-100 hover:border-brand-red/50 hover:shadow-md bg-white
+                                    `}
+                                >
+                                    <span className="font-bold block text-gray-700">{option.label}</span>
+                                    {(option as any).description && (
+                                        <span className="block text-xs text-gray-500 mb-1">{(option as any).description}</span>
+                                    )}
+                                    <span className="text-xs text-brand-red font-semibold">A partir de CHF {option.basePrice}</span>
+                                </button>
+                            ))}
+                        </div>
+                    </motion.div>
+                )}
+
+                {/* "Add Another" Button */}
+                {!isAddingService && activeServices.length > 0 && SERVICE_OPTIONS.length > activeServices.length && (
+                    <button
+                        onClick={() => setIsAddingService(true)}
+                        className="text-sm text-brand-red font-bold hover:text-brand-dark underline block mx-auto py-4"
+                    >
+                        + Escolher outro serviço (Juntar ao pedido)
+                    </button>
+                )}
             </div>
-        );
-    }
 
-    if (currentStep === 2) {
-        return (
-            <div className="animate-in fade-in slide-in-from-right-4 duration-500">
+            {/* Step 2: Date Time */}
+            <div className={currentStep === 2 ? 'animate-in fade-in slide-in-from-right-4 duration-500' : 'hidden'}>
                 <DateTimeSelection
                     date={formData.date}
                     time={formData.time}
@@ -345,17 +329,14 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
                     duration={formData.duration}
                     address={formData.address}
                     canton={formData.canton}
-                    serviceName={formData.serviceName} // [NEW] Pass service name for filtering
+                    serviceName={formData.serviceName}
                     onUpdate={handleInputChange}
                     hideFrequency={formData.serviceId === 'res-truck-rental' || formData.serviceId === 'res-material' || formData.serviceId === 'res-assembly'}
                 />
             </div>
-        );
-    }
 
-    if (currentStep === 3) {
-        return (
-            <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
+            {/* Step 3: Checkout */}
+            <div className={currentStep === 3 ? 'space-y-8 animate-in fade-in slide-in-from-right-4 duration-500' : 'hidden'}>
                 <div>
                     <h2 className="text-2xl font-bold text-brand-dark mb-2">Para finalizar</h2>
                     <p className="text-gray-500 text-sm">Informe seus dados para contato e confirmação.</p>
@@ -476,8 +457,6 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
                     </div>
                 </div>
             </div>
-        );
-    }
-
-    return null;
+        </>
+    );
 };

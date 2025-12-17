@@ -110,53 +110,6 @@ export const TruckRentalForm: React.FC<TruckRentalFormProps> = ({ onUpdate, show
         );
     };
 
-    if (showExtras) {
-        return (
-            <div className="space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
-                <div>
-                    <h2 className="text-2xl font-bold text-brand-dark mb-2">Itens Opcionais</h2>
-                    <p className="text-gray-500 text-sm">Adicione profissionais e equipamentos.</p>
-                </div>
-
-                <div className="grid grid-cols-1 gap-4">
-                    {TRUCK_EXTRAS_OPTIONS.map((extra) => {
-                        const isSelected = extras.includes(extra.id);
-                        const Icon = extra.icon;
-                        return (
-                            <button
-                                key={extra.id}
-                                onClick={() => toggleExtra(extra.id)}
-                                className={`
-                                    p-4 text-left rounded-xl border-2 flex items-start gap-4 transition-all duration-200
-                                    ${isSelected
-                                        ? 'bg-brand-cream border-brand-red text-brand-dark shadow-sm'
-                                        : 'bg-white border-gray-100 text-gray-600 hover:border-gray-200'}
-                                `}
-                            >
-                                <div className={`p-2 rounded-lg shrink-0 ${isSelected ? 'bg-brand-red text-white' : 'bg-gray-100 text-gray-400'}`}>
-                                    <Icon size={20} />
-                                </div>
-                                <div className="flex-1">
-                                    <div className="flex justify-between items-start">
-                                        <h3 className="font-bold text-sm">{extra.label}</h3>
-                                        <span className={`text-sm font-bold ${isSelected ? 'text-brand-red' : 'text-gray-400'}`}>
-                                            +CHF {extra.price}
-                                        </span>
-                                    </div>
-                                    <p className="text-xs text-gray-400 mt-1">{extra.description}</p>
-                                </div>
-                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mt-0.5 ${isSelected ? 'border-brand-red bg-brand-red' : 'border-gray-200'
-                                    }`}>
-                                    {isSelected && <CheckCircle2 size={12} className="text-white" />}
-                                </div>
-                            </button>
-                        )
-                    })}
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
             <div>
@@ -223,9 +176,47 @@ export const TruckRentalForm: React.FC<TruckRentalFormProps> = ({ onUpdate, show
                 </div>
             </div>
 
+            {/* Extras Section */}
+            <div className="space-y-4">
+                <label className="text-xs font-bold uppercase tracking-widest text-gray-500">2. Mão de Obra e Equipamentos</label>
+                <div className="grid grid-cols-1 gap-4">
+                    {TRUCK_EXTRAS_OPTIONS.map((extra) => {
+                        const isSelected = extras.includes(extra.id);
+                        const Icon = extra.icon;
+                        return (
+                            <button
+                                key={extra.id}
+                                onClick={() => toggleExtra(extra.id)}
+                                className={`
+                                    p-4 text-left rounded-xl border-2 flex items-start gap-4 transition-all duration-200
+                                    ${isSelected
+                                        ? 'bg-brand-cream border-brand-red text-brand-dark shadow-sm'
+                                        : 'bg-white border-gray-100 text-gray-600 hover:border-gray-200'}
+                                `}
+                            >
+                                <div className={`p-2 rounded-lg shrink-0 ${isSelected ? 'bg-brand-red text-white' : 'bg-gray-100 text-gray-400'}`}>
+                                    <Icon size={20} />
+                                </div>
+                                <div className="flex-1">
+                                    <div className="flex justify-between items-start">
+                                        <h3 className="font-bold text-sm">{extra.label}</h3>
+                                        <span className={`text-sm font-bold ${isSelected ? 'text-brand-red' : 'text-gray-400'}`}>
+                                            +CHF {extra.price}
+                                        </span>
+                                    </div>
+                                    <p className="text-xs text-gray-400 mt-1">{extra.description}</p>
+                                </div>
+                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mt-0.5 ${isSelected ? 'border-brand-red bg-brand-red' : 'border-gray-200'
+                                    }`}>
+                                    {isSelected && <CheckCircle2 size={12} className="text-white" />}
+                                </div>
+                            </button>
+                        )
+                    })}
+                </div>
+            </div>
+
             <div className="space-y-6">
-
-
                 <div>
                     <div className="flex justify-between mb-3">
                         <label className="text-xs font-bold uppercase tracking-widest text-gray-500">3. Horas Extras (+30 CHF/h)</label>

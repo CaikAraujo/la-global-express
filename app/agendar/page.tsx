@@ -168,7 +168,7 @@ export default function BookingPage() {
                         </div>
                     </div>
 
-                    <div className="lg:col-span-4 z-40">
+                    <div className="lg:col-span-4 z-40 lg:sticky lg:top-24 self-start">
                         <BookingSummary
                             serviceName={bookingData.serviceName}
                             frequency={
@@ -182,6 +182,7 @@ export default function BookingPage() {
                             step={step}
                             onNext={nextStep}
                             canProceed={canProceed()}
+                            items={(bookingData as any).items || []}
                         />
                     </div>
                 </div>

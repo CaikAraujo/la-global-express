@@ -5,6 +5,7 @@ import { PLANS } from './pricing/constants';
 import { PricingCard } from './pricing/PricingCard';
 import { Switch } from './pricing/Switch';
 import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 const Plans: React.FC = () => {
    const [isYearly, setIsYearly] = useState(false);
@@ -54,10 +55,10 @@ const Plans: React.FC = () => {
                      <h3 className="text-2xl md:text-3xl font-serif text-white mb-2">Precisa de uma solução para grandes corporações?</h3>
                      <p className="text-gray-400 font-sans">Desenvolvemos projetos personalizados para indústrias, condomínios e redes de varejo.</p>
                   </div>
-                  <button className="flex items-center gap-2 bg-white/10 hover:bg-white text-white hover:text-brand-dark px-8 py-4 rounded-lg font-bold text-sm uppercase tracking-wider transition-all duration-300 backdrop-blur-sm border border-white/20">
+                  <Link href="/contact" className="flex items-center gap-2 bg-white/10 hover:bg-white text-white hover:text-brand-dark px-8 py-4 rounded-lg font-bold text-sm uppercase tracking-wider transition-all duration-300 backdrop-blur-sm border border-white/20">
                      Falar com Consultor Corporativo
                      <ArrowRight size={16} />
-                  </button>
+                  </Link>
                </div>
             </div>
 

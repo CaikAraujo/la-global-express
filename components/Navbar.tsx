@@ -49,7 +49,7 @@ const Navbar: React.FC = () => {
               Área do Cliente
             </a>
             <Link
-              href="/contact"
+              href="/#servicos"
               className="px-6 py-2.5 bg-brand-600 text-white text-sm font-bold uppercase tracking-wider hover:bg-black transition-all rounded-lg"
             >
               Orçamento
@@ -77,7 +77,7 @@ const Navbar: React.FC = () => {
             <Link href="/about" onClick={closeMenu} className="font-bold text-gray-900 uppercase tracking-wider cursor-pointer">Sobre Nós</Link>
             <Link href="/contact" onClick={closeMenu} className="font-bold text-gray-900 uppercase tracking-wider cursor-pointer">Contato</Link>
             <hr className="border-gray-200" />
-            <Link href="/contact" onClick={closeMenu} className="w-full text-center px-6 py-3 bg-brand-600 text-white font-bold uppercase rounded-lg">
+            <Link href="/#servicos" onClick={closeMenu} className="w-full text-center px-6 py-3 bg-brand-600 text-white font-bold uppercase rounded-lg">
               <img src="/icon-express.svg" alt="La Global Express" className="w-full h-full object-contain" />
               Solicitar Orçamento
             </Link>

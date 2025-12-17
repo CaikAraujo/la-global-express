@@ -22,14 +22,14 @@ export default {
                     100: '#ffdede',
                     400: '#ff4d4d',
                     500: '#ff0000',
-                    600: '#e60000', // Primary Swiss Red
-                    700: '#cc0000',
+                    600: '#CB0001', // Updated to match Logo Red
+                    700: '#a30000', // Darker shade
                     800: '#990000',
-                    DEFAULT: '#E60000',
+                    DEFAULT: '#CB0001', // Updated to match Logo Red
                     dark: '#111111', // Swiss Design often uses stark black/white
                     gray: '#333333',
                     // New Corporate Page Colors
-                    red: '#FF0000',
+                    red: '#CB0001', // Updated to match Logo Red
                     'swiss-dark': '#0B0F19',
                     'swiss-gray': '#F5F5F7',
                     text: '#1A1A1A'

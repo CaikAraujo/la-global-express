@@ -28,6 +28,15 @@ const EXTRAS_OPTIONS = [
     { id: 'laundry', label: 'Lavar Roupas', price: 40, duration: 1 },
 ];
 
+const CANTON_FEES: Record<string, number> = {
+    'geneve': 30,
+    'vaud': 70,
+    'fribourg': 80,
+    'neuchatel': 100,
+    'valais': 100,
+    'jura': 120
+};
+
 type ServiceCategory = 'standard' | 'heavy' | 'ironing';
 type HeavyCleaningType = 'routine' | 'move' | 'construction';
 type PropertyType = 'studio' | 'apartment' | 'house';
@@ -36,10 +45,11 @@ export const CleaningForm: React.FC<CleaningFormProps> = ({ onUpdate, showExtras
     const [state, setState] = useState({
         serviceCategory: 'standard' as ServiceCategory,
         heavyType: 'routine' as HeavyCleaningType,
-        propertyType: 'apartment' as PropertyType,
+        propertyType: 'studio' as PropertyType,
         bedrooms: 1,
         bathrooms: 1,
         ironingHours: 2,
+        canton: 'geneve',
         extras: [] as string[],
         manualDuration: 0, // 0 means auto-calculated
     });
@@ -51,10 +61,14 @@ export const CleaningForm: React.FC<CleaningFormProps> = ({ onUpdate, showExtras
         let duration = 0;
         let detailsText = '';
 
+        // Add Canton Fee
+        const displacementFee = CANTON_FEES[state.canton] || 0;
+        total += displacementFee;
+
         if (state.serviceCategory === 'ironing') {
             // Ironing Logic (kept)
             const hourlyRate = 60;
-            total = state.ironingHours * hourlyRate;
+            total += state.ironingHours * hourlyRate; // Add to existing total (displacement)
             duration = state.ironingHours;
 
             const minPieces = Math.floor(state.ironingHours * 8);
@@ -77,13 +91,18 @@ export const CleaningForm: React.FC<CleaningFormProps> = ({ onUpdate, showExtras
             const extraBathrooms = Math.max(0, state.bathrooms - 1);
 
             const roomCost = (extraBedrooms * 60) + (extraBathrooms * 70);
-            total = basePrice + roomCost;
+            total += basePrice + roomCost; // Add to existing total (displacement)
             duration = 4 + extraBedrooms + extraBathrooms;
 
             description = `${state.serviceCategory === 'standard' ? 'Limpeza Padrão' :
                 `Limpeza Pesada (${state.heavyType === 'routine' ? 'Rotina' : state.heavyType === 'move' ? 'Pré-mudança' : 'Pós-obra'})`} - ${state.propertyType === 'studio' ? 'Studio' : state.propertyType === 'apartment' ? 'Apartamento' : 'Casa'} (${state.bedrooms} quartos, ${state.bathrooms} banheiros)`;
 
             detailsText = description;
+        }
+
+        // Add Displacement Fee to details
+        if (displacementFee > 0) {
+            detailsText += ` + Deslocamento (${state.canton.charAt(0).toUpperCase() + state.canton.slice(1)}): CHF ${displacementFee}`;
         }
 
         // Add Extras (Only if not ironing main service, though logic permits)
@@ -105,16 +124,13 @@ export const CleaningForm: React.FC<CleaningFormProps> = ({ onUpdate, showExtras
         // But usually manual duration is an override of the total.
         // Let's treat manualDuration as the FINAL duration if set, otherwise use calculated.
 
-        let finalDuration = duration;
-        if (state.manualDuration > 0) {
-            // Adjust price if manual duration is different?
-            // Usually if user adds hours, price increases.
-            // Rate for extra hour: R$ 50?
-            const diff = state.manualDuration - duration;
-            if (diff !== 0) {
-                total += diff * 50; // Simple hourly adjustments
-            }
-            finalDuration = state.manualDuration;
+        // Manual Duration Override (cannot be less than calculated)
+        let finalDuration = Math.max(duration, state.manualDuration);
+
+        // Only charge for ADDED hours (cannot reduce price below calculated)
+        const addedHours = Math.max(0, finalDuration - duration);
+        if (addedHours > 0) {
+            total += addedHours * 50; // CHF 50 per extra hour
         }
 
         onUpdate({
@@ -152,9 +168,11 @@ export const CleaningForm: React.FC<CleaningFormProps> = ({ onUpdate, showExtras
         return d + extrasDuration;
     };
 
-    // Initialize manualDuration on first extras view?
-    // Actually, stick to: if manualDuration == 0, show calculated.
-    const currentDuration = state.manualDuration > 0 ? state.manualDuration : getCalculatedDuration();
+    // Current duration is the greater of manual (if set) or calculated
+    const calculatedDuration = getCalculatedDuration();
+    const currentDuration = state.manualDuration > 0
+        ? Math.max(state.manualDuration, calculatedDuration)
+        : calculatedDuration;
 
     if (showExtras) {
         return (
@@ -193,7 +211,7 @@ export const CleaningForm: React.FC<CleaningFormProps> = ({ onUpdate, showExtras
                         <Counter
                             label={currentDuration === 1 ? 'hora' : 'horas'}
                             value={currentDuration}
-                            min={2}
+                            min={calculatedDuration}
                             max={12}
                             onChange={(v) => updateState('manualDuration', v)}
                         />
@@ -393,13 +411,71 @@ export const CleaningForm: React.FC<CleaningFormProps> = ({ onUpdate, showExtras
                             />
                         </div>
 
-                        <div className="mt-6 flex items-center justify-center gap-2 text-sm text-green-700 bg-green-50/50 py-2 rounded-lg border border-green-100/50">
-                            <CheckCircle2 size={16} />
-                            <span>Cozinha e sala já estão inclusos no valor.</span>
+                        <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div className="flex items-center justify-center gap-2 text-sm text-green-700 bg-green-50/50 py-2 rounded-lg border border-green-100/50">
+                                <CheckCircle2 size={16} />
+                                <span className="text-center font-medium">
+                                    {state.propertyType === 'studio'
+                                        ? 'Cozinha inclusa'
+                                        : 'Cozinha e sala'}
+                                </span>
+                            </div>
+                            <div className="flex items-center justify-center gap-2 text-sm text-green-700 bg-green-50/50 py-2 rounded-lg border border-green-100/50">
+                                <CheckCircle2 size={16} />
+                                <span className="text-center font-medium">Produtos inclusos</span>
+                            </div>
+                            <div className="flex items-center justify-center gap-2 text-sm text-green-700 bg-green-50/50 py-2 rounded-lg border border-green-100/50">
+                                <CheckCircle2 size={16} />
+                                <span className="text-center font-medium">Seguro incluso</span>
+                            </div>
                         </div>
                     </div>
                 </section>
             )}
+
+            {/* 5. Canton Selection */}
+            <section>
+                <h2 className="text-lg font-bold text-brand-dark mb-4">Onde será o serviço?</h2>
+                <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+                    {[
+                        { id: 'geneve', label: 'Genève', image: '/images/cantons/geneve-v2.webp' },
+                        { id: 'vaud', label: 'Vaud (Lausanne)', image: '/images/cantons/vaud-v2.webp' },
+                        { id: 'fribourg', label: 'Fribourg', image: '/images/cantons/fribourg-v2.jpeg' },
+                        { id: 'neuchatel', label: 'Neuchâtel', image: '/images/cantons/neuchatel-v2.jpg' },
+                        { id: 'valais', label: 'Valais (Sion)', image: '/images/cantons/valais-v2.jpg' },
+                        { id: 'jura', label: 'Jura', image: '/images/cantons/jura-v2.jpg' },
+                    ].map((canton) => {
+                        const isSelected = state.canton === canton.id;
+                        return (
+                            <button
+                                key={canton.id}
+                                onClick={() => updateState('canton', canton.id)}
+                                className={`relative group overflow-hidden rounded-xl border-2 transition-all duration-300 aspect-[4/3] ${isSelected
+                                    ? 'border-brand-red ring-2 ring-brand-red/30'
+                                    : 'border-transparent hover:border-brand-red/50'
+                                    }`}
+                            >
+                                <img
+                                    src={canton.image}
+                                    alt={canton.label}
+                                    className={`absolute inset-0 w-full h-full object-cover transition-transform duration-700 ${isSelected ? 'scale-110' : 'group-hover:scale-110'
+                                        }`}
+                                />
+                                <div className={`absolute inset-0 transition-colors duration-300 ${isSelected ? 'bg-black/40' : 'bg-black/20 group-hover:bg-black/40'
+                                    }`} />
+                                <div className="absolute inset-0 flex items-center justify-center p-2">
+                                    <span className="text-white font-bold text-sm drop-shadow-md tracking-wide text-center">{canton.label}</span>
+                                </div>
+                                {isSelected && (
+                                    <div className="absolute top-2 right-2 bg-brand-red text-white p-1 rounded-full shadow-sm">
+                                        <CheckCircle2 size={14} />
+                                    </div>
+                                )}
+                            </button>
+                        );
+                    })}
+                </div>
+            </section>
         </div>
     );
 };

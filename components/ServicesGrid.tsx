@@ -2,9 +2,10 @@
 
 import React, { useState, useMemo } from 'react';
 import { Category } from './services/types';
+import Link from 'next/link';
 import { SERVICES } from './services/data';
 import { ServiceCard } from './services/ServiceCard';
-import { AISearch } from './services/AISearch';
+
 
 const ServicesGrid: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<Category>(Category.RESIDENCIAL);
@@ -55,13 +56,7 @@ const ServicesGrid: React.FC = () => {
             <div className="w-24 h-1 bg-brand-red mx-auto mt-6 rounded-full"></div>
           </div>
 
-          {/* AI Search Integration */}
-          <div className="pt-8 pb-4">
-            <AISearch
-              onServiceFound={handleServiceFound}
-              onReset={() => setHighlightedServiceId(null)}
-            />
-          </div>
+
         </header>
 
         {/* Navigation Tabs */}
@@ -105,9 +100,9 @@ const ServicesGrid: React.FC = () => {
         {/* Bottom CTA */}
         <div className="mt-20 text-center">
           <p className="text-gray-400 text-sm mb-4">Não encontrou o que procura?</p>
-          <button className="text-brand-dark font-display text-xl border-b border-brand-red/30 hover:border-brand-red pb-1 transition-colors">
+          <Link href="/contact" className="text-brand-dark font-display text-xl border-b border-brand-red/30 hover:border-brand-red pb-1 transition-colors">
             Falar com um consultor humano
-          </button>
+          </Link>
         </div>
 
       </div>

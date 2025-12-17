@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 const Hero = () => {
     return (
@@ -25,10 +26,10 @@ const Hero = () => {
                         </p>
 
                         <div className="flex flex-wrap gap-4 reveal-text" style={{ animationDelay: '0.4s' }}>
-                            <button className="group bg-brand-dark text-white px-8 py-4 text-sm font-bold uppercase tracking-wider hover:bg-brand-red transition-all duration-300 flex items-center gap-2 rounded-lg">
+                            <Link href="/contact" className="group bg-brand-dark text-white px-8 py-4 text-sm font-bold uppercase tracking-wider hover:bg-brand-red transition-all duration-300 flex items-center gap-2 rounded-lg">
                                 Agendar Consultoria
                                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                            </button>
+                            </Link>
 
                         </div>
                     </div>

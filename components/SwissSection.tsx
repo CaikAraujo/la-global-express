@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 import { FeatureCard } from './swiss/FeatureCard';
 import { FEATURES } from './swiss/constants';
 import { motion } from 'framer-motion';
@@ -46,10 +47,10 @@ const SwissSection: React.FC = () => {
                             <p className="text-neutral-400 font-sans text-lg leading-relaxed mb-6">
                                 Não apenas limpamos ou consertamos. Cuidamos do seu patrimônio com a máxima discrição e precisão técnica.
                             </p>
-                            <a href="#" className="inline-flex items-center gap-2 text-white text-sm font-semibold tracking-widest uppercase hover:text-brand-red transition-colors group">
+                            <Link href="/about" className="inline-flex items-center gap-2 text-white text-sm font-semibold tracking-widest uppercase hover:text-brand-red transition-colors group">
                                 Conheça nosso método
                                 <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                            </a>
+                            </Link>
                         </motion.div>
                     </div>
                 </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { ShieldCheck, CheckSquare, Clock, Star } from 'lucide-react';
+import Link from 'next/link';
 
 const Hero: React.FC = () => {
   return (
@@ -50,12 +51,12 @@ const Hero: React.FC = () => {
               >
                 Nossos Serviços
               </a>
-              <a
-                href="#contato"
+              <Link
+                href="/contact"
                 className="inline-flex justify-center items-center bg-white text-gray-900 border-2 border-gray-900 font-bold py-4 px-10 text-sm uppercase tracking-widest hover:bg-gray-50 transition-all rounded-lg"
               >
                 Fale Conosco
-              </a>
+              </Link>
             </div>
           </div>
 
