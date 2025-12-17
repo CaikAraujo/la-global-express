@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { BookingForm } from '@/components/booking/BookingForm';
 import { BookingSummary } from '@/components/booking/BookingSummary';
+import { createBooking } from '@/app/actions/createBooking';
 
 export default function BookingPage() {
     const [step, setStep] = useState(1);
@@ -33,7 +34,9 @@ export default function BookingPage() {
         });
     }, []);
 
-    const nextStep = () => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const nextStep = async () => {
         const isCleaning = bookingData.serviceId === 'res-cleaning';
         const isTruck = bookingData.serviceId === 'res-truck-rental';
 
@@ -63,9 +66,27 @@ export default function BookingPage() {
             return;
         }
 
-        if (step < 3) setStep(step + 1);
-        else {
-            alert('Pedido enviado com sucesso! Nosso time entrará em contato.');
+        if (step < 3) {
+            setStep(step + 1);
+            return;
+        }
+
+        // Final Step: Submit
+        try {
+            setIsSubmitting(true);
+            const result = await createBooking(bookingData);
+
+            if (result.success) {
+                alert('Pedido enviado com sucesso! Nosso time entrará em contato. ID: ' + result.bookingId);
+                // Redirect or reset form could go here
+            } else {
+                alert('Erro ao enviar pedido: ' + result.error);
+            }
+        } catch (error) {
+            alert('Ocorreu um erro inesperado.');
+            console.error(error);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 

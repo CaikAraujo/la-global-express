@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useCallback } from 'react';
 import {
     Check,
     MapPin,
@@ -106,6 +106,10 @@ const CANTONS = [
     { id: 'JU', name: 'Jura' }
 ];
 
+import { getAvailability } from '@/app/actions/getAvailability'; // Import the action
+
+// ... imports
+
 export const DateTimeSelection: React.FC<DateTimeSelectionProps> = ({
     date,
     time,
@@ -117,6 +121,8 @@ export const DateTimeSelection: React.FC<DateTimeSelectionProps> = ({
     canton
 }) => {
     const dateInputRef = useRef<HTMLInputElement>(null);
+    const [busySlots, setBusySlots] = React.useState<{ start: number, end: number }[]>([]);
+    const [isLoadingAvailability, setIsLoadingAvailability] = React.useState(false);
 
     // Parse current selected date or default to tomorrow
     const selectedDateObj = useMemo(() => {
@@ -125,7 +131,39 @@ export const DateTimeSelection: React.FC<DateTimeSelectionProps> = ({
         return new Date(y, m - 1, d);
     }, [date]);
 
+    // Fetch availability when date changes
+    React.useEffect(() => {
+        const fetchSlots = async () => {
+            if (!date) return;
+            setIsLoadingAvailability(true);
+            const slots = await getAvailability(date);
+            setBusySlots(slots);
+            setIsLoadingAvailability(false);
+        };
+        fetchSlots();
+    }, [date]);
+
+    // Logic: "One team for each time slot".
+    // This means bookings are independent. A 4h job at 08:00 blocks ONLY 08:00.
+    // 09:00 remains open for the "09:00 Team".
+
+    // Check if a specific slot (start hour) is blocked
+    const isSlotBlocked = useCallback((slotTime: string) => {
+        const [h, m] = slotTime.split(':').map(Number);
+        const myStart = h + (m / 60);
+
+        // Check if there is ALREADY a booking starting at this EXACT time.
+        // We ignore duration/overlaps because other slots have their own teams.
+        const bookingsStartingHere = busySlots.filter(busy => {
+            return Math.abs(busy.start - myStart) < 0.01; // Float comparison
+        }).length;
+
+        // "One for each time slot" means Limit = 1 per slot.
+        return bookingsStartingHere >= 1;
+    }, [busySlots]);
+
     // Generate next 14 days
+    // ... rest of code
     const next14Days = useMemo(() => {
         return Array.from({ length: 14 }).map((_, i) => addDays(startOfToday(), i));
     }, []);
@@ -330,15 +368,19 @@ export const DateTimeSelection: React.FC<DateTimeSelectionProps> = ({
                     <div className="grid grid-cols-2 gap-3">
                         {TIME_SLOTS.map((slot) => {
                             const isActive = time === slot.id;
+                            const isBlocked = isSlotBlocked(slot.id); // Check availability
                             return (
                                 <button
                                     key={slot.id}
-                                    onClick={() => onUpdate('time', slot.id)}
+                                    onClick={() => !isBlocked && onUpdate('time', slot.id)} // Prevent click
+                                    disabled={isBlocked}
                                     className={`
                     relative p-3 rounded-xl border text-left transition-all duration-200 flex flex-col gap-1 group
                     ${isActive
                                             ? 'bg-red-50 border-brand-red ring-1 ring-brand-red shadow-sm'
-                                            : 'bg-white border-gray-100 hover:border-brand-red/30 hover:shadow-sm'
+                                            : isBlocked
+                                                ? 'bg-gray-100 border-gray-100 opacity-50 cursor-not-allowed' // Disabled style
+                                                : 'bg-white border-gray-100 hover:border-brand-red/30 hover:shadow-sm'
                                         }
                   `}
                                 >
@@ -357,10 +399,19 @@ export const DateTimeSelection: React.FC<DateTimeSelectionProps> = ({
                                         {/* Calculate end time based on duration prop if possible */}
                                         {(() => {
                                             const [h] = slot.id.split(':').map(Number);
-                                            const endH = h + duration;
-                                            return `até ${endH}:00`;
+                                            const endTotal = h + duration;
+                                            const endH = Math.floor(endTotal);
+                                            const endM = Math.round((endTotal % 1) * 60);
+                                            const endMStr = endM.toString().padStart(2, '0');
+                                            return `até ${endH}:${endMStr}`;
                                         })()}
                                     </span>
+
+                                    {isBlocked && (
+                                        <span className="text-[10px] font-bold text-red-500 mt-1">
+                                            Indisponível
+                                        </span>
+                                    )}
 
                                     {/* Tags */}
                                     <div className="flex gap-1 mt-1">

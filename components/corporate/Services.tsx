@@ -12,7 +12,7 @@ const Services = () => {
             id: "01",
             title: "Concierge",
             desc: "Serviços de recepção executiva, gestão de acessos e suporte administrativo premium para seu escritório.",
-            image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1000&auto=format&fit=crop"
+            image: "/concierge_service.png"
         },
         {
             id: "02",
@@ -24,13 +24,13 @@ const Services = () => {
             id: "03",
             title: "Déchetterie",
             desc: "Gestão sustentável de resíduos, coleta seletiva e descarte certificado de materiais corporativos.",
-            image: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?q=80&w=1000&auto=format&fit=crop"
+            image: "/waste_management.png"
         },
         {
             id: "04",
             title: "Profissionais para Escritório",
             desc: "Suporte diário para copa, organização de mesas, limpeza de banheiros e manutenção da ordem no ambiente de trabalho.",
-            image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1000&auto=format&fit=crop"
+            image: "/office_support.png"
         }
     ];
 
@@ -97,31 +97,21 @@ const Services = () => {
 
                     {/* Right: Dynamic Image Display */}
                     <div className="lg:w-1/2 relative h-[500px] lg:h-[600px] bg-gray-100 hidden lg:block overflow-hidden rounded-2xl">
-                        {services.map((service, index) => (
-                            <div
-                                key={index}
-                                className={`absolute inset-0 transition-opacity duration-700 ease-out ${activeService === index ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
-                            >
-                                <img
-                                    src={service.image}
-                                    alt={service.title}
-                                    loading="lazy"
-                                    className="w-full h-full object-cover grayscale transition-transform duration-1000 scale-105"
-                                />
-                                {/* Overlay Gradient */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/60 via-transparent to-transparent opacity-60"></div>
+                        <div className="absolute inset-0 z-10">
+                            <img
+                                src={services[activeService].image}
+                                alt={services[activeService].title}
+                                className="w-full h-full object-cover transition-transform duration-1000 scale-105"
+                                key={activeService} // Force re-render on change
+                            />
+                            {/* Overlay Gradient */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/60 via-transparent to-transparent opacity-60"></div>
 
-                                {/* Indicator Box */}
-                                <div className="absolute bottom-0 right-0 bg-white p-6 lg:p-8">
-                                    <ArrowRight className="w-8 h-8 text-brand-red" />
-                                </div>
-
-                                {/* Progress Bar for Auto Play */}
-                                {!isPaused && activeService === index && (
-                                    <div className="absolute bottom-0 left-0 h-1 bg-brand-red animate-[width_5s_linear_forwards] w-full origin-left"></div>
-                                )}
+                            {/* Indicator Box */}
+                            <div className="absolute bottom-0 right-0 bg-white p-6 lg:p-8">
+                                <ArrowRight className="w-8 h-8 text-brand-red" />
                             </div>
-                        ))}
+                        </div>
                     </div>
 
                 </div>
