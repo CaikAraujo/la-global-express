@@ -2,14 +2,15 @@
 
 import { createAdminClient } from '@/utils/supabase/admin'
 
-export async function getAvailability(date: string) {
+export async function getAvailability(date: string, serviceName: string) {
     const supabase = createAdminClient()
 
-    // 1. Fetch bookings for the specific date
+    // 1. Fetch bookings for the specific date AND service
     const { data: bookings, error } = await supabase
         .from('agendamentos')
         .select('horario, duration')
         .eq('data', date)
+        .ilike('service_name', serviceName) // Case insensitive match just in case
 
     if (error) {
         console.error('Error fetching availability:', error)

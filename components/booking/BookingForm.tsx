@@ -345,6 +345,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
                     duration={formData.duration}
                     address={formData.address}
                     canton={formData.canton}
+                    serviceName={formData.serviceName} // [NEW] Pass service name for filtering
                     onUpdate={handleInputChange}
                     hideFrequency={formData.serviceId === 'res-truck-rental' || formData.serviceId === 'res-material' || formData.serviceId === 'res-assembly'}
                 />

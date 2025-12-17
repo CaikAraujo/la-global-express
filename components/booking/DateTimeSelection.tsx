@@ -19,6 +19,7 @@ interface DateTimeSelectionProps {
     frequency: string;
     duration: number;
     address: string;
+    serviceName: string; // [NEW] Availability Filter
     canton?: string;
     onUpdate: (field: string, value: any) => void;
     hideFrequency?: boolean;
@@ -118,7 +119,8 @@ export const DateTimeSelection: React.FC<DateTimeSelectionProps> = ({
     address,
     onUpdate,
     hideFrequency = false,
-    canton
+    canton,
+    serviceName // [NEW]
 }) => {
     const dateInputRef = useRef<HTMLInputElement>(null);
     const [busySlots, setBusySlots] = React.useState<{ start: number, end: number }[]>([]);
@@ -131,17 +133,17 @@ export const DateTimeSelection: React.FC<DateTimeSelectionProps> = ({
         return new Date(y, m - 1, d);
     }, [date]);
 
-    // Fetch availability when date changes
+    // Fetch availability when date OR service changes
     React.useEffect(() => {
         const fetchSlots = async () => {
             if (!date) return;
             setIsLoadingAvailability(true);
-            const slots = await getAvailability(date);
+            const slots = await getAvailability(date, serviceName);
             setBusySlots(slots);
             setIsLoadingAvailability(false);
         };
         fetchSlots();
-    }, [date]);
+    }, [date, serviceName]);
 
     // Logic: "One team for each time slot".
     // This means bookings are independent. A 4h job at 08:00 blocks ONLY 08:00.
