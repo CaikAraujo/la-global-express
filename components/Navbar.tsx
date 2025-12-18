@@ -3,7 +3,9 @@
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import { NAV_LINKS } from '@/constants/navigation';
 
 const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -27,7 +29,13 @@ const Navbar: React.FC = () => {
             className="flex items-center gap-3 cursor-pointer group"
           >
             <div className="relative w-12 h-12 flex-shrink-0">
-              <img src="/icon-express.svg" alt="La Global Express" className="w-full h-full object-contain" />
+              <Image
+                src="/icon-express.svg"
+                alt="La Global Express"
+                fill
+                className="object-contain"
+                priority
+              />
             </div>
             <div className="flex flex-col leading-none justify-center">
               <span className="text-2xl font-black tracking-widest text-gray-900">LA GLOBAL</span>
@@ -37,10 +45,11 @@ const Navbar: React.FC = () => {
 
           {/* Desktop Links */}
           <div className="hidden md:flex items-center space-x-10">
-            <Link href="/" className={navLinkClass('/')}>Soluções</Link>
-            <Link href="/corporate" className={navLinkClass('/corporate')}>Corporativo</Link>
-            <Link href="/about" className={navLinkClass('/about')}>Sobre Nós</Link>
-            <Link href="/contact" className={navLinkClass('/contact')}>Contato</Link>
+            {NAV_LINKS.map((link) => (
+              <Link key={link.href} href={link.href} className={navLinkClass(link.href)}>
+                {link.label}
+              </Link>
+            ))}
           </div>
 
           {/* CTA Buttons */}
@@ -72,13 +81,21 @@ const Navbar: React.FC = () => {
       {mobileMenuOpen && (
         <div className="absolute top-full left-0 right-0 bg-white border-b border-gray-100 p-6 md:hidden shadow-xl z-50">
           <div className="flex flex-col space-y-6">
-            <Link href="/" onClick={closeMenu} className="font-bold text-gray-900 uppercase tracking-wider cursor-pointer">Soluções</Link>
-            <Link href="/corporate" onClick={closeMenu} className="font-bold text-gray-900 uppercase tracking-wider cursor-pointer">Corporativo</Link>
-            <Link href="/about" onClick={closeMenu} className="font-bold text-gray-900 uppercase tracking-wider cursor-pointer">Sobre Nós</Link>
-            <Link href="/contact" onClick={closeMenu} className="font-bold text-gray-900 uppercase tracking-wider cursor-pointer">Contato</Link>
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={closeMenu}
+                className="font-bold text-gray-900 uppercase tracking-wider cursor-pointer"
+              >
+                {link.label}
+              </Link>
+            ))}
             <hr className="border-gray-200" />
-            <Link href="/#servicos" onClick={closeMenu} className="w-full text-center px-6 py-3 bg-brand-600 text-white font-bold uppercase rounded-lg">
-              <img src="/icon-express.svg" alt="La Global Express" className="w-full h-full object-contain" />
+            <Link href="/#servicos" onClick={closeMenu} className="w-full text-center px-6 py-3 bg-brand-600 text-white font-bold uppercase rounded-lg relative overflow-hidden flex items-center justify-center gap-2">
+              <div className="relative w-5 h-5">
+                <Image src="/icon-express.svg" alt="Icon" fill className="object-contain brightness-0 invert" />
+              </div>
               Solicitar Orçamento
             </Link>
           </div>

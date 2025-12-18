@@ -33,13 +33,14 @@ export const HeroSection: React.FC = () => {
                     </div>
 
                     <h1 className="font-display font-bold text-6xl md:text-8xl text-white leading-[0.9] mb-8">
-                        NOSSA <br />
-                        <span className="text-transparent stroke-white text-outline block md:inline" style={{ WebkitTextStroke: '1px white' }}>ORIGEM.</span>
+                        PRECISION <br />
+                        <span className="text-transparent stroke-white text-outline block md:inline" style={{ WebkitTextStroke: '1px white' }}>SWISS MADE.</span>
                     </h1>
 
                     <p className="text-gray-400 max-w-xl text-lg md:text-xl font-light leading-relaxed border-l-2 border-brand-red pl-6">
-                        Exportando o padrão suíço de Facility Management para o mundo.
-                        Precisão, eficiência e visão global.
+                        Não vendemos apenas serviços, entregamos tempo.
+                        Unimos a precisão suíça ao calor humano para cuidar do invisível,
+                        enquanto você aproveita o essencial.
                     </p>
                 </div>
             </div>

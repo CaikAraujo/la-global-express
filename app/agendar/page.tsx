@@ -7,27 +7,32 @@ import { BookingForm } from '@/components/booking/BookingForm';
 import { BookingSummary } from '@/components/booking/BookingSummary';
 import { createBooking } from '@/app/actions/createBooking';
 
+import { BookingFormData } from '@/types/booking';
+
 export default function BookingPage() {
     const [step, setStep] = useState(1);
     const [subStep, setSubStep] = useState(1); // 1: Config, 2: Extras
-    const [bookingData, setBookingData] = useState({
+    const [bookingData, setBookingData] = useState<BookingFormData>({
+        serviceId: '',
         serviceName: '',
-        frequency: 'Uma vez',
+        frequency: 'once',
         duration: 4,
-        price: 0,
         date: '',
         time: '',
         address: '',
         name: '',
         email: '',
         phone: '',
-        serviceId: '',
-        isIroning: false,
+        canton: '',
         observations: '',
-        acceptedTerms: false
+        acceptedTerms: false,
+        materialsTotal: 0,
+        price: 0,
+        serviceDetails: {},
+        items: []
     });
 
-    const handleFormUpdate = useCallback((data: any) => {
+    const handleFormUpdate = useCallback((data: BookingFormData) => {
         setBookingData(prev => {
             if (JSON.stringify(prev) === JSON.stringify({ ...prev, ...data })) return prev;
             return { ...prev, ...data }

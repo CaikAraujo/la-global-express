@@ -1,14 +1,14 @@
 'use server'
 
 import { createAdminClient } from '@/utils/supabase/admin'
-import { revalidatePath } from 'next/cache'
+import { BookingFormData, BookingResponse } from '@/types/booking'
 
-export async function createBooking(formData: any) {
+export async function createBooking(formData: BookingFormData): Promise<BookingResponse> {
     const supabase = createAdminClient()
 
-    // Basic validation could go here
+    // Basic validation
     if (!formData.name || !formData.email || !formData.serviceId) {
-        return { error: 'Dados incompletos' }
+        return { error: 'Dados incompletos: Nome, Email e ID do Serviço são obrigatórios.' }
     }
 
     const { data, error } = await supabase
@@ -28,7 +28,9 @@ export async function createBooking(formData: any) {
                 phone: formData.phone,
                 canton: formData.canton || null,
                 observations: formData.observations,
-                service_details: formData.serviceDetails,
+                service_details: typeof formData.serviceDetails === 'string'
+                    ? formData.serviceDetails
+                    : JSON.stringify(formData.serviceDetails),
                 status: 'pending',
                 created_at: new Date().toISOString(),
             },
@@ -37,7 +39,7 @@ export async function createBooking(formData: any) {
 
     if (error) {
         console.error('Supabase Error:', error)
-        return { error: error.message || 'Erro desconhecido no Supabase' }
+        return { error: error.message || 'Erro ao salvar agendamento.' }
     }
 
     return { success: true, bookingId: data[0].id }

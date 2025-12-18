@@ -4,8 +4,30 @@ import Footer from '../components/Footer';
 import '../index.css';
 
 export const metadata = {
-    title: 'LA Global Express',
-    description: 'Soluções integradas de facilities',
+    metadataBase: new URL('https://laglobal.express'), // Replace with actual domain
+    title: {
+        default: 'LA Global Express | Facility Management Premium',
+        template: '%s | LA Global Express'
+    },
+    description: 'Soluções integradas de facilities, gestão corporativa e serviços residenciais de alto padrão na Suíça e Brasil.',
+    keywords: ['facility management', 'limpeza', 'concierge', 'mudanças', 'suíça', 'brasil'],
+    openGraph: {
+        type: 'website',
+        locale: 'pt_BR',
+        url: 'https://laglobal.express',
+        title: 'LA Global Express | Excelência Suíça',
+        description: 'Liderança em Facility Management Premium. Soluções integradas para residências e corporações.',
+        siteName: 'LA Global Express',
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'LA Global Express',
+        description: 'Excelência Suíça em Facility Management.',
+    },
+    robots: {
+        index: true,
+        follow: true,
+    }
 }
 
 export default function RootLayout({

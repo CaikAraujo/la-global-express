@@ -1,6 +1,8 @@
 import React from 'react';
 import { ArrowRight, Check, Clock, Calendar } from 'lucide-react';
 
+import { ServiceItem } from '@/types/booking';
+
 interface BookingSummaryProps {
     serviceName: string;
     frequency: string;
@@ -9,13 +11,7 @@ interface BookingSummaryProps {
     step: number;
     onNext: () => void;
     canProceed: boolean;
-    items?: {
-        id: string;
-        name: string;
-        price: number;
-        duration: number;
-        description?: string;
-    }[];
+    items?: ServiceItem[];
 }
 
 export const BookingSummary: React.FC<BookingSummaryProps> = ({

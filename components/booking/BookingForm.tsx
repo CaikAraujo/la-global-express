@@ -3,14 +3,21 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Calendar, Clock, MapPin, User, CheckCircle2 } from 'lucide-react';
+import { Calendar, Clock, MapPin, User, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { ConciergeForm } from './ConciergeForm';
+import { CorporateCleaningForm } from './CorporateCleaningForm';
+import { DechetterieForm } from './DechetterieForm';
+import { OfficeSupportForm } from './OfficeSupportForm';
+
 import { TruckRentalForm } from './TruckRentalForm';
 import { MaterialSupplyForm } from './MaterialSupplyForm';
 import { AssemblyForm } from './AssemblyForm';
 import { CleaningForm } from './CleaningForm';
 import { DateTimeSelection } from './DateTimeSelection';
+import { BookingFormData } from '@/types/booking';
+
 interface BookingFormProps {
-    onUpdate: (data: any) => void;
+    onUpdate: (data: BookingFormData) => void;
     currentStep: number;
     showExtras?: boolean;
 }
@@ -26,12 +33,18 @@ const SERVICE_OPTIONS = [
     { id: 'res-material', label: 'Fornecimento de Material', basePrice: 10, description: 'Caixas, Fitas e Proteção' },
     { id: 'res-cleaning', label: 'Limpeza Executiva', basePrice: 180, description: 'Residencial e Comercial' },
     { id: 'res-assembly', label: 'Montagem Técnica', basePrice: 150, description: 'Móveis e Equipamentos' },
+    { id: 'corp-concierge', label: 'Concierge & Recepção', basePrice: 200, description: 'Corporativo e Eventos' },
+    { id: 'corp-cleaning', label: 'Limpeza Industrial', basePrice: 300, description: 'Grandes Áreas e Galpões' },
+    { id: 'corp-waste', label: 'Déchetterie & Resíduos', basePrice: 80, description: 'Coleta e Descarte' },
+    { id: 'corp-office-staff', label: 'Profissionais para Escritório', basePrice: 350, description: 'Copa, Limpeza e Apoio' },
 ];
+
+// ... existing imports
 
 export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep, showExtras }) => {
     const searchParams = useSearchParams();
 
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<BookingFormData>({
         serviceId: '',
         serviceName: '',
         frequency: 'once',
@@ -47,7 +60,8 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
         acceptedTerms: false,
         materialsTotal: 0,
         price: 0,
-        serviceDetails: {}
+        serviceDetails: {},
+        items: []
     });
 
     const DELIVERY_FEES: Record<string, number> = {
@@ -72,7 +86,8 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
         const serviceParam = searchParams?.get('service');
         if (serviceParam && activeServices.length === 0) {
             const found = SERVICE_OPTIONS.find(s => s.label.toLowerCase() === serviceParam.toLowerCase())
-                || SERVICE_OPTIONS.find(s => serviceParam.toLowerCase().includes(s.label.toLowerCase()));
+                || SERVICE_OPTIONS.find(s => serviceParam.toLowerCase().includes(s.label.toLowerCase()))
+                || SERVICE_OPTIONS.find(s => s.label.toLowerCase().includes(serviceParam.toLowerCase()));
 
             if (found) {
                 setActiveServices([found.id]);
@@ -246,12 +261,15 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
                             >
                                 {index > 0 && <div className="border-t border-gray-200 my-8"></div>}
 
-                                <div className="flex justify-end mb-2">
+                                <div className="flex justify-start mb-6">
                                     <button
                                         onClick={() => handleRemoveService(serviceId)}
-                                        className="text-xs text-red-500 hover:text-red-700 underline"
+                                        className="flex items-center gap-2 text-slate-500 hover:text-brand-dark transition-colors group"
                                     >
-                                        Remover serviço
+                                        <div className="p-2 rounded-full bg-slate-100 group-hover:bg-slate-200 transition-colors">
+                                            <ArrowLeft size={20} className="text-slate-600 group-hover:-translate-x-0.5 transition-transform" />
+                                        </div>
+                                        <span className="font-bold text-sm">Voltar para serviços</span>
                                     </button>
                                 </div>
 
@@ -266,6 +284,18 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
                                 )}
                                 {serviceId === 'res-assembly' && (
                                     <AssemblyForm onUpdate={(d) => handleChildUpdate(serviceId, d)} />
+                                )}
+                                {serviceId === 'corp-concierge' && (
+                                    <ConciergeForm onUpdate={(d) => handleChildUpdate(serviceId, d)} />
+                                )}
+                                {serviceId === 'corp-office-staff' && (
+                                    <OfficeSupportForm onUpdate={(d) => handleChildUpdate(serviceId, d)} />
+                                )}
+                                {serviceId === 'corp-cleaning' && (
+                                    <CorporateCleaningForm onUpdate={(d) => handleChildUpdate(serviceId, d)} />
+                                )}
+                                {serviceId === 'corp-waste' && (
+                                    <DechetterieForm onUpdate={(d) => handleChildUpdate(serviceId, d)} />
                                 )}
                             </motion.div>
                         );
