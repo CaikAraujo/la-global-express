@@ -46,7 +46,7 @@ const Footer: React.FC = () => {
             <ul className="space-y-4 text-sm text-gray-400">
               <li className="flex items-start gap-3">
                 <MapPin size={18} className="text-brand-600 mt-0.5" />
-                <span>Headquarters<br />Av. Brigadeiro Faria Lima, 3000<br />São Paulo, SP</span>
+                <span>Avenue des Communes-Réunies 43<br />1212 Grand-Lancy</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail size={18} className="text-brand-600" />

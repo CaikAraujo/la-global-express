@@ -54,9 +54,7 @@ const Navbar: React.FC = () => {
 
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center space-x-6">
-            <a href="#" className="text-sm font-bold text-gray-900 hover:text-brand-600 transition-colors">
-              Área do Cliente
-            </a>
+
             <Link
               href="/#servicos"
               className="px-6 py-2.5 bg-brand-600 text-white text-sm font-bold uppercase tracking-wider hover:bg-black transition-all rounded-lg"

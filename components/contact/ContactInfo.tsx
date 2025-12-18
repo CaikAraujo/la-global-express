@@ -22,10 +22,10 @@ const ContactInfo: React.FC = () => {
                             <MapPin className="w-5 h-5 text-brand-red" />
                         </div>
                         <div>
-                            <h3 className="font-bold text-xs uppercase tracking-widest text-brand-navy mb-1">Headquarters</h3>
+
                             <p className="text-brand-gray text-sm leading-relaxed">
-                                Av. Brigadeiro Faria Lima, 3000<br />
-                                Itaim Bibi, São Paulo - SP
+                                Avenue des Communes-Réunies 43<br />
+                                1212 Grand-Lancy
                             </p>
                         </div>
                     </div>
