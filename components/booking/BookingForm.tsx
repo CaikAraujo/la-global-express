@@ -263,7 +263,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
 
                                 <div className="flex justify-start mb-6">
                                     <button
-                                        onClick={() => handleRemoveService(serviceId)}
+                                        onClick={() => window.location.href = '/#servicos'}
                                         className="flex items-center gap-2 text-slate-500 hover:text-brand-dark transition-colors group"
                                     >
                                         <div className="p-2 rounded-full bg-slate-100 group-hover:bg-slate-200 transition-colors">
