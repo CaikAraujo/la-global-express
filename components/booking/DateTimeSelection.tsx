@@ -357,7 +357,7 @@ export const DateTimeSelection: React.FC<DateTimeSelectionProps> = ({
                             {/* Standard List */}
                             {/* Standard List */}
                             {next14Days.map((d, index) => {
-                                const isSelected = isSameDay(d, selectedDateObj);
+                                const isSelected = !!date && isSameDay(d, selectedDateObj);
                                 const isToday = isSameDay(d, startOfToday());
                                 const dateId = `date-card-${format(d, 'yyyy-MM-dd')}`;
 

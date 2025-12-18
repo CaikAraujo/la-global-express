@@ -1,83 +1,57 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    Coffee,
-    Briefcase,
-    Sparkles,
     Users,
-    Clock,
     CheckCircle2,
+    Briefcase,
+    Coffee,
+    Sparkles,
     Settings,
-    ShieldCheck
+    Clock
 } from 'lucide-react';
 
+import { OfficeSupportData } from '@/types/booking'; // Strict Type
+import { calculateOfficeSupportPrice, getOfficeSupportDetails } from './logic/pricing'; // Centralized Logic
 
 interface OfficeSupportFormProps {
     onUpdate: (data: any) => void;
+    frequency?: string; // [NEW] Link with parent frequency
 }
 
-type RoleType = 'pantry' | 'cleaning' | 'organizer' | 'maintenance';
-
-export const OfficeSupportForm: React.FC<OfficeSupportFormProps> = ({ onUpdate }) => {
-    const [state, setState] = useState({
-        role: 'pantry' as RoleType,
+export const OfficeSupportForm: React.FC<OfficeSupportFormProps> = ({ onUpdate, frequency = 'once' }) => {
+    // [REF] Use Strict Type for State
+    const [state, setState] = useState<OfficeSupportData>({
+        role: 'general' as any, // default
         staffCount: 1,
         hoursPerDay: 4,
-        frequency: 'daily', // daily, weekly
         uniform: true
     });
 
-    const updateState = (field: string, value: any) => {
+    const updateState = (field: keyof OfficeSupportData, value: any) => {
         setState(prev => ({ ...prev, [field]: value }));
     };
 
+    // [REF] Logic Extracted to useMemo + Pure Functions
+    // Instead of useEffect with lots of math, we derive the values.
+    const price = useMemo(() => calculateOfficeSupportPrice(state, frequency), [state, frequency]);
+    const details = useMemo(() => getOfficeSupportDetails(state), [state]);
+
+    // Update parent when derived values change
     useEffect(() => {
-        // Pricing Logic
-        let hourlyRate = 0;
-        switch (state.role) {
-            case 'pantry': hourlyRate = 35; break;
-            case 'cleaning': hourlyRate = 32; break;
-            case 'organizer': hourlyRate = 38; break;
-            case 'maintenance': hourlyRate = 45; break;
-        }
-
-        // Add uniform cost overhead
-        if (state.uniform) hourlyRate += 2;
-
-        const totalHours = state.hoursPerDay * state.staffCount;
-        let totalDaily = totalHours * hourlyRate;
-
-        // Discount for frequency could be applied in global store, but here we send base price
-
-        const getRoleLabel = () => {
-            switch (state.role) {
-                case 'pantry': return 'Copa & Café';
-                case 'cleaning': return 'Limpeza & Conservação';
-                case 'organizer': return 'Organização & Apoio';
-                case 'maintenance': return 'Manutenção Predial';
-            }
-        };
-
-        let details = `Profissional: ${getRoleLabel()}`;
-        details += `\nEquipe: ${state.staffCount} profissional(is)`;
-        details += `\nCarga: ${state.hoursPerDay}h/dia`;
-        if (state.uniform) details += ' (Com Uniforme)';
-
         onUpdate({
-            price: totalDaily * 5, // Weekly estimate (5 days) for the base price shown
+            price,
             duration: state.hoursPerDay,
             serviceDetails: details,
             isValid: true,
-            // Custom frequency flag if needed by parent
-            recurrence: 'weekly'
+            // Pass raw config if needed by API
+            config: state
         });
-
-    }, [state]);
+    }, [price, state.hoursPerDay, details, onUpdate]); // Minimal dependency array
 
     return (
-        <div className="space-y-8 font-sans text-slate-800 animate-in fade-in slide-in-from-right-8 duration-500">
+        <div className="space-y-10 font-sans text-slate-800 animate-in fade-in slide-in-from-right-8 duration-500">
             {/* Header */}
             <div className="bg-gradient-to-r from-brand-red/5 to-white p-6 rounded-2xl border border-brand-red/10">
                 <h1 className="text-2xl font-display font-bold text-brand-dark mb-2 flex items-center gap-3">
@@ -91,10 +65,7 @@ export const OfficeSupportForm: React.FC<OfficeSupportFormProps> = ({ onUpdate }
 
             {/* 1. Role Selection */}
             <section>
-                <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-lg font-bold text-brand-dark">1. Qual perfil você precisa?</h2>
-                </div>
-
+                <h2 className="text-lg font-bold text-brand-dark mb-4">1. Escolha a Função</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {[
                         { id: 'pantry', label: 'Copa & Café', icon: Coffee, desc: 'Preparo de café, serviço de copa e reuniões.', color: 'bg-amber-50 border-amber-200 text-amber-700' },
@@ -110,7 +81,7 @@ export const OfficeSupportForm: React.FC<OfficeSupportFormProps> = ({ onUpdate }
                                 key={item.id}
                                 whileHover={{ scale: 1.01 }}
                                 whileTap={{ scale: 0.99 }}
-                                onClick={() => updateState('role', item.id)}
+                                onClick={() => updateState('role', item.id as any)}
                                 className={`relative p-4 rounded-xl border-2 text-left transition-all duration-200 group ${isSelected
                                     ? 'border-brand-red ring-1 ring-brand-red bg-white shadow-md'
                                     : 'border-slate-100 bg-white hover:border-slate-300'
@@ -140,22 +111,22 @@ export const OfficeSupportForm: React.FC<OfficeSupportFormProps> = ({ onUpdate }
                 </div>
             </section>
 
-            {/* 2. Configuration */}
-            <section className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Staff Counter */}
-                    <div>
+            {/* 2. Staff Count & Uniform */}
+            <section>
+                <div className="flex flex-col md:flex-row gap-8">
+                    <div className="flex-1">
                         <h2 className="text-lg font-bold text-brand-dark mb-4 flex items-center gap-2">
                             <Users size={20} className="text-brand-red" /> Tamanho da Equipe
                         </h2>
                         <div className="flex items-center gap-4 bg-slate-50 p-2 rounded-xl border border-slate-200 w-fit">
                             <button
                                 onClick={() => updateState('staffCount', Math.max(1, state.staffCount - 1))}
-                                className="w-10 h-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center font-bold text-slate-600 hover:bg-slate-100 transition-colors"
+                                disabled={state.staffCount <= 1}
+                                className="w-10 h-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-100 disabled:opacity-50 transition-colors font-bold text-lg"
                             >
                                 -
                             </button>
-                            <span className="w-12 text-center text-xl font-bold text-brand-dark">{state.staffCount}</span>
+                            <span className="w-12 text-center font-bold text-xl text-brand-dark">{state.staffCount}</span>
                             <button
                                 onClick={() => updateState('staffCount', state.staffCount + 1)}
                                 className="w-10 h-10 rounded-lg bg-brand-red border border-brand-red flex items-center justify-center font-bold text-white hover:bg-brand-dark transition-colors shadow-sm"
@@ -163,30 +134,22 @@ export const OfficeSupportForm: React.FC<OfficeSupportFormProps> = ({ onUpdate }
                                 +
                             </button>
                         </div>
-                        <p className="text-xs text-slate-400 mt-2">
-                            Profissionais dedicados
-                        </p>
                     </div>
 
-                    {/* Uniform Toggle */}
-                    <div className="flex flex-col justify-center">
-                        <label className="flex items-center gap-3 p-4 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition-colors">
+                    <div className="flex-1">
+                        <h2 className="text-lg font-bold text-brand-dark mb-4">Uniforme</h2>
+                        <div
+                            onClick={() => updateState('uniform', !state.uniform)}
+                            className="flex items-center gap-4 p-4 rounded-xl border border-slate-200 bg-white cursor-pointer hover:border-brand-red/50 transition-colors group"
+                        >
                             <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-colors ${state.uniform ? 'bg-brand-red border-brand-red' : 'border-slate-300 bg-white'}`}>
                                 {state.uniform && <CheckCircle2 size={16} className="text-white" />}
                             </div>
-                            <input
-                                type="checkbox"
-                                className="hidden"
-                                checked={state.uniform}
-                                onChange={(e) => updateState('uniform', e.target.checked)}
-                            />
                             <div>
-                                <span className="block font-bold text-brand-dark flex items-center gap-2">
-                                    <ShieldCheck size={16} className="text-slate-400" /> Uniforme Completo
-                                </span>
-                                <span className="text-xs text-slate-500">Incluir EPIs e Identificação</span>
+                                <h3 className="font-bold text-brand-dark text-sm">Incluir Uniforme Completo</h3>
+                                <p className="text-xs text-slate-500">Padrão Executivo (+ CHF 15/dia)</p>
                             </div>
-                        </label>
+                        </div>
                     </div>
                 </div>
             </section>

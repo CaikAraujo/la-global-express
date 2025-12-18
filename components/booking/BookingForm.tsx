@@ -82,6 +82,22 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
         setFormData(prev => ({ ...prev, [field]: value }));
     };
 
+    // [FIX] Sync direct form fields to parent immediately
+    // Separate effect for basic fields to ensure responsiveness and avoid circular deps with servicesData
+    useEffect(() => {
+        onUpdate(formData);
+    }, [
+        formData.date,
+        formData.time,
+        formData.address,
+        formData.name,
+        formData.email,
+        formData.phone,
+        formData.observations,
+        formData.acceptedTerms,
+        onUpdate
+    ]);
+
     useEffect(() => {
         const serviceParam = searchParams?.get('service');
         if (serviceParam && activeServices.length === 0) {
@@ -96,7 +112,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
         }
     }, [searchParams]);
 
-    // Aggregate Data
+    // Aggregate Data (Calculated Fields)
     useEffect(() => {
         let totalPrice = 0;
         let totalDuration = 0;
@@ -119,17 +135,12 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
 
             if (serviceId === 'res-material') {
                 const deliveryFee = DELIVERY_FEES[formData.canton] || 0;
-                // Avoid double counting delivery if needed? 
-                // Logic: Material price + Delivery.
-                // If Cleaning is also present, maybe delivery is shared?
-                // For now, keep it simple: Add delivery fee.
                 servicePrice = (data.price || 0) + deliveryFee;
             }
 
             totalPrice += servicePrice;
 
             // Exclude Truck Rental and Material Supply validation from main schedule duration
-            // These services run in parallel or are deliveries, not main appointments
             if (serviceId !== 'res-truck-rental' && serviceId !== 'res-material') {
                 const rawDuration = data.duration || 0;
                 const numericDuration = typeof rawDuration === 'string'
@@ -161,27 +172,15 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
             totalDuration = 1;
         }
 
-        // Update FormData
-        // We defer updates to avoid render loops, only if changed
-        // But here we depend on servicesData which updates on child update.
-        // We need to be careful.
-        // Actually, just calling onUpdate from here is safer than child calling parent directly with total.
-
         // Construct composite details string
         let compositeDetails = "";
         if (typeof allDetails[0] === 'string') {
             compositeDetails = allDetails.join('\n + ');
         } else {
-            // If objects, stringify or map
-            // Assuming child forms return string or object. 
-            // Cleaning returns string. Truck returns object.
-            // We should standardize or handle both.
             compositeDetails = allDetails.map(d => typeof d === 'string' ? d : (d.description || JSON.stringify(d))).join('\n + ');
         }
 
-        const valid = activeServices.length > 0 && activeServices.every(id => servicesData[id]); // rudimentary validation
-
-        // Rudimentary deep check to avoid loop, including items
+        // Only update if calculated values differ
         const newPayload = {
             ...formData,
             price: totalPrice,
@@ -189,16 +188,11 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
             serviceDetails: compositeDetails,
             serviceId: primaryService || '',
             serviceName: SERVICE_OPTIONS.find(s => s.id === primaryService)?.label || '',
-            items: items // [NEW] Pass items
+            items: items
         };
 
-        if (JSON.stringify(newPayload) !== JSON.stringify(formData)) {
-            // Update Parent
-            if (totalPrice !== formData.price || totalDuration !== formData.duration || JSON.stringify(items) !== JSON.stringify((formData as any).items)) {
-                onUpdate(newPayload);
-            }
-
-            // [FIX] Update local state so internal components (DateTimeSelection) see the new duration
+        if (totalPrice !== formData.price || totalDuration !== formData.duration || JSON.stringify(items) !== JSON.stringify((formData as any).items)) {
+            // Local Update first
             setFormData(prev => ({
                 ...prev,
                 price: totalPrice,
@@ -208,6 +202,13 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
                 serviceName: SERVICE_OPTIONS.find(s => s.id === primaryService)?.label || '',
                 items: items
             }));
+            // Parent update will happen via the specific field effect ? 
+            // NO, we need to explicitely sync these calculated fields too because they are not deps of the other effect.
+            // Actually, if we update local state here, the OTHER effect will trigger? 
+            // NO, the other effect depends on formData.date, time, etc. NOT price.
+
+            // So we DO need to call onUpdate here for calculated values.
+            onUpdate(newPayload);
         }
 
     }, [servicesData, activeServices, formData.frequency, formData.canton, onUpdate]);
@@ -289,7 +290,10 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
                                     <ConciergeForm onUpdate={(d) => handleChildUpdate(serviceId, d)} />
                                 )}
                                 {serviceId === 'corp-office-staff' && (
-                                    <OfficeSupportForm onUpdate={(d) => handleChildUpdate(serviceId, d)} />
+                                    <OfficeSupportForm
+                                        frequency={formData.frequency}
+                                        onUpdate={(d) => handleChildUpdate(serviceId, d)}
+                                    />
                                 )}
                                 {serviceId === 'corp-cleaning' && (
                                     <CorporateCleaningForm onUpdate={(d) => handleChildUpdate(serviceId, d)} />
