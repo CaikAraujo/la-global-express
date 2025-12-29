@@ -1,9 +1,11 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, Sparkles, Loader2, Check, ArrowRight } from 'lucide-react';
+import { Send, Sparkles, Loader2, Check, ArrowRight, AlertCircle } from 'lucide-react';
 import { ContactFormState, InterestType } from '../../types';
 import { analyzeIntent } from '@/app/actions/contact';
 import { CustomSelect } from '../ui/CustomSelect';
+import { contactSchema } from '../../lib/schemas/contact';
+import { ZodError } from 'zod';
 
 // Lightweight Confetti Component
 const ConfettiExplosion: React.FC = () => {
@@ -86,6 +88,7 @@ const ContactForm: React.FC = () => {
         message: ''
     });
 
+    const [errors, setErrors] = useState<Record<string, string>>({});
     const [isTyping, setIsTyping] = useState(false);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [aiSuggestion, setAiSuggestion] = useState<string | null>(null);
@@ -113,18 +116,54 @@ const ContactForm: React.FC = () => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
         if (name === 'message') setIsTyping(true);
+        // Clear error when user starts typing
+        if (errors[name]) {
+            setErrors(prev => {
+                const newErrors = { ...prev };
+                delete newErrors[name];
+                return newErrors;
+            });
+        }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Validate with Zod
+        const result = contactSchema.safeParse(formData);
+
+        if (!result.success) {
+            const formattedErrors: Record<string, string> = {};
+            result.error.issues.forEach((issue) => {
+                formattedErrors[String(issue.path[0])] = issue.message;
+            });
+            setErrors(formattedErrors);
+            return;
+        }
+
         setSubmitted(true);
-        // Simulate API call
-        setTimeout(() => {
-            setSubmitted(false);
+
+        try {
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.error || 'Erro ao enviar mensagem');
+            }
+
             setIsSuccess(true);
             setFormData({ firstName: '', lastName: '', email: '', phone: '', interest: '', message: '' });
             setAiSuggestion(null);
-        }, 1500);
+        } catch (error) {
+            console.error('Submission error:', error);
+            alert('Ocorreu um erro ao enviar sua mensagem. Por favor, tente novamente.');
+        } finally {
+            setSubmitted(false);
+        }
     };
 
     const handleReset = () => {
@@ -192,10 +231,10 @@ const ContactForm: React.FC = () => {
                             name="firstName"
                             value={formData.firstName}
                             onChange={handleChange}
-                            required
-                            className="w-full bg-brand-cream border-none rounded-lg px-4 py-3 text-lg text-black focus:outline-none focus:ring-2 focus:ring-brand-red transition-all placeholder-gray-500 focus:placeholder-transparent font-display"
+                            className={`w-full bg-brand-cream border-none rounded-lg px-4 py-3 text-lg text-black focus:outline-none focus:ring-2 focus:ring-brand-red transition-all placeholder-gray-500 focus:placeholder-transparent font-display ${errors.firstName ? 'ring-2 ring-red-500' : ''}`}
                             placeholder="João"
                         />
+                        {errors.firstName && <span className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.firstName}</span>}
                     </div>
                     <div className="group">
                         <label className="block text-xs font-bold tracking-widest text-gray-500 mb-2 uppercase group-focus-within:text-brand-red transition-colors">
@@ -206,10 +245,10 @@ const ContactForm: React.FC = () => {
                             name="lastName"
                             value={formData.lastName}
                             onChange={handleChange}
-                            required
-                            className="w-full bg-brand-cream border-none rounded-lg px-4 py-3 text-lg text-black focus:outline-none focus:ring-2 focus:ring-brand-red transition-all placeholder-gray-500 focus:placeholder-transparent font-display"
+                            className={`w-full bg-brand-cream border-none rounded-lg px-4 py-3 text-lg text-black focus:outline-none focus:ring-2 focus:ring-brand-red transition-all placeholder-gray-500 focus:placeholder-transparent font-display ${errors.lastName ? 'ring-2 ring-red-500' : ''}`}
                             placeholder="Silva"
                         />
+                        {errors.lastName && <span className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.lastName}</span>}
                     </div>
                 </div>
 
@@ -223,10 +262,10 @@ const ContactForm: React.FC = () => {
                             name="email"
                             value={formData.email}
                             onChange={handleChange}
-                            required
-                            className="w-full bg-brand-cream border-none rounded-lg px-4 py-3 text-lg text-black focus:outline-none focus:ring-2 focus:ring-brand-red transition-all placeholder-gray-500 focus:placeholder-transparent font-display"
+                            className={`w-full bg-brand-cream border-none rounded-lg px-4 py-3 text-lg text-black focus:outline-none focus:ring-2 focus:ring-brand-red transition-all placeholder-gray-500 focus:placeholder-transparent font-display ${errors.email ? 'ring-2 ring-red-500' : ''}`}
                             placeholder="joao@empresa.com"
                         />
+                        {errors.email && <span className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.email}</span>}
                     </div>
                     <div className="group">
                         <label className="block text-xs font-bold tracking-widest text-gray-500 mb-2 uppercase group-focus-within:text-brand-red transition-colors">
@@ -237,9 +276,10 @@ const ContactForm: React.FC = () => {
                             name="phone"
                             value={formData.phone}
                             onChange={handleChange}
-                            className="w-full bg-brand-cream border-none rounded-lg px-4 py-3 text-lg text-black focus:outline-none focus:ring-2 focus:ring-brand-red transition-all placeholder-gray-500 focus:placeholder-transparent font-display"
-                            placeholder="+55 (11) 90000-0000"
+                            className={`w-full bg-brand-cream border-none rounded-lg px-4 py-3 text-lg text-black focus:outline-none focus:ring-2 focus:ring-brand-red transition-all placeholder-gray-500 focus:placeholder-transparent font-display ${errors.phone ? 'ring-2 ring-red-500' : ''}`}
+                            placeholder="+41 79 000 00 00"
                         />
+                        {errors.phone && <span className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.phone}</span>}
                     </div>
                 </div>
 
@@ -257,11 +297,17 @@ const ContactForm: React.FC = () => {
                     <div className="relative z-50">
                         <CustomSelect
                             value={formData.interest}
-                            onChange={(value) => setFormData(prev => ({ ...prev, interest: value }))}
+                            onChange={(value) => {
+                                setFormData(prev => ({ ...prev, interest: value }));
+                                if (errors.interest) {
+                                    setErrors(prev => { const n = { ...prev }; delete n.interest; return n; })
+                                }
+                            }}
                             options={Object.values(InterestType).map(type => ({ value: type, label: type }))}
                             placeholder="Selecione um serviço"
-                            className="w-full bg-brand-cream border-none rounded-lg px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-brand-red transition-all font-display"
+                            className={`w-full bg-brand-cream border-none rounded-lg px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-brand-red transition-all font-display ${errors.interest ? 'ring-2 ring-red-500' : ''}`}
                         />
+                        {errors.interest && <span className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.interest}</span>}
                     </div>
                 </div>
 
@@ -274,9 +320,10 @@ const ContactForm: React.FC = () => {
                         value={formData.message}
                         onChange={handleChange}
                         rows={3}
-                        className="w-full bg-brand-cream border-none rounded-lg px-4 py-3 text-lg text-black focus:outline-none focus:ring-2 focus:ring-brand-red transition-all placeholder-gray-500 resize-none focus:placeholder-transparent font-display"
+                        className={`w-full bg-brand-cream border-none rounded-lg px-4 py-3 text-lg text-black focus:outline-none focus:ring-2 focus:ring-brand-red transition-all placeholder-gray-500 resize-none focus:placeholder-transparent font-display ${errors.message ? 'ring-2 ring-red-500' : ''}`}
                         placeholder="Descreva sua necessidade..."
                     />
+                    {errors.message && <span className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.message}</span>}
                 </div>
 
                 <button
