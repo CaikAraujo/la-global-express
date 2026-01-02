@@ -54,7 +54,7 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, isHighlighted
 
                 <div className="mt-auto">
                     <Link
-                        href={`/agendar?service=${encodeURIComponent(service.title)}`}
+                        href={`/agendar?service=${encodeURIComponent(service.id)}`}
                         className="flex items-center gap-2 text-xs font-bold tracking-widest text-brand-dark group-hover:text-brand-red transition-all duration-300 uppercase group/btn"
                     >
                         Solicitar Proposta
@@ -62,6 +62,6 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, isHighlighted
                     </Link>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };

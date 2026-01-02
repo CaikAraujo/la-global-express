@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Package, Scroll, Scissors, ShoppingBag, ShoppingCart, Plus, Minus } from 'lucide-react';
+import { Archive, Book, Disc, Layers, Shirt, BedDouble, Armchair, ShieldCheck, Truck, Plus, Minus, PackageMinus } from 'lucide-react';
 
 interface MaterialOption {
     id: string;
@@ -16,35 +16,35 @@ const MATERIAL_OPTIONS: MaterialOption[] = [
         name: 'Cartão Grande',
         description: 'Caixa reforçada para itens volumosos',
         price: 4.99,
-        icon: Box
+        icon: Archive
     },
     {
         id: 'box-book',
         name: 'Cartão Livro',
         description: 'Ideal para livros e objetos pesados',
         price: 2.99,
-        icon: Package
+        icon: Book
     },
     {
         id: 'tape-pvc',
         name: 'Scott PVC',
         description: 'Fita adesiva de alta fixação',
         price: 3.69,
-        icon: Scissors
+        icon: Disc
     },
     {
         id: 'film',
         name: 'Films',
         description: 'Filme stretch para proteção',
         price: 12.99,
-        icon: Scroll
+        icon: Layers
     },
     {
         id: 'wardrobe',
         name: 'Ponderie (Porta-Roupas)',
         description: 'Caixa com cabideiro para roupas',
         price: 11.99,
-        icon: ShoppingBag,
+        icon: Shirt,
         badge: 'Prático'
     },
     {
@@ -52,28 +52,28 @@ const MATERIAL_OPTIONS: MaterialOption[] = [
         name: 'Cobertura Boxe',
         description: 'Proteção para colchões e móveis',
         price: 7.99,
-        icon: ShoppingBag
+        icon: BedDouble
     },
     {
         id: 'blanket',
         name: 'Cobertura Déménageur',
         description: 'Cobertor profissional de mudança',
         price: 11.99,
-        icon: ShoppingBag
+        icon: Armchair
     },
     {
         id: 'bubble-10m',
         name: 'Bolha 10 Metros',
         description: 'Plástico bolha para proteção',
         price: 11.99,
-        icon: Package
+        icon: ShieldCheck
     },
     {
         id: 'trolley',
         name: 'Chariot Profissional',
         description: 'Carrinho para transporte de cargas',
         price: 79.99,
-        icon: ShoppingCart,
+        icon: Truck,
         badge: 'Essencial'
     }
 ];
@@ -191,7 +191,7 @@ export const MaterialSupplyForm: React.FC<MaterialSupplyFormProps> = ({ onUpdate
 
             {totalItems === 0 && (
                 <div className="bg-yellow-50 text-yellow-800 p-4 rounded-xl border border-yellow-200 text-sm flex gap-3">
-                    <ShoppingBag size={20} className="shrink-0" />
+                    <PackageMinus size={20} className="shrink-0" />
                     <p>Selecione pelo menos um item para continuar.</p>
                 </div>
             )}

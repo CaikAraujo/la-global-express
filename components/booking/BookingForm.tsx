@@ -15,6 +15,8 @@ import { AssemblyForm } from './AssemblyForm';
 import { CleaningForm } from './CleaningForm';
 import { DateTimeSelection } from './DateTimeSelection';
 import { BookingFormData } from '@/types/booking';
+import { SERVICES } from '../services/data';
+import { Category } from '../services/types';
 
 interface BookingFormProps {
     onUpdate: (data: BookingFormData) => void;
@@ -101,7 +103,8 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
     useEffect(() => {
         const serviceParam = searchParams?.get('service');
         if (serviceParam && activeServices.length === 0) {
-            const found = SERVICE_OPTIONS.find(s => s.label.toLowerCase() === serviceParam.toLowerCase())
+            const found = SERVICE_OPTIONS.find(s => s.id === serviceParam)
+                || SERVICE_OPTIONS.find(s => s.label.toLowerCase() === serviceParam.toLowerCase())
                 || SERVICE_OPTIONS.find(s => serviceParam.toLowerCase().includes(s.label.toLowerCase()))
                 || SERVICE_OPTIONS.find(s => s.label.toLowerCase().includes(serviceParam.toLowerCase()));
 
@@ -324,7 +327,23 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
                             {activeServices.length === 0 ? 'Tipo de Serviço' : 'Serviços Disponíveis'}
                         </label>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {SERVICE_OPTIONS.filter(s => !activeServices.includes(s.id)).map(option => (
+                            {SERVICE_OPTIONS.filter(option => {
+                                // Filter out already selected services
+                                if (activeServices.includes(option.id)) return false;
+
+                                // Filter by Category if a service is already selected
+                                if (activeServices.length > 0) {
+                                    const firstServiceId = activeServices[0];
+                                    const firstService = SERVICES.find(s => s.id === firstServiceId);
+                                    const currentService = SERVICES.find(s => s.id === option.id);
+
+                                    if (firstService && currentService) {
+                                        return firstService.category === currentService.category;
+                                    }
+                                }
+
+                                return true;
+                            }).map(option => (
                                 <button
                                     key={option.id}
                                     onClick={() => handleAddService(option.id)}
