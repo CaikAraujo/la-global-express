@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, User } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -54,6 +54,14 @@ const Navbar: React.FC = () => {
 
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center space-x-6">
+
+            <Link
+              href="/login"
+              className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-brand-600 transition-colors mr-4"
+            >
+              <User size={20} />
+              <span>Login</span>
+            </Link>
 
             <Link
               href="/#servicos"
