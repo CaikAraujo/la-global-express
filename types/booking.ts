@@ -76,7 +76,7 @@ export interface WasteData {
 }
 
 export interface TruckData {
-    selectedTruck: 'car' | 'van' | 'truck';
+    selectedTruck: 'car' | 'van' | 'truck' | 'lift';
     period: 4 | 8;
     extraHours: number;
     extras: string[]; // IDs

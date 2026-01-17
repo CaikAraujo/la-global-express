@@ -4,6 +4,7 @@ import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import { Resend } from 'resend'
 import { NewCompanyEmailTemplate } from '@/components/emails/NewCompanyEmail'
+import { headers } from 'next/headers'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -60,6 +61,17 @@ export async function signupIndividual(formData: FormData) {
         return { error: 'Por favor, preencha todos os campos obrigatórios.' }
     }
 
+    // Check if user already exists
+    const { data: existingUser } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('email', email)
+        .single()
+
+    if (existingUser) {
+        return { error: 'Este email já está cadastrado. Tente fazer login.' }
+    }
+
     const { error } = await supabase.auth.signUp({
         email,
         password,
@@ -89,6 +101,17 @@ export async function signupCompany(formData: FormData) {
 
     if (!email || !password || !companyName || !companyUid || !contactPerson) {
         return { error: 'Por favor, preencha todos os campos obrigatórios.' }
+    }
+
+    // Check if user already exists
+    const { data: existingUser } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('email', email)
+        .single()
+
+    if (existingUser) {
+        return { error: 'Este email já está cadastrado. Tente fazer login.' }
     }
 
     const { error } = await supabase.auth.signUp({
@@ -136,4 +159,55 @@ export async function logout() {
     const supabase = await createClient()
     await supabase.auth.signOut()
     redirect('/login')
+}
+
+// ------ PASSWORD RESET ACTIONS ------
+
+export async function resetPassword(formData: FormData) {
+    const supabase = await createClient()
+    const email = formData.get('email') as string
+
+    // Construct the URL to redirect to after clicking the link
+    // We want to go to /auth/callback which handles the token exchange,
+    // and then redirect to our Reset Password Page
+    const origin = (await headers()).get('origin')
+    const redirectTo = `${origin}/auth/callback?next=/auth/reset-password`
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo,
+    })
+
+    if (error) {
+        return { error: 'Erro ao enviar email. Verifique se o endereço está correto.' }
+    }
+
+    return { success: true, message: `Um link de recuperação foi enviado para ${email}` }
+}
+
+export async function updatePassword(formData: FormData) {
+    const supabase = await createClient()
+    const password = formData.get('password') as string
+    const confirmPassword = formData.get('confirmPassword') as string
+
+    if (!password || !confirmPassword) {
+        return { error: 'Preencha todos os campos' }
+    }
+
+    if (password !== confirmPassword) {
+        return { error: 'As senhas não coincidem' }
+    }
+
+    if (password.length < 6) {
+        return { error: 'A senha deve ter pelo menos 6 caracteres' }
+    }
+
+    const { error } = await supabase.auth.updateUser({
+        password: password
+    })
+
+    if (error) {
+        return { error: 'Erro ao atualizar senha. Tente novamente.' }
+    }
+
+    return { success: true }
 }

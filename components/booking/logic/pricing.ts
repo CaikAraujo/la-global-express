@@ -52,7 +52,8 @@ export const PRICING_CONSTANTS = {
         OPTIONS: {
             car: { price4h: 80, price8h: 80, fixed: true },
             van: { price4h: 120, price8h: 220, fixed: false },
-            truck: { price4h: 150, price8h: 280, fixed: false }
+            truck: { price4h: 150, price8h: 280, fixed: false },
+            lift: { price4h: 400, price8h: 400, fixed: true }
         } as Record<string, any>,
         EXTRA_HOUR_RATE: 30,
         EXTRAS: {

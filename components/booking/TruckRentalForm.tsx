@@ -40,6 +40,16 @@ const TRUCK_OPTIONS = [
         price4h: 150,
         price8h: 280,
         icon: Truck
+    },
+    {
+        id: 'lift',
+        name: 'Monte-charge',
+        description: 'Elevador de móveis + Operador.',
+        capacity: 'Até 400kg • 8º Andar',
+        price4h: 400,
+        price8h: 400,
+        isFixedPrice: true,
+        icon: Truck // Using Truck icon for now, ideally find a better one
     }
 ];
 

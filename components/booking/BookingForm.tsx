@@ -22,6 +22,11 @@ interface BookingFormProps {
     onUpdate: (data: BookingFormData) => void;
     currentStep: number;
     showExtras?: boolean;
+    initialUserData?: {
+        name: string;
+        email: string;
+        phone: string; // Added phone just in case we have it later
+    } | null;
 }
 
 const FREQUENCY_OPTIONS = [
@@ -43,7 +48,7 @@ const SERVICE_OPTIONS = [
 
 // ... existing imports
 
-export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep, showExtras }) => {
+export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep, showExtras, initialUserData }) => {
     const searchParams = useSearchParams();
 
     const [formData, setFormData] = useState<BookingFormData>({
@@ -65,6 +70,31 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
         serviceDetails: {},
         items: []
     });
+
+    // ... existing constants
+
+    // Pre-fill user data when available
+    useEffect(() => {
+        if (initialUserData) {
+            setFormData(prev => ({
+                ...prev,
+                name: prev.name || initialUserData.name || '',
+                email: prev.email || initialUserData.email || '',
+                // Only fill if empty to respect user input if they started typing (unlikely but safe)
+                // Actually, user wants "simplificar". Overwriting is good, but let's be safe:
+                // If it's the specific initial load, we overwrite.
+            }));
+
+            // Stronger enforcement: If we have userData, we set it.
+            // The user can edit it afterwards because handleInputChange updates state.
+            setFormData(prev => ({
+                ...prev,
+                name: initialUserData.name || prev.name,
+                email: initialUserData.email || prev.email,
+                phone: initialUserData.phone || prev.phone
+            }));
+        }
+    }, [initialUserData]);
 
     const DELIVERY_FEES: Record<string, number> = {
         'GE': 30,
