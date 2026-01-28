@@ -41,13 +41,14 @@ export const metadata = {
 
 export default async function LocaleLayout({
     children,
-    params: { locale }
+    params
 }: {
     children: React.ReactNode
-    params: { locale: string }
+    params: Promise<{ locale: string }>
 }) {
     // Receive messages from the server
     const messages = await getMessages();
+    const { locale } = await params;
 
     return (
         <html lang={locale}>
