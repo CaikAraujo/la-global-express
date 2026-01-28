@@ -34,15 +34,15 @@ export default function ForgotPasswordPage() {
                 className="absolute top-8 left-8 text-gray-500 hover:text-brand-600 flex items-center gap-2 transition-colors"
             >
                 <ArrowLeft size={20} />
-                Voltar para Login
+                Retour à la Connexion
             </Link>
 
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-                    Recuperar Senha
+                    Récupérer le Mot de Passe
                 </h2>
                 <p className="mt-2 text-center text-sm text-gray-600">
-                    Digite seu email para receber um link de redefinição.
+                    Entrez votre email pour recevoir un lien de réinitialisation.
                 </p>
             </div>
 
@@ -58,7 +58,7 @@ export default function ForgotPasswordPage() {
                             <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
                                 <Mail className="h-6 w-6 text-green-600" />
                             </div>
-                            <h3 className="text-lg font-medium text-gray-900 mb-2">Email Enviado!</h3>
+                            <h3 className="text-lg font-medium text-gray-900 mb-2">Email Envoyé !</h3>
                             <p className="text-gray-500 text-sm mb-6">
                                 {successMessage}
                             </p>
@@ -66,14 +66,14 @@ export default function ForgotPasswordPage() {
                                 href="/login"
                                 className="text-brand-600 hover:text-brand-500 font-medium"
                             >
-                                Voltar para o Login
+                                Retour à la Connexion
                             </Link>
                         </motion.div>
                     ) : (
                         <form action={handleSubmit} className="space-y-6">
                             <div>
                                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                                    Endereço de Email
+                                    Adresse Email
                                 </label>
                                 <div className="mt-1">
                                     <input
@@ -102,7 +102,7 @@ export default function ForgotPasswordPage() {
                                     {loading ? (
                                         <Loader2 className="animate-spin h-5 w-5" />
                                     ) : (
-                                        'Enviar Link de Recuperação'
+                                        'Envoyer le Lien de Récupération'
                                     )}
                                 </button>
                             </div>

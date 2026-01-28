@@ -6,6 +6,7 @@ import { analyzeIntent } from '@/app/actions/contact';
 import { CustomSelect } from '../ui/CustomSelect';
 import { contactSchema } from '../../lib/schemas/contact';
 import { ZodError } from 'zod';
+import { useTranslations } from 'next-intl';
 
 // Lightweight Confetti Component
 const ConfettiExplosion: React.FC = () => {
@@ -79,6 +80,13 @@ const ConfettiExplosion: React.FC = () => {
 };
 
 const ContactForm: React.FC = () => {
+    const t = useTranslations('Contact.form');
+    // Using keys for InterestType mapping
+    // We assume backend handles the Enum values or we send the localized label? 
+    // Ideally we send the Enum KEY (e.g. CORPORATE) and display the localized label.
+    // The current state uses 'InterestType' values which are French strings.
+    // We should probably change the select to hold the Enum KEYS (CORPORATE, etc) as value.
+
     const [formData, setFormData] = useState<ContactFormState>({
         firstName: '',
         lastName: '',
@@ -103,6 +111,8 @@ const ContactForm: React.FC = () => {
                 const suggestedCategory = await analyzeIntent(formData.message);
                 if (suggestedCategory) {
                     setAiSuggestion(suggestedCategory);
+                    // Assuming analyzeIntent returns the Enum Value or Key. 
+                    // If it returns the French string, we might need to map it if we switch to Keys.
                     setFormData(prev => ({ ...prev, interest: suggestedCategory }));
                 }
                 setIsAnalyzing(false);
@@ -152,7 +162,7 @@ const ContactForm: React.FC = () => {
 
             if (!response.ok) {
                 const data = await response.json();
-                throw new Error(data.error || 'Erro ao enviar mensagem');
+                throw new Error(data.error || 'Idk error');
             }
 
             setIsSuccess(true);
@@ -160,7 +170,7 @@ const ContactForm: React.FC = () => {
             setAiSuggestion(null);
         } catch (error) {
             console.error('Submission error:', error);
-            alert('Ocorreu um erro ao enviar sua mensagem. Por favor, tente novamente.');
+            alert('Error sending message');
         } finally {
             setSubmitted(false);
         }
@@ -169,6 +179,13 @@ const ContactForm: React.FC = () => {
     const handleReset = () => {
         setIsSuccess(false);
     };
+
+    const interestOptions = Object.keys(InterestType).map(key => {
+        return {
+            value: InterestType[key as keyof typeof InterestType], // Keeps original values for backend compatibility
+            label: t(`interests.${key}`) // Uses translated label for display
+        };
+    });
 
     if (isSuccess) {
         return (
@@ -187,16 +204,16 @@ const ContactForm: React.FC = () => {
                 </div>
 
                 <div className="z-10 relative">
-                    <h2 className="font-display font-bold text-4xl mb-4 text-white tracking-tight">Recebido.</h2>
+                    <h2 className="font-display font-bold text-4xl mb-4 text-white tracking-tight">{t('success.received')}</h2>
                     <p className="text-gray-400 max-w-sm mx-auto mb-12 leading-relaxed text-sm tracking-wide">
-                        Sua solicitação foi enviada para nossa equipe de especialistas. Entraremos em contato em breve.
+                        {t('success.message')}
                     </p>
 
                     <button
                         onClick={handleReset}
                         className="group flex items-center gap-3 text-xs font-bold tracking-[0.2em] uppercase text-white hover:text-brand-red transition-colors mx-auto"
                     >
-                        <span>Nova mensagem</span>
+                        <span>{t('success.newMessage')}</span>
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </button>
                 </div>
@@ -214,9 +231,9 @@ const ContactForm: React.FC = () => {
             <div className="absolute top-0 left-0 w-24 h-1 bg-brand-red"></div>
 
             <div className="mb-10">
-                <h2 className="font-display font-bold text-3xl mb-2">Envie uma mensagem</h2>
+                <h2 className="font-display font-bold text-3xl mb-2">{t('title')}</h2>
                 <p className="text-gray-400 text-sm">
-                    Preencha o formulário abaixo e nossos consultores entrarão em contato em até 24h.
+                    {t('description')}
                 </p>
             </div>
 
@@ -224,7 +241,7 @@ const ContactForm: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="group">
                         <label className="block text-xs font-bold tracking-widest text-gray-500 mb-2 uppercase group-focus-within:text-brand-red transition-colors">
-                            Nome
+                            {t('labels.firstName')}
                         </label>
                         <input
                             type="text"
@@ -232,13 +249,13 @@ const ContactForm: React.FC = () => {
                             value={formData.firstName}
                             onChange={handleChange}
                             className={`w-full bg-brand-cream border-none rounded-lg px-4 py-3 text-lg text-black focus:outline-none focus:ring-2 focus:ring-brand-red transition-all placeholder-gray-500 focus:placeholder-transparent font-display ${errors.firstName ? 'ring-2 ring-red-500' : ''}`}
-                            placeholder="João"
+                            placeholder={t('placeholders.firstName')}
                         />
                         {errors.firstName && <span className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.firstName}</span>}
                     </div>
                     <div className="group">
                         <label className="block text-xs font-bold tracking-widest text-gray-500 mb-2 uppercase group-focus-within:text-brand-red transition-colors">
-                            Sobrenome
+                            {t('labels.lastName')}
                         </label>
                         <input
                             type="text"
@@ -246,7 +263,7 @@ const ContactForm: React.FC = () => {
                             value={formData.lastName}
                             onChange={handleChange}
                             className={`w-full bg-brand-cream border-none rounded-lg px-4 py-3 text-lg text-black focus:outline-none focus:ring-2 focus:ring-brand-red transition-all placeholder-gray-500 focus:placeholder-transparent font-display ${errors.lastName ? 'ring-2 ring-red-500' : ''}`}
-                            placeholder="Silva"
+                            placeholder={t('placeholders.lastName')}
                         />
                         {errors.lastName && <span className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.lastName}</span>}
                     </div>
@@ -255,7 +272,7 @@ const ContactForm: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="group">
                         <label className="block text-xs font-bold tracking-widest text-gray-500 mb-2 uppercase group-focus-within:text-brand-red transition-colors">
-                            Email Corporativo
+                            {t('labels.email')}
                         </label>
                         <input
                             type="email"
@@ -263,13 +280,13 @@ const ContactForm: React.FC = () => {
                             value={formData.email}
                             onChange={handleChange}
                             className={`w-full bg-brand-cream border-none rounded-lg px-4 py-3 text-lg text-black focus:outline-none focus:ring-2 focus:ring-brand-red transition-all placeholder-gray-500 focus:placeholder-transparent font-display ${errors.email ? 'ring-2 ring-red-500' : ''}`}
-                            placeholder="joao@empresa.com"
+                            placeholder={t('placeholders.email')}
                         />
                         {errors.email && <span className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.email}</span>}
                     </div>
                     <div className="group">
                         <label className="block text-xs font-bold tracking-widest text-gray-500 mb-2 uppercase group-focus-within:text-brand-red transition-colors">
-                            Telefone <span className="text-[10px] normal-case tracking-normal opacity-60">(Opcional)</span>
+                            {t('labels.phone')} <span className="text-[10px] normal-case tracking-normal opacity-60">({t('labels.optional')})</span>
                         </label>
                         <input
                             type="tel"
@@ -277,7 +294,7 @@ const ContactForm: React.FC = () => {
                             value={formData.phone}
                             onChange={handleChange}
                             className={`w-full bg-brand-cream border-none rounded-lg px-4 py-3 text-lg text-black focus:outline-none focus:ring-2 focus:ring-brand-red transition-all placeholder-gray-500 focus:placeholder-transparent font-display ${errors.phone ? 'ring-2 ring-red-500' : ''}`}
-                            placeholder="+41 79 000 00 00"
+                            placeholder={t('placeholders.phone')}
                         />
                         {errors.phone && <span className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.phone}</span>}
                     </div>
@@ -285,12 +302,12 @@ const ContactForm: React.FC = () => {
 
                 <div className="group relative">
                     <label className="flex items-center gap-2 text-xs font-bold tracking-widest text-gray-500 mb-2 uppercase group-focus-within:text-brand-red transition-colors">
-                        Interesse
+                        {t('labels.interest')}
                         {isAnalyzing && <Loader2 className="w-3 h-3 animate-spin text-brand-red" />}
                         {aiSuggestion && !isAnalyzing && (
                             <span className="flex items-center gap-1 text-[10px] bg-brand-red/10 text-brand-red px-2 py-0.5 rounded-full normal-case tracking-normal border border-brand-red/20 animate-pulse">
                                 <Sparkles className="w-3 h-3" />
-                                Sugerido por IA
+                                {t('labels.suggested')}
                             </span>
                         )}
                     </label>
@@ -303,8 +320,8 @@ const ContactForm: React.FC = () => {
                                     setErrors(prev => { const n = { ...prev }; delete n.interest; return n; })
                                 }
                             }}
-                            options={Object.values(InterestType).map(type => ({ value: type, label: type }))}
-                            placeholder="Selecione um serviço"
+                            options={interestOptions}
+                            placeholder={t('placeholders.interest')}
                             className={`w-full bg-brand-cream border-none rounded-lg px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-brand-red transition-all font-display ${errors.interest ? 'ring-2 ring-red-500' : ''}`}
                         />
                         {errors.interest && <span className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.interest}</span>}
@@ -313,7 +330,7 @@ const ContactForm: React.FC = () => {
 
                 <div className="group">
                     <label className="block text-xs font-bold tracking-widest text-gray-500 mb-2 uppercase group-focus-within:text-brand-red transition-colors">
-                        Mensagem
+                        {t('labels.message')}
                     </label>
                     <textarea
                         name="message"
@@ -321,7 +338,7 @@ const ContactForm: React.FC = () => {
                         onChange={handleChange}
                         rows={3}
                         className={`w-full bg-brand-cream border-none rounded-lg px-4 py-3 text-lg text-black focus:outline-none focus:ring-2 focus:ring-brand-red transition-all placeholder-gray-500 resize-none focus:placeholder-transparent font-display ${errors.message ? 'ring-2 ring-red-500' : ''}`}
-                        placeholder="Descreva sua necessidade..."
+                        placeholder={t('placeholders.message')}
                     />
                     {errors.message && <span className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.message}</span>}
                 </div>
@@ -332,7 +349,7 @@ const ContactForm: React.FC = () => {
                     className="w-full bg-brand-red text-white py-4 px-6 flex items-center justify-between group hover:bg-white hover:text-brand-red transition-all duration-300 mt-8"
                 >
                     <span className="font-bold uppercase tracking-widest text-sm">
-                        {submitted ? 'Enviando...' : 'Enviar Solicitação'}
+                        {submitted ? t('submit.sending') : t('submit.default')}
                     </span>
                     {submitted ? (
                         <Loader2 className="w-5 h-5 animate-spin" />

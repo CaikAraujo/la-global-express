@@ -1,7 +1,7 @@
 import React from 'react';
-import { ArrowRight, Check, Clock, Calendar } from 'lucide-react';
-
+import { ArrowRight, Check, Clock } from 'lucide-react';
 import { ServiceItem } from '@/types/booking';
+import { useTranslations } from 'next-intl';
 
 interface BookingSummaryProps {
     serviceName: string;
@@ -24,11 +24,33 @@ export const BookingSummary: React.FC<BookingSummaryProps> = ({
     canProceed,
     items = []
 }) => {
+    const t = useTranslations('Booking.summary');
+    const tButtons = useTranslations('Booking.buttons');
+    const tFreq = useTranslations('Booking.summary.frequencies');
+
+    // Helper to translate frequency value
+    const getFrequencyLabel = (freqKey: string) => {
+        // Map internal keys to translation keys
+        const map: Record<string, string> = {
+            'once': 'once',
+            'weekly': 'weekly',
+            'biweekly': 'biweekly',
+            'monthly': 'monthly',
+            // Handle legacy/fallback values if necessary
+            'Une fois': 'once',
+            'Hebdomadaire': 'weekly',
+            'Bihebdomadaire': 'biweekly',
+            'Mensuel': 'monthly'
+        };
+        const key = map[freqKey] || 'once';
+        return tFreq(key);
+    };
+
     return (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sticky top-24 max-h-[calc(100vh-120px)] overflow-y-auto">
             <h3 className="font-bold text-gray-900 mb-6 flex items-center gap-2">
                 <span className="w-1 h-6 bg-brand-red rounded-full"></span>
-                Resumo do Pedido
+                {t('title')}
             </h3>
 
             <div className="space-y-6 mb-8">
@@ -53,7 +75,7 @@ export const BookingSummary: React.FC<BookingSummaryProps> = ({
                                 {item.duration > 0 && (
                                     <div className="flex items-center gap-1.5 text-xs text-brand-red font-medium mt-1">
                                         <Clock size={12} />
-                                        <span>{item.duration}h estimado</span>
+                                        <span>{item.duration}h {t('estimated')}</span>
                                     </div>
                                 )}
                             </div>
@@ -61,8 +83,8 @@ export const BookingSummary: React.FC<BookingSummaryProps> = ({
                     ) : (
                         <div className="flex justify-between items-start pb-4 border-b border-gray-50">
                             <div>
-                                <p className="text-xs text-gray-400 uppercase font-bold tracking-wider mb-1">Serviço</p>
-                                <p className="font-medium text-gray-900">{serviceName || 'Selecione...'}</p>
+                                <p className="text-xs text-gray-400 uppercase font-bold tracking-wider mb-1">{t('service')}</p>
+                                <p className="font-medium text-gray-900">{serviceName || '...'}</p>
                             </div>
                         </div>
                     )}
@@ -72,29 +94,29 @@ export const BookingSummary: React.FC<BookingSummaryProps> = ({
                 <div className="bg-gray-50 rounded-xl p-4 space-y-3">
                     {duration > 0 && (
                         <div className="flex justify-between items-center text-sm">
-                            <span className="text-gray-500">Duração Total</span>
+                            <span className="text-gray-500">{t('totalDuration')}</span>
                             <span className="font-bold text-gray-900 flex items-center gap-1">
                                 <Clock size={14} className="text-brand-red" />
-                                {duration} horas
+                                {duration} {t('hours')}
                             </span>
                         </div>
                     )}
 
                     <div className="flex justify-between items-center text-sm">
-                        <span className="text-gray-500">Frequência</span>
-                        <span className="font-bold text-gray-900">{frequency}</span>
+                        <span className="text-gray-500">{t('frequency')}</span>
+                        <span className="font-bold text-gray-900">{getFrequencyLabel(frequency)}</span>
                     </div>
 
                     <div className="pt-3 border-t border-gray-200 mt-2">
                         <div className="flex justify-between items-end">
-                            <span className="text-sm font-bold text-gray-600">Total Estimado</span>
+                            <span className="text-sm font-bold text-gray-600">{t('estimatedTotal')}</span>
                             <div className="text-right">
                                 <p className="text-2xl font-display font-bold text-brand-dark">
                                     CHF {price.toFixed(2)}
                                 </p>
-                                {frequency !== 'Uma vez' && (
+                                {frequency !== 'once' && frequency !== 'Une fois' && (
                                     <p className="text-[10px] text-green-600 font-bold bg-green-100 px-2 py-0.5 rounded-full inline-block mt-1">
-                                        {frequency === 'Semanal' ? '20%' : frequency === 'Quinzenal' ? '15%' : '10%'} OFF
+                                        {(frequency === 'weekly' || frequency === 'Hebdomadaire') ? '20%' : (frequency === 'biweekly' || frequency === 'Bihebdomadaire') ? '15%' : '10%'} OFF
                                     </p>
                                 )}
                             </div>
@@ -113,13 +135,13 @@ export const BookingSummary: React.FC<BookingSummaryProps> = ({
                         : 'bg-gray-100 text-gray-400 cursor-not-allowed'}
                 `}
             >
-                {step === 3 ? 'Finalizar Agendamento' : 'Avançar'}
+                {step === 3 ? tButtons('finalize') : tButtons('next')}
                 {step < 3 && <ArrowRight size={18} />}
             </button>
 
             <div className="mt-4 flex items-center justify-center gap-2 text-xs text-gray-400">
                 <Check size={12} />
-                <span>Compra 100% Segura</span>
+                <span>{t('secure')}</span>
             </div>
         </div>
     );

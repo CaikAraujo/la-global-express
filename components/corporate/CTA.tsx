@@ -4,8 +4,10 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Phone, ArrowRight, Mail, Send } from 'lucide-react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 const CTA: React.FC = () => {
+    const t = useTranslations('Corporate.cta');
     return (
         <section className="relative w-full py-24 bg-brand-dark overflow-hidden font-sans">
             {/* Background Ambience */}
@@ -24,7 +26,9 @@ const CTA: React.FC = () => {
                             transition={{ duration: 0.6 }}
                             className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight tracking-tight"
                         >
-                            Pronto para elevar o nível da sua <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-red-400">infraestrutura?</span>
+                            {t.rich('title', {
+                                gradient: (chunks) => <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-red-400">{chunks}</span>
+                            })}
                         </motion.h2>
 
                         <motion.p
@@ -34,7 +38,7 @@ const CTA: React.FC = () => {
                             transition={{ duration: 0.6, delay: 0.1 }}
                             className="text-lg text-gray-400 mb-10 max-w-2xl leading-relaxed"
                         >
-                            Solicite uma auditoria gratuita das suas instalações atuais e descubra onde você pode economizar com nossas soluções de alta performance.
+                            {t('description')}
                         </motion.p>
 
                         <motion.div
@@ -50,14 +54,14 @@ const CTA: React.FC = () => {
                                     <Phone className="w-5 h-5" />
                                 </div>
                                 <div>
-                                    <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-0.5">Ligue agora</p>
-                                    <p className="text-white font-bold text-lg tracking-wide">+55 11 9999-9999</p>
+                                    <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-0.5">{t('phone')}</p>
+                                    <p className="text-white font-bold text-lg tracking-wide">+41 79 000 00 00</p>
                                 </div>
                             </div>
 
                             {/* Main CTA Button */}
                             <Link href="/contact" className="flex-1 sm:flex-none px-8 py-4 bg-brand-red text-white font-bold rounded-lg hover:bg-red-600 transition-colors shadow-lg shadow-brand-red/25 flex items-center justify-center gap-2 group">
-                                SOLICITAR ORÇAMENTO
+                                {t('button')}
                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                             </Link>
                         </motion.div>
@@ -76,31 +80,31 @@ const CTA: React.FC = () => {
                                 <div className="p-2 bg-gray-100 rounded-md">
                                     <Mail className="w-5 h-5 text-brand-dark" />
                                 </div>
-                                <h3 className="text-xl font-bold text-brand-dark">Contato Rápido</h3>
+                                <h3 className="text-xl font-bold text-brand-dark">{t('form.title')}</h3>
                             </div>
 
                             <form className="space-y-6">
                                 <div>
                                     <label htmlFor="email" className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
-                                        Seu Email Corporativo
+                                        {t('form.email')}
                                     </label>
                                     <input
                                         type="email"
                                         id="email"
-                                        placeholder="nome@empresa.com.br"
+                                        placeholder="nom@entreprise.com"
                                         className="w-full px-4 py-3 bg-gray-100 border border-transparent rounded-lg text-brand-dark placeholder-gray-400 focus:bg-white focus:border-brand-red focus:ring-2 focus:ring-brand-red/20 outline-none transition-all"
                                     />
                                 </div>
 
                                 <button type="button" className="w-full py-4 bg-brand-dark text-white font-bold rounded-lg hover:bg-black transition-all flex items-center justify-center gap-2 group">
-                                    INICIAR CONVERSA
+                                    {t('form.submit')}
                                     <Send className="w-4 h-4 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
                                 </button>
                             </form>
 
                             <div className="mt-6 flex items-center justify-center gap-2 text-xs text-gray-400">
                                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                                <span>Especialistas online agora</span>
+                                <span>{t('form.online')}</span>
                             </div>
                         </div>
 

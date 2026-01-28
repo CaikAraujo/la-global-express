@@ -27,7 +27,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({ plan, isYearly }) => {
         <div className={containerClasses}>
             {plan.isRecommended && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand-red text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
-                    Mais Escolhido
+                    Recommandé
                 </div>
             )}
 
@@ -46,21 +46,21 @@ export const PricingCard: React.FC<PricingCardProps> = ({ plan, isYearly }) => {
             <div className="mb-8 font-sans">
                 {price !== null ? (
                     <div className="flex items-baseline gap-1">
-                        <span className="text-sm font-medium text-gray-400">R$</span>
+                        <span className="text-sm font-medium text-gray-400">CHF</span>
                         <span className={`text-5xl font-light tracking-tight ${isDark ? 'text-white' : 'text-brand-dark'}`}>
-                            {price.toLocaleString('pt-BR')}
+                            {price.toLocaleString('fr-CH')}
                         </span>
-                        <span className="text-sm text-gray-400">/mês</span>
+                        <span className="text-sm text-gray-400">/mois</span>
                     </div>
                 ) : (
                     <div className="flex items-baseline gap-1">
                         <span className={`text-4xl font-light tracking-tight ${isDark ? 'text-white' : 'text-brand-dark'}`}>
-                            Sob Consulta
+                            Sur Devis
                         </span>
                     </div>
                 )}
                 {isYearly && price !== null && (
-                    <p className="text-xs text-brand-red mt-2 font-medium">Cobrado anualmente (Economia de 10%)</p>
+                    <p className="text-xs text-brand-red mt-2 font-medium">Facturé annuellement (Économie de 10%)</p>
                 )}
             </div>
 
@@ -75,8 +75,8 @@ export const PricingCard: React.FC<PricingCardProps> = ({ plan, isYearly }) => {
                             {feature.included ? ICONS.Check : ICONS.X}
                         </div>
                         <span className={`text-sm font-sans ${!feature.included
-                                ? 'text-gray-400 line-through decoration-gray-300 decoration-1'
-                                : isDark ? 'text-gray-300' : 'text-gray-600'
+                            ? 'text-gray-400 line-through decoration-gray-300 decoration-1'
+                            : isDark ? 'text-gray-300' : 'text-gray-600'
                             }`}>
                             {feature.name}
                             {feature.tooltip && (

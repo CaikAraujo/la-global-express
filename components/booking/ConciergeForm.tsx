@@ -67,12 +67,12 @@ export const ConciergeForm: React.FC<ConciergeFormProps> = ({ onUpdate }) => {
 
         const total = baseRate * state.staffCount * state.hoursPerDay;
 
-        const description = `Concierge (${state.serviceType === 'reception' ? 'Recepção' : state.serviceType === 'security' ? 'Segurança' : 'Administrativo'}) - ${state.serviceLevel === 'standard' ? 'Padrão' : 'Premium'}`;
+        const description = `Concierge (${state.serviceType === 'reception' ? 'Réception' : state.serviceType === 'security' ? 'Sécurité' : 'Administratif'}) - ${state.serviceLevel === 'standard' ? 'Standard' : 'Premium'}`;
 
         let details = description;
-        details += `\n + ${state.staffCount} Profissiona${state.staffCount > 1 ? 'is' : 'l'}`;
-        details += `\n + ${state.hoursPerDay}h/dia`;
-        if (state.languages.length > 0) details += `\n + Idiomas: ${state.languages.join(', ')}`;
+        details += `\n + ${state.staffCount} Professionnel${state.staffCount > 1 ? 's' : ''}`;
+        details += `\n + ${state.hoursPerDay}h/jour`;
+        if (state.languages.length > 0) details += `\n + Langues: ${state.languages.join(', ')}`;
 
         onUpdate({
             price: total,
@@ -87,18 +87,18 @@ export const ConciergeForm: React.FC<ConciergeFormProps> = ({ onUpdate }) => {
         <div className="space-y-10 font-sans text-slate-800 animate-in fade-in slide-in-from-right-8 duration-500">
             {/* Header */}
             <div>
-                <h1 className="text-3xl font-display font-bold text-brand-dark mb-2">Configure seu Concierge</h1>
-                <p className="text-slate-500">Profissionais treinados para elevar o nível do seu atendimento.</p>
+                <h1 className="text-3xl font-display font-bold text-brand-dark mb-2">Configurez votre Concierge</h1>
+                <p className="text-slate-500">Des professionnels formés pour élever le niveau de votre service.</p>
             </div>
 
             {/* 1. Service Type */}
             <section>
-                <h2 className="text-lg font-bold text-brand-dark mb-4">1. Qual o perfil do profissional?</h2>
+                <h2 className="text-lg font-bold text-brand-dark mb-4">1. Quel est le profil du professionnel ?</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {[
-                        { id: 'reception', label: 'Recepção', icon: ConciergeBell, desc: 'Atendimento e Check-in' },
-                        { id: 'security', label: 'Controle de Acesso', icon: ShieldCheck, desc: 'Monitoramento e Portaria' },
-                        { id: 'admin', label: 'Assistente Admin.', icon: FileText, desc: 'Back-office e Apoio' },
+                        { id: 'reception', label: 'Réception', icon: ConciergeBell, desc: 'Accueil et Enregistrement' },
+                        { id: 'security', label: 'Contrôle d\'Accès', icon: ShieldCheck, desc: 'Surveillance et Loge' },
+                        { id: 'admin', label: 'Assistant Admin.', icon: FileText, desc: 'Back-office et Soutien' },
                     ].map((item) => {
                         const isSelected = state.serviceType === item.id;
                         const Icon = item.icon;
@@ -124,7 +124,7 @@ export const ConciergeForm: React.FC<ConciergeFormProps> = ({ onUpdate }) => {
 
             {/* 2. Service Level */}
             <section>
-                <h2 className="text-lg font-bold text-brand-dark mb-4">2. Nível de Experiência</h2>
+                <h2 className="text-lg font-bold text-brand-dark mb-4">2. Niveau d'Expérience</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <button
                         onClick={() => updateState('serviceLevel', 'standard')}
@@ -138,9 +138,9 @@ export const ConciergeForm: React.FC<ConciergeFormProps> = ({ onUpdate }) => {
                             {state.serviceLevel === 'standard' && <CheckCircle2 size={20} className="text-brand-red" />}
                         </div>
                         <ul className={`text-sm space-y-1 ${state.serviceLevel === 'standard' ? 'text-gray-400' : 'text-gray-500'}`}>
-                            <li>• Horário Comercial</li>
-                            <li>• Uniforme Padrão</li>
-                            <li>• Treinamento Básico</li>
+                            <li>• Heures de Bureau</li>
+                            <li>• Uniforme Standard</li>
+                            <li>• Formation de Base</li>
                         </ul>
                     </button>
 
@@ -156,9 +156,9 @@ export const ConciergeForm: React.FC<ConciergeFormProps> = ({ onUpdate }) => {
                             {state.serviceLevel === 'premium' && <CheckCircle2 size={20} className="text-white" />}
                         </div>
                         <ul className={`text-sm space-y-1 ${state.serviceLevel === 'premium' ? 'text-red-100' : 'text-gray-500'}`}>
-                            <li>• Disponibilidade Flexível</li>
-                            <li>• Profissionais Bilíngues</li>
-                            <li>• Gestão de Crises</li>
+                            <li>• Disponibilité Flexible</li>
+                            <li>• Professionnels Bilingues</li>
+                            <li>• Gestion de Crise</li>
                         </ul>
                     </button>
                 </div>
@@ -170,10 +170,10 @@ export const ConciergeForm: React.FC<ConciergeFormProps> = ({ onUpdate }) => {
                     <div>
                         <h3 className="font-bold text-brand-dark mb-4 flex items-center gap-2">
                             <UserCheck className="text-brand-red" size={20} />
-                            Equipe
+                            Équipe
                         </h3>
                         <Counter
-                            label={state.staffCount === 1 ? 'profissional' : 'profissionais'}
+                            label={state.staffCount === 1 ? 'professionnel' : 'professionnels'}
                             value={state.staffCount}
                             onChange={(v) => updateState('staffCount', v)}
                             min={1}
@@ -183,10 +183,10 @@ export const ConciergeForm: React.FC<ConciergeFormProps> = ({ onUpdate }) => {
                     <div>
                         <h3 className="font-bold text-brand-dark mb-4 flex items-center gap-2">
                             <Clock className="text-brand-red" size={20} />
-                            Duração diária
+                            Durée quotidienne
                         </h3>
                         <Counter
-                            label="horas/dia"
+                            label="heures/jour"
                             value={state.hoursPerDay}
                             onChange={(v) => updateState('hoursPerDay', v)}
                             min={4}
@@ -199,18 +199,18 @@ export const ConciergeForm: React.FC<ConciergeFormProps> = ({ onUpdate }) => {
             {/* 4. Languages */}
             <section>
                 <h2 className="text-lg font-bold text-brand-dark mb-4 flex items-center gap-2">
-                    <Languages size={20} /> Idiomas Necessários
+                    <Languages size={20} /> Langues Requises
                 </h2>
                 <div className="flex flex-wrap gap-3">
-                    {['Francês', 'Inglês', 'Alemão', 'Português', 'Espanhol'].map(lang => {
+                    {['Français', 'Anglais', 'Allemand', 'Portugais', 'Espagnol'].map(lang => {
                         const isSelected = state.languages.includes(lang);
                         return (
                             <button
                                 key={lang}
                                 onClick={() => toggleLanguage(lang)}
                                 className={`px-4 py-2 rounded-full text-sm font-bold border transition-all ${isSelected
-                                        ? 'bg-brand-dark text-white border-brand-dark'
-                                        : 'bg-white text-gray-500 border-gray-200 hover:border-gray-300'
+                                    ? 'bg-brand-dark text-white border-brand-dark'
+                                    : 'bg-white text-gray-500 border-gray-200 hover:border-gray-300'
                                     }`}
                             >
                                 {lang}

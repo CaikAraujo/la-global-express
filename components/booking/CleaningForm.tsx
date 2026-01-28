@@ -19,13 +19,13 @@ interface CleaningFormProps {
 }
 
 const EXTRAS_OPTIONS = [
-    { id: 'fridge', label: 'Interior da geladeira', price: 30, duration: 0.5 },
-    { id: 'cupboard', label: 'Int. de armário de cozinha', price: 50, duration: 1 },
-    { id: 'window', label: 'Interior de janelas', price: 50, duration: 1 },
-    { id: 'carpet', label: 'Aspirar Tapete ou Estofado', price: 30, duration: 0.5 },
-    { id: 'outdoor', label: 'Área externa (até 20m²)', price: 60, duration: 1 },
-    { id: 'ironing2h', label: 'Passadoria de roupas - 2h adicionais', price: 100, duration: 2 },
-    { id: 'laundry', label: 'Lavar Roupas', price: 40, duration: 1 },
+    { id: 'fridge', label: 'Intérieur du réfrigérateur', price: 30, duration: 0.5 },
+    { id: 'cupboard', label: 'Int. des placards de cuisine', price: 50, duration: 1 },
+    { id: 'window', label: 'Intérieur des fenêtres', price: 50, duration: 1 },
+    { id: 'carpet', label: 'Aspirer Tapis ou Canapé', price: 30, duration: 0.5 },
+    { id: 'outdoor', label: 'Zone extérieure (jusqu\'à 20m²)', price: 60, duration: 1 },
+    { id: 'ironing2h', label: 'Repassage - 2h supplémentaires', price: 100, duration: 2 },
+    { id: 'laundry', label: 'Laver le Linge', price: 40, duration: 1 },
 ];
 
 const CANTON_FEES: Record<string, number> = {
@@ -74,8 +74,8 @@ export const CleaningForm: React.FC<CleaningFormProps> = ({ onUpdate, showExtras
             const minPieces = Math.floor(state.ironingHours * 8);
             const maxPieces = Math.floor(state.ironingHours * 12);
 
-            description = `Passadoria`;
-            detailsText = `Passadoria - ${state.ironingHours}h (Estimado ${minPieces}-${maxPieces} peças)`;
+            description = `Repassage`;
+            detailsText = `Repassage - ${state.ironingHours}h (Estimé ${minPieces}-${maxPieces} pièces)`;
         } else {
             // Cleaning Logic
             let basePrice = 560;
@@ -94,15 +94,15 @@ export const CleaningForm: React.FC<CleaningFormProps> = ({ onUpdate, showExtras
             total += basePrice + roomCost; // Add to existing total (displacement)
             duration = 4 + extraBedrooms + extraBathrooms;
 
-            description = `${state.serviceCategory === 'standard' ? 'Limpeza Padrão' :
-                `Limpeza Pesada (${state.heavyType === 'routine' ? 'Rotina' : state.heavyType === 'move' ? 'Pré-mudança' : 'Pós-obra'})`} - ${state.propertyType === 'studio' ? 'Studio' : state.propertyType === 'apartment' ? 'Apartamento' : 'Casa'} (${state.bedrooms} quartos, ${state.bathrooms} banheiros)`;
+            description = `${state.serviceCategory === 'standard' ? 'Nettoyage Standard' :
+                `Grand Nettoyage (${state.heavyType === 'routine' ? 'Routine' : state.heavyType === 'move' ? 'Déménagement' : 'Fin de chantier'})`} - ${state.propertyType === 'studio' ? 'Studio' : state.propertyType === 'apartment' ? 'Appartement' : 'Maison'} (${state.bedrooms} chambres, ${state.bathrooms} bains)`;
 
             detailsText = description;
         }
 
         // Add Displacement Fee to details
         if (displacementFee > 0) {
-            detailsText += ` + Deslocamento (${state.canton.charAt(0).toUpperCase() + state.canton.slice(1)}): CHF ${displacementFee}`;
+            detailsText += ` + Déplacement (${state.canton.charAt(0).toUpperCase() + state.canton.slice(1)}): CHF ${displacementFee}`;
         }
 
         // Add Extras (Only if not ironing main service, though logic permits)
@@ -178,9 +178,9 @@ export const CleaningForm: React.FC<CleaningFormProps> = ({ onUpdate, showExtras
         return (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
                 <div>
-                    <h2 className="text-2xl font-bold text-brand-dark mb-2">Itens opcionais</h2>
-                    <p className="text-slate-500">Personalize sua diária com itens opcionais.</p>
-                    <button className="text-brand-red text-sm font-semibold mt-1">O que está incluso?</button>
+                    <h2 className="text-2xl font-bold text-brand-dark mb-2">Options supplémentaires</h2>
+                    <p className="text-slate-500">Personnalisez votre service avec des options.</p>
+                    <button className="text-brand-red text-sm font-semibold mt-1">Ce qui est inclus ?</button>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -206,10 +206,10 @@ export const CleaningForm: React.FC<CleaningFormProps> = ({ onUpdate, showExtras
                 </div>
 
                 <div className="pt-6 border-t border-slate-100">
-                    <h3 className="font-bold text-brand-dark mb-4">Ajuste de horas</h3>
+                    <h3 className="font-bold text-brand-dark mb-4">Ajustement des heures</h3>
                     <div className="flex items-center gap-4">
                         <Counter
-                            label={currentDuration === 1 ? 'hora' : 'horas'}
+                            label={currentDuration === 1 ? 'heure' : 'heures'}
                             value={currentDuration}
                             min={calculatedDuration}
                             max={12}
@@ -219,7 +219,7 @@ export const CleaningForm: React.FC<CleaningFormProps> = ({ onUpdate, showExtras
                         {currentDuration >= 9 && (
                             <div className="bg-purple-600 text-white text-xs p-3 rounded-xl relative ml-2 max-w-xs shadow-lg">
                                 <div className="absolute left-0 top-1/2 -translate-x-1.5 -translate-y-1/2 border-t-8 border-b-8 border-r-8 border-transparent border-r-purple-600"></div>
-                                {currentDuration} horas é bastante tempo, então você será atendido por <b>2 profissionais</b> e a diária será realizada em {currentDuration / 2}h.
+                                {currentDuration} heures est une longue durée, vous serez donc servi par <b>2 professionnels</b> et le service sera réalisé en {currentDuration / 2}h.
                             </div>
                         )}
                     </div>
@@ -233,21 +233,21 @@ export const CleaningForm: React.FC<CleaningFormProps> = ({ onUpdate, showExtras
         <div className="space-y-10 font-sans text-slate-800">
             {/* Header */}
             <div>
-                <h1 className="text-3xl font-display font-bold text-brand-dark mb-2">Configure sua Limpeza</h1>
-                <p className="text-slate-500">Personalize cada detalhe do serviço em poucos cliques.</p>
+                <h1 className="text-3xl font-display font-bold text-brand-dark mb-2">Configurez votre Nettoyage</h1>
+                <p className="text-slate-500">Personnalisez chaque détail en quelques clics.</p>
             </div>
 
             {/* ... Rest of Main Form (Service Selection, Property, Rooms) ... */}
             {/* 1. Escolha um serviço */}
             <section>
                 <h2 className="text-lg font-bold text-brand-dark mb-4 flex items-center gap-2">
-                    1. Tipo de Limpeza
+                    1. Type de Nettoyage
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {[
-                        { id: 'standard', label: 'Padrão', badge: 'MAIS PEDIDO', icon: Sparkles },
-                        { id: 'heavy', label: 'Pesada', icon: CheckCircle2 },
-                        { id: 'ironing', label: 'Passadoria', icon: Shirt },
+                        { id: 'standard', label: 'Standard', badge: 'LE PLUS POPULAIRE', icon: Sparkles },
+                        { id: 'heavy', label: 'Grand Nettoyage', icon: CheckCircle2 },
+                        { id: 'ironing', label: 'Repassage', icon: Shirt },
                     ].map((item) => {
                         const isSelected = state.serviceCategory === item.id;
                         const Icon = item.icon;
@@ -284,12 +284,12 @@ export const CleaningForm: React.FC<CleaningFormProps> = ({ onUpdate, showExtras
                         exit={{ opacity: 0, height: 0 }}
                         className="overflow-hidden"
                     >
-                        <h2 className="text-lg font-bold text-slate-800 mb-4">Qual finalidade?</h2>
+                        <h2 className="text-lg font-bold text-slate-800 mb-4">Quel objectif ?</h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             {[
-                                { id: 'routine', label: 'Rotina' },
-                                { id: 'move', label: 'Pré-mudança', badge: 'PRODUTOS INCLUSOS' },
-                                { id: 'construction', label: 'Pós-obra', badge: 'PRODUTOS INCLUSOS' },
+                                { id: 'routine', label: 'Routine' },
+                                { id: 'move', label: 'Déménagement', badge: 'PRODUITS INCLUS' },
+                                { id: 'construction', label: 'Fin de chantier', badge: 'PRODUITS INCLUS' },
                             ].map((sub) => {
                                 const isSelected = state.heavyType === sub.id;
                                 return (
@@ -316,7 +316,7 @@ export const CleaningForm: React.FC<CleaningFormProps> = ({ onUpdate, showExtras
                         </div>
                         <div className="mt-3 flex items-start gap-2 text-sm text-brand-dark bg-brand-cream p-3 rounded-lg border border-brand-red/10">
                             <Info size={18} className="shrink-0 mt-0.5 text-brand-red" />
-                            <p>A limpeza pesada é ideal para limpezas profundas, mudanças ou pós-obras. Inclui vidros e parte interna de móveis (se vazios).</p>
+                            <p>Le grand nettoyage est idéal pour les nettoyages en profondeur, déménagements ou fins de chantier. Comprend les vitres et l'intérieur des meubles (si vides).</p>
                         </div>
                     </motion.section>
                 )}
@@ -332,11 +332,11 @@ export const CleaningForm: React.FC<CleaningFormProps> = ({ onUpdate, showExtras
                         className="overflow-hidden"
                     >
                         <div className="bg-white border border-slate-100 rounded-2xl p-8 text-center space-y-6">
-                            <h2 className="text-xl font-bold text-brand-dark">Quantas horas de serviço?</h2>
+                            <h2 className="text-xl font-bold text-brand-dark">Combien d'heures de service ?</h2>
 
                             <div className="flex justify-center">
                                 <Counter
-                                    label="horas"
+                                    label="heures"
                                     value={state.ironingHours}
                                     onChange={(v) => updateState('ironingHours', v)}
                                     min={2}
@@ -351,11 +351,11 @@ export const CleaningForm: React.FC<CleaningFormProps> = ({ onUpdate, showExtras
 
                                 <div className="relative bg-red-50 border border-red-100 text-red-900 p-4 rounded-xl shadow-lg shadow-red-100/50">
                                     <h3 className="font-bold text-lg mb-1">
-                                        Sugestão para {state.ironingHours * 8} - {state.ironingHours * 12} peças
+                                        Suggestion pour {state.ironingHours * 8} - {state.ironingHours * 12} pièces
                                     </h3>
                                     <p className="text-red-700/80 text-sm leading-relaxed">
-                                        Cálculo com base em peças comuns (calças jeans, camisetas).
-                                        Para peças mais delicadas (vestidos, camisas sociais), aumente o número de horas.
+                                        Calcul basé sur des pièces courantes (jeans, t-shirts).
+                                        Pour des pièces plus délicates (robes, chemises), augmentez le nombre d'heures.
                                     </p>
                                 </div>
                             </div>
@@ -367,13 +367,13 @@ export const CleaningForm: React.FC<CleaningFormProps> = ({ onUpdate, showExtras
             {/* 4. Property Type & Counters (Only for Standard/Heavy) */}
             {state.serviceCategory !== 'ironing' && (
                 <section>
-                    <h2 className="text-lg font-bold text-slate-800 mb-4">Como é o imóvel?</h2>
+                    <h2 className="text-lg font-bold text-slate-800 mb-4">Quel type de propriété ?</h2>
 
                     <div className="grid grid-cols-3 gap-4 mb-8">
                         {[
                             { id: 'studio', label: 'Studio', icon: Armchair },
-                            { id: 'apartment', label: 'Apartamento', icon: Building2 },
-                            { id: 'house', label: 'Casa', icon: Home },
+                            { id: 'apartment', label: 'Appartement', icon: Building2 },
+                            { id: 'house', label: 'Maison', icon: Home },
                         ].map((prop) => {
                             const isSelected = state.propertyType === prop.id;
                             const Icon = prop.icon;
@@ -398,13 +398,13 @@ export const CleaningForm: React.FC<CleaningFormProps> = ({ onUpdate, showExtras
                     <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
                         <div className="flex flex-col md:flex-row gap-6 md:gap-12 items-center justify-center">
                             <Counter
-                                label={state.bedrooms === 1 ? 'quarto' : 'quartos'}
+                                label={state.bedrooms === 1 ? 'chambre' : 'chambres'}
                                 value={state.bedrooms}
                                 onChange={(v) => updateState('bedrooms', v)}
                             />
                             <div className="hidden md:block w-px h-12 bg-slate-100"></div>
                             <Counter
-                                label={state.bathrooms === 1 ? 'banheiro' : 'banheiros'}
+                                label={state.bathrooms === 1 ? 'salle de bain' : 'salles de bain'}
                                 value={state.bathrooms}
                                 onChange={(v) => updateState('bathrooms', v)}
                                 min={1}
@@ -416,17 +416,17 @@ export const CleaningForm: React.FC<CleaningFormProps> = ({ onUpdate, showExtras
                                 <CheckCircle2 size={16} />
                                 <span className="text-center font-medium">
                                     {state.propertyType === 'studio'
-                                        ? 'Cozinha inclusa'
-                                        : 'Cozinha e sala'}
+                                        ? 'Cuisine incluse'
+                                        : 'Cuisine et salon'}
                                 </span>
                             </div>
                             <div className="flex items-center justify-center gap-2 text-sm text-green-700 bg-green-50/50 py-2 rounded-lg border border-green-100/50">
                                 <CheckCircle2 size={16} />
-                                <span className="text-center font-medium">Produtos inclusos</span>
+                                <span className="text-center font-medium">Produits inclus</span>
                             </div>
                             <div className="flex items-center justify-center gap-2 text-sm text-green-700 bg-green-50/50 py-2 rounded-lg border border-green-100/50">
                                 <CheckCircle2 size={16} />
-                                <span className="text-center font-medium">Seguro incluso</span>
+                                <span className="text-center font-medium">Assurance incluse</span>
                             </div>
                         </div>
                     </div>
@@ -435,7 +435,7 @@ export const CleaningForm: React.FC<CleaningFormProps> = ({ onUpdate, showExtras
 
             {/* 5. Canton Selection */}
             <section>
-                <h2 className="text-lg font-bold text-brand-dark mb-4">Onde será o serviço?</h2>
+                <h2 className="text-lg font-bold text-brand-dark mb-4">Où aura lieu le service ?</h2>
                 <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
                     {[
                         { id: 'geneve', label: 'Genève', image: '/images/cantons/geneve-v2.webp' },

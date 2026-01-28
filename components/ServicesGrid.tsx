@@ -2,19 +2,30 @@
 
 import React, { useState, useMemo } from 'react';
 import { Category } from './services/types';
-import Link from 'next/link';
+import { Link } from '@/navigation';
 import { SERVICES } from './services/data';
 import { ServiceCard } from './services/ServiceCard';
-
+import { useTranslations } from 'next-intl';
 
 const ServicesGrid: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<Category>(Category.RESIDENCIAL);
   const [highlightedServiceId, setHighlightedServiceId] = useState<string | null>(null);
+  const t = useTranslations('Services');
+
+  // We need to inject translations into the services data
+  const servicesWithTranslations = useMemo(() => {
+    return SERVICES.map(service => ({
+      ...service,
+      title: t(`items.${service.id}.title`),
+      description: t(`items.${service.id}.description`),
+      tag: t(`items.${service.id}.tag`)
+    }));
+  }, [t]);
 
   // Filter services based on active tab
   const filteredServices = useMemo(() => {
-    return SERVICES.filter(s => s.category === activeCategory);
-  }, [activeCategory]);
+    return servicesWithTranslations.filter(s => s.category === activeCategory);
+  }, [activeCategory, servicesWithTranslations]);
 
   const handleServiceFound = (serviceId: string) => {
     // Find the category of the recommended service to switch tabs if necessary
@@ -48,15 +59,13 @@ const ServicesGrid: React.FC = () => {
         <header className="text-center mb-16 space-y-8">
           <div className="space-y-4">
             <h2 className="text-brand-red font-bold tracking-[0.2em] text-xs uppercase animate-[fadeInDown_1s_ease-out]">
-              Excelência em Cada Detalhe
+              {t('header.subtitle')}
             </h2>
             <h1 className="font-display text-5xl md:text-6xl lg:text-7xl text-brand-dark leading-tight">
-              Soluções Integradas
+              {t('header.title')}
             </h1>
             <div className="w-24 h-1 bg-brand-red mx-auto mt-6 rounded-full"></div>
           </div>
-
-
         </header>
 
         {/* Navigation Tabs */}
@@ -74,7 +83,7 @@ const ServicesGrid: React.FC = () => {
                 {activeCategory === cat && (
                   <div className="absolute inset-0 bg-brand-dark rounded-full shadow-md -z-10 animate-[fadeIn_0.3s_ease-out]"></div>
                 )}
-                {cat}
+                {t(`tabs.${cat}`)}
               </button>
             ))}
           </div>
@@ -99,9 +108,9 @@ const ServicesGrid: React.FC = () => {
 
         {/* Bottom CTA */}
         <div className="mt-20 text-center">
-          <p className="text-gray-400 text-sm mb-4">Não encontrou o que procura?</p>
+          <p className="text-gray-400 text-sm mb-4">{t('bottomCta.text')}</p>
           <Link href="/contact" className="text-brand-dark font-display text-xl border-b border-brand-red/30 hover:border-brand-red pb-1 transition-colors">
-            Falar com um consultor humano
+            {t('bottomCta.link')}
           </Link>
         </div>
 

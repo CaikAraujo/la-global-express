@@ -59,11 +59,11 @@ export const CorporateCleaningForm: React.FC<CorporateCleaningFormProps> = ({ on
         // Minimums
         if (perServiceTotal < 150) perServiceTotal = 150;
 
-        const description = `Limpeza Industrial (${state.facilityType === 'office' ? 'Escritório' : state.facilityType === 'industrial' ? 'Industrial' : 'Varejo'})`;
+        const description = `Nettoyage Industriel (${state.facilityType === 'office' ? 'Bureau' : state.facilityType === 'industrial' ? 'Industriel' : 'Commerce'})`;
 
         let details = description;
-        details += `\n + Área: ${state.areaSize}m²`;
-        details += `\n + Frequência: ${state.frequency === 'daily' ? 'Diária' : state.frequency === 'weekly' ? 'Semanal' : 'Quinzenal'}`;
+        details += `\n + Surface: ${state.areaSize}m²`;
+        details += `\n + Fréquence: ${state.frequency === 'daily' ? 'Quotidienne' : state.frequency === 'weekly' ? 'Hebdomadaire' : 'Bi-mensuelle'}`;
 
         onUpdate({
             price: Math.round(perServiceTotal),
@@ -78,18 +78,18 @@ export const CorporateCleaningForm: React.FC<CorporateCleaningFormProps> = ({ on
         <div className="space-y-10 font-sans text-slate-800 animate-in fade-in slide-in-from-right-8 duration-500">
             {/* Header */}
             <div>
-                <h1 className="text-3xl font-display font-bold text-brand-dark mb-2">Configure sua Limpeza</h1>
-                <p className="text-slate-500">Soluções especializadas para grandes áreas e empresas.</p>
+                <h1 className="text-3xl font-display font-bold text-brand-dark mb-2">Configurez votre Nettoyage</h1>
+                <p className="text-slate-500">Solutions spécialisées pour grandes surfaces et entreprises.</p>
             </div>
 
             {/* 1. Facility Type */}
             <section>
-                <h2 className="text-lg font-bold text-brand-dark mb-4">1. Qual o tipo de ambiente?</h2>
+                <h2 className="text-lg font-bold text-brand-dark mb-4">1. Quel type d'environnement ?</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {[
-                        { id: 'office', label: 'Corporativo', icon: Building2, desc: 'Escritórios e Sedes' },
-                        { id: 'industrial', label: 'Industrial', icon: Factory, desc: 'Galpões e Fábricas' },
-                        { id: 'retail', label: 'Varejo', icon: Store, desc: 'Lojas e Shoppings' },
+                        { id: 'office', label: 'Corporatif', icon: Building2, desc: 'Bureaux et Sièges' },
+                        { id: 'industrial', label: 'Industriel', icon: Factory, desc: 'Entrepôts et Usines' },
+                        { id: 'retail', label: 'Commerce', icon: Store, desc: 'Magasins et Centres Commerciaux' },
                     ].map((item) => {
                         const isSelected = state.facilityType === item.id;
                         const Icon = item.icon;
@@ -115,8 +115,8 @@ export const CorporateCleaningForm: React.FC<CorporateCleaningFormProps> = ({ on
 
             {/* 2. Area Size */}
             <PremiumSlider
-                label="Área Aproximada"
-                description="Estimativa baseada na metragem"
+                label="Surface Approximative"
+                description="Estimation basée sur la surface"
                 value={state.areaSize}
                 min={50}
                 max={5000}
@@ -124,9 +124,9 @@ export const CorporateCleaningForm: React.FC<CorporateCleaningFormProps> = ({ on
                 unit="m²"
                 onChange={(val) => updateState('areaSize', val)}
                 secondaryLabel={state.areaSize > 2000 ? (
-                    'Grande Porte'
+                    'Grande Envergure'
                 ) : (
-                    'Estimativa Padrão'
+                    'Estimation Standard'
                 )}
                 minLabel="50 m²"
                 maxLabel="5000 m² +"
@@ -134,20 +134,20 @@ export const CorporateCleaningForm: React.FC<CorporateCleaningFormProps> = ({ on
             {state.areaSize > 2000 && (
                 <div className="bg-blue-50 text-blue-800 p-3 rounded-lg text-sm flex gap-2 items-start mt-[-20px] mx-4 relative z-10 font-medium">
                     <AlertCircle size={16} className="mt-0.5 shrink-0" />
-                    Para áreas muito grandes, recomendamos uma visita técnica GRATUITA para orçamento preciso.
+                    Pour les très grandes surfaces, nous recommandons une visite technique GRATUITE pour un devis précis.
                 </div>
             )}
 
             {/* 3. Frequency */}
             <section>
                 <h2 className="text-lg font-bold text-brand-dark mb-4 flex items-center gap-2">
-                    <CalendarDays size={20} /> Frequência Desejada
+                    <CalendarDays size={20} /> Fréquence Souhaitée
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {[
-                        { id: 'daily', label: 'Diária', desc: 'Segunda a Sexta' },
-                        { id: 'biweekly', label: '2-3x / Semana', desc: 'Dias alternados' },
-                        { id: 'weekly', label: 'Semanal', desc: '1x na semana' },
+                        { id: 'daily', label: 'Quotidienne', desc: 'Lundi au Vendredi' },
+                        { id: 'biweekly', label: '2-3x / Semaine', desc: 'Jours alternés' },
+                        { id: 'weekly', label: 'Hebdomadaire', desc: '1x par semaine' },
                     ].map((item) => {
                         const isSelected = state.frequency === item.id;
                         return (

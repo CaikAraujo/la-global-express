@@ -51,16 +51,16 @@ export const DechetterieForm: React.FC<DechetterieFormProps> = ({ onUpdate }) =>
 
         const getDescription = () => {
             switch (state.wasteType) {
-                case 'construction': return 'Entulho de Obra';
-                case 'furniture': return 'Móveis & Volumosos';
-                case 'green': return 'Resíduos Verdes';
-                default: return 'Resíduos Gerais';
+                case 'construction': return 'Gravats de Chantier';
+                case 'furniture': return 'Meubles & Encombrants';
+                case 'green': return 'Déchets Verts';
+                default: return 'Déchets Généraux';
             }
         };
 
         let details = `Déchetterie - ${getDescription()}`;
         details += `\nVolume: ${state.volume}m³`;
-        details += `\nAcesso: ${state.access === 'easy' ? 'Fácil' : 'Difícil'}`;
+        details += `\nAccès: ${state.access === 'easy' ? 'Facile' : 'Difficile'}`;
 
         onUpdate({
             price: total,
@@ -73,9 +73,9 @@ export const DechetterieForm: React.FC<DechetterieFormProps> = ({ onUpdate }) =>
 
     // Helpers for visual feedback
     const getVehicleIcon = (vol: number) => {
-        if (vol <= 3) return { icon: Truck, label: 'Van Pequena' };
-        if (vol <= 10) return { icon: Truck, label: 'Caminhão Médio' };
-        return { icon: Truck, label: 'Caminhão Grande / Caçamba' };
+        if (vol <= 3) return { icon: Truck, label: 'Petite Camionnette' };
+        if (vol <= 10) return { icon: Truck, label: 'Camion Moyen' };
+        return { icon: Truck, label: 'Grand Camion / Benne' };
     };
 
     const volumeInfo = getVehicleIcon(state.volume);
@@ -86,26 +86,26 @@ export const DechetterieForm: React.FC<DechetterieFormProps> = ({ onUpdate }) =>
             <div className="bg-gradient-to-r from-brand-red/5 to-white p-6 rounded-2xl border border-brand-red/10">
                 <h1 className="text-2xl font-display font-bold text-brand-dark mb-2 flex items-center gap-3">
                     <Trash2 className="text-brand-red" size={28} />
-                    Coleta e Ecoponto
+                    Collecte et Déchetterie
                 </h1>
                 <p className="text-slate-600">
-                    Selecione o tipo de material e o volume estimado. Nós cuidamos do transporte e destinação certificada.
+                    Sélectionnez le type de matériau et le volume estimé. Nous nous occupons du transport et de l'élimination certifiée.
                 </p>
             </div>
 
             {/* 1. Waste Type Selection */}
             <section>
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-lg font-bold text-brand-dark">1. O que vamos retirar?</h2>
-                    <span className="text-xs bg-slate-100 px-2 py-1 rounded-full text-slate-500 font-medium">Obrigatório</span>
+                    <h2 className="text-lg font-bold text-brand-dark">1. Que devons-nous retirer ?</h2>
+                    <span className="text-xs bg-slate-100 px-2 py-1 rounded-full text-slate-500 font-medium">Obligatoire</span>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {[
-                        { id: 'general', label: 'Geral / Misturado', icon: Trash2, desc: 'Sacos pretos, limpeza geral, escritório', color: 'bg-blue-50 border-blue-200 text-blue-600' },
-                        { id: 'furniture', label: 'Móveis Antigos', icon: BoxSelect, desc: 'Sofás, colchões, armários desmontados', color: 'bg-amber-50 border-amber-200 text-amber-600' },
-                        { id: 'construction', label: 'Entulho / Obra', icon: Hammer, desc: 'Tijolos, azulejos, madeira, gesso', color: 'bg-stone-100 border-stone-200 text-stone-600' },
-                        { id: 'green', label: 'Verde / Jardim', icon: Leaf, desc: 'Podas, grama, troncos pequenos', color: 'bg-green-50 border-green-200 text-green-600' },
+                        { id: 'general', label: 'Général / Mélangé', icon: Trash2, desc: 'Sacs noirs, nettoyage général, bureau', color: 'bg-blue-50 border-blue-200 text-blue-600' },
+                        { id: 'furniture', label: 'Meubles Anciens', icon: BoxSelect, desc: 'Canapés, matelas, armoires démontées', color: 'bg-amber-50 border-amber-200 text-amber-600' },
+                        { id: 'construction', label: 'Gravats / Chantier', icon: Hammer, desc: 'Briques, carrelage, bois, plâtre', color: 'bg-stone-100 border-stone-200 text-stone-600' },
+                        { id: 'green', label: 'Vert / Jardin', icon: Leaf, desc: 'Tailles, gazon, petites branches', color: 'bg-green-50 border-green-200 text-green-600' },
                     ].map((item) => {
                         const isSelected = state.wasteType === item.id;
                         const Icon = item.icon;
@@ -149,8 +149,8 @@ export const DechetterieForm: React.FC<DechetterieFormProps> = ({ onUpdate }) =>
 
             {/* 2. Volume Slider (Visual) */}
             <PremiumSlider
-                label="Estimativa de Volume"
-                description="Arraste para ajustar a quantidade"
+                label="Estimation du Volume"
+                description="Glissez pour ajuster la quantité"
                 value={state.volume}
                 min={1}
                 max={30}
@@ -164,7 +164,7 @@ export const DechetterieForm: React.FC<DechetterieFormProps> = ({ onUpdate }) =>
 
             {/* 3. Logistics & Warnings */}
             <section className="bg-slate-50 rounded-2xl p-6">
-                <h2 className="text-lg font-bold text-brand-dark mb-4">Detalhes do Acesso</h2>
+                <h2 className="text-lg font-bold text-brand-dark mb-4">Détails de l'Accès</h2>
 
                 <div className="flex flex-col gap-4">
                     <div className="flex gap-4">
@@ -175,7 +175,7 @@ export const DechetterieForm: React.FC<DechetterieFormProps> = ({ onUpdate }) =>
                                 : 'bg-transparent border-slate-300 text-slate-500 hover:bg-white'
                                 }`}
                         >
-                            Acesso Fácil / Térreo
+                            Accès Facile / Rez-de-chaussée
                         </button>
                         <button
                             onClick={() => updateState('access', 'hard')}
@@ -184,7 +184,7 @@ export const DechetterieForm: React.FC<DechetterieFormProps> = ({ onUpdate }) =>
                                 : 'bg-transparent border-slate-300 text-slate-500 hover:bg-white'
                                 }`}
                         >
-                            Difícil / Escadas
+                            Difficile / Escaliers
                         </button>
                     </div>
 
@@ -201,10 +201,10 @@ export const DechetterieForm: React.FC<DechetterieFormProps> = ({ onUpdate }) =>
                         />
                         <div>
                             <span className={`block font-bold text-sm transition-colors ${state.heavyItems ? 'text-brand-dark' : 'text-slate-600'}`}>
-                                Itens Pesados ou Especiais
+                                Objets Lourds ou Spéciaux
                             </span>
                             <span className="text-xs text-slate-500">
-                                Marque se houver cofres, pianos, servidores ou maquinário pesado.
+                                Cochez si coffres-forts, pianos, serveurs ou machines lourdes.
                             </span>
                         </div>
                     </label>

@@ -13,68 +13,68 @@ interface MaterialOption {
 const MATERIAL_OPTIONS: MaterialOption[] = [
     {
         id: 'box-large',
-        name: 'Cartão Grande',
-        description: 'Caixa reforçada para itens volumosos',
+        name: 'Grand Carton',
+        description: 'Boîte renforcée pour objets volumineux',
         price: 4.99,
         icon: Archive
     },
     {
         id: 'box-book',
-        name: 'Cartão Livro',
-        description: 'Ideal para livros e objetos pesados',
+        name: 'Carton Livres',
+        description: 'Idéal pour livres et objets lourds',
         price: 2.99,
         icon: Book
     },
     {
         id: 'tape-pvc',
-        name: 'Scott PVC',
-        description: 'Fita adesiva de alta fixação',
+        name: 'Scotch PVC',
+        description: 'Ruban adhésif haute fixation',
         price: 3.69,
         icon: Disc
     },
     {
         id: 'film',
         name: 'Films',
-        description: 'Filme stretch para proteção',
+        description: 'Film étirable de protection',
         price: 12.99,
         icon: Layers
     },
     {
         id: 'wardrobe',
-        name: 'Ponderie (Porta-Roupas)',
-        description: 'Caixa com cabideiro para roupas',
+        name: 'Penderie',
+        description: 'Carton penderie pour vêtements',
         price: 11.99,
         icon: Shirt,
-        badge: 'Prático'
+        badge: 'Pratique'
     },
     {
         id: 'cover-box',
-        name: 'Cobertura Boxe',
-        description: 'Proteção para colchões e móveis',
+        name: 'Housse Matelas',
+        description: 'Protection pour matelas et meubles',
         price: 7.99,
         icon: BedDouble
     },
     {
         id: 'blanket',
-        name: 'Cobertura Déménageur',
-        description: 'Cobertor profissional de mudança',
+        name: 'Couverture de Déménagement',
+        description: 'Couverture professionnelle',
         price: 11.99,
         icon: Armchair
     },
     {
         id: 'bubble-10m',
-        name: 'Bolha 10 Metros',
-        description: 'Plástico bolha para proteção',
+        name: 'Film Bulles 10 Mètres',
+        description: 'Papier bulles de protection',
         price: 11.99,
         icon: ShieldCheck
     },
     {
         id: 'trolley',
-        name: 'Chariot Profissional',
-        description: 'Carrinho para transporte de cargas',
+        name: 'Chariot Professionnel',
+        description: 'Chariot pour transport de charges',
         price: 79.99,
         icon: Truck,
-        badge: 'Essencial'
+        badge: 'Essentiel'
     }
 ];
 
@@ -119,7 +119,7 @@ export const MaterialSupplyForm: React.FC<MaterialSupplyFormProps> = ({ onUpdate
                 type: 'Material Supply',
                 description: selectedItems.length > 0
                     ? selectedItems.join(', ')
-                    : 'Nenhum item selecionado',
+                    : 'Aucun article sélectionné',
                 items: quantities
             }
         });
@@ -130,8 +130,8 @@ export const MaterialSupplyForm: React.FC<MaterialSupplyFormProps> = ({ onUpdate
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
             <div>
-                <h2 className="text-2xl font-bold text-brand-dark mb-2">Escolha seus Materiais</h2>
-                <p className="text-gray-500 text-sm">Selecione os itens e quantidades que você precisa.</p>
+                <h2 className="text-2xl font-bold text-brand-dark mb-2">Choisissez vos Matériaux</h2>
+                <p className="text-gray-500 text-sm">Sélectionnez les articles et les quantités dont vous avez besoin.</p>
             </div>
 
             <div className="grid grid-cols-1 gap-4">
@@ -192,7 +192,7 @@ export const MaterialSupplyForm: React.FC<MaterialSupplyFormProps> = ({ onUpdate
             {totalItems === 0 && (
                 <div className="bg-yellow-50 text-yellow-800 p-4 rounded-xl border border-yellow-200 text-sm flex gap-3">
                     <PackageMinus size={20} className="shrink-0" />
-                    <p>Selecione pelo menos um item para continuar.</p>
+                    <p>Sélectionnez au moins un article pour continuer.</p>
                 </div>
             )}
         </div>

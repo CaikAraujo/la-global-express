@@ -38,7 +38,7 @@ const TrustedBy = () => {
         <section className="bg-white border-b border-gray-100 py-16 overflow-hidden">
             <div className="container mx-auto px-6 lg:px-12 mb-20">
                 <p className="text-center text-xs font-bold uppercase tracking-widest text-gray-400">
-                    Confiança de grandes líderes de mercado
+                    La confiance des grands leaders du marché
                 </p>
             </div>
 

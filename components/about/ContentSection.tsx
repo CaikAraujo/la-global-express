@@ -22,13 +22,13 @@ export const ContentSection: React.FC = () => {
                     <div className="md:col-span-5 relative">
                         <span className="absolute -top-10 -left-6 text-9xl text-gray-100 font-display font-bold select-none z-0">"</span>
                         <blockquote className="relative z-10 font-display font-bold text-3xl md:text-4xl leading-tight text-brand-dark">
-                            Você não deveria ter que gerenciar quem trabalha para você. O luxo é a ausência de preocupação.
+                            Vous ne devriez pas avoir à gérer ceux qui travaillent pour vous. Le luxe, c'est l'absence de soucis.
                         </blockquote>
                         <div className="mt-8 flex items-center gap-3">
                             <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden relative">
                                 <Image
                                     src="https://picsum.photos/100/100"
-                                    alt="Founder"
+                                    alt="Fondateur"
                                     fill
                                     className="object-cover grayscale"
                                     sizes="40px"
@@ -36,7 +36,7 @@ export const ContentSection: React.FC = () => {
                             </div>
                             <div>
                                 <p className="text-sm font-bold text-brand-dark uppercase">LA Global</p>
-                                <p className="text-xs text-gray-500">Filosofia Corporativa</p>
+                                <p className="text-xs text-gray-500">Philosophie d'Entreprise</p>
                             </div>
                         </div>
                     </div>
@@ -44,14 +44,14 @@ export const ContentSection: React.FC = () => {
                     <div className="md:col-span-1 hidden md:block border-r border-gray-100"></div>
 
                     <div className="md:col-span-6 flex flex-col justify-center space-y-6">
-                        <h3 className="font-bold text-xl text-brand-dark">A Anti-agência.</h3>
+                        <h3 className="font-bold text-xl text-brand-dark">L'Anti-agence.</h3>
                         <p className="text-gray-600 leading-relaxed text-lg">
-                            Tudo começou com uma observação silenciosa entre o Brasil e a Suíça. O mercado de luxo tinha acesso aos melhores imóveis, mas a gestão do dia a dia era caótica.
-                            O diretor de uma multinacional perdia horas coordenando uma mudança. Famílias enfrentavam barreiras para contratar limpeza confiável.
+                            Tout a commencé par une observation silencieuse entre le Brésil et la Suisse. Le marché du luxe avait accès aux meilleurs biens immobiliers, mais la gestion quotidienne était chaotique.
+                            Le directeur d'une multinationale perdait des heures à coordonner un déménagement. Les familles se heurtaient à des barrières pour engager un nettoyage fiable.
                         </p>
                         <p className="text-gray-600 leading-relaxed">
-                            A LA Global Express nasceu para eliminar essa fricção. Centralizamos logística, mudanças, conciergerie e limpeza técnica sob um único teto.
-                            <strong> Sem tickets de suporte, apenas soluções.</strong>
+                            LA Global Express est née pour éliminer cette friction. Nous centralisons la logistique, les déménagements, la conciergerie et le nettoyage technique sous un même toit.
+                            <strong> Pas de tickets de support, juste des solutions.</strong>
                         </p>
                     </div>
                 </div>
@@ -59,25 +59,25 @@ export const ContentSection: React.FC = () => {
                 {/* Bottom Section: Values Grid */}
                 <div className="border-t border-gray-100 pt-12">
                     <div className="flex flex-col md:flex-row justify-between items-end mb-12">
-                        <h2 className="font-display font-bold text-3xl text-brand-dark">NOSSO PADRÃO</h2>
-                        <a href="/contact" className="text-brand-red font-bold text-sm tracking-widest uppercase hover:underline mt-4 md:mt-0">Fale com um consultor</a>
+                        <h2 className="font-display font-bold text-3xl text-brand-dark">NOTRE STANDARD</h2>
+                        <a href="/contact" className="text-brand-red font-bold text-sm tracking-widest uppercase hover:underline mt-4 md:mt-0">Parlez à un consultant</a>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <ValueItem
                             icon={<Target size={32} strokeWidth={1.5} />}
-                            title="Zero Fricção"
-                            desc="Não vendemos horas, vendemos resultados. Você pede, nós executamos. Simples assim."
+                            title="Zéro Friction"
+                            desc="Nous ne vendons pas des heures, nous vendons des résultats. Vous demandez, nous exécutons. Tout simplement."
                         />
                         <ValueItem
                             icon={<Globe size={32} strokeWidth={1.5} />}
-                            title="Visão 360º"
-                            desc="Da mudança internacional à limpeza final do imóvel. Um único ponto de contato para tudo."
+                            title="Vision 360º"
+                            desc="Du déménagement international au nettoyage final de la propriété. Un point de contact unique pour tout."
                         />
                         <ValueItem
                             icon={<Layers size={32} strokeWidth={1.5} />}
-                            title="Human Touch"
-                            desc="Tecnologia suíça para processos, calor humano para o atendimento. Conhecemos nossos clientes pelo nome."
+                            title="Approche Humaine"
+                            desc="Technologie suisse pour les processus, chaleur humaine pour le service. Nous connaissons nos clients par leur nom."
                         />
                     </div>
                 </div>

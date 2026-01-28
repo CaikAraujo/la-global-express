@@ -3,12 +3,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Leaf, Users, Scale, ArrowUpRight, LucideIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 // --- Types ---
 interface ESGItem {
-    id: string;
-    title: string;
-    description: string;
+    id: 'eco' | 'social' | 'gov';
     icon: LucideIcon;
     variant: 'eco' | 'social' | 'gov';
 }
@@ -22,22 +21,16 @@ interface ESGCardProps {
 const ESG_DATA: ESGItem[] = [
     {
         id: 'eco',
-        title: 'Eco-Friendly',
-        description: 'Produtos com selo verde, redução de uso de água e equipamentos de baixo consumo energético para um futuro mais limpo.',
         icon: Leaf,
         variant: 'eco',
     },
     {
         id: 'social',
-        title: 'Social',
-        description: 'Programas de capacitação contínua, inclusão diversificada e planos claros de ascensão social para todos os colaboradores.',
         icon: Users,
         variant: 'social',
     },
     {
         id: 'gov',
-        title: 'Governança',
-        description: 'Transparência total com auditorias trimestrais, compliance rigoroso e ética inegociável em todas as operações.',
         icon: Scale,
         variant: 'gov',
     },
@@ -45,6 +38,7 @@ const ESG_DATA: ESGItem[] = [
 
 // --- Components ---
 const ESGCard: React.FC<ESGCardProps> = ({ item, index }) => {
+    const t = useTranslations('Corporate.esg');
     const Icon = item.icon;
 
     return (
@@ -76,17 +70,17 @@ const ESGCard: React.FC<ESGCardProps> = ({ item, index }) => {
                 </div>
 
                 <h3 className="text-2xl font-sans font-bold text-white mb-4 group-hover:text-white transition-colors">
-                    {item.title}
+                    {t(`items.${item.id}.title`)}
                 </h3>
 
                 <p className="text-gray-400 leading-relaxed font-sans text-base group-hover:text-gray-200 transition-colors">
-                    {item.description}
+                    {t(`items.${item.id}.desc`)}
                 </p>
             </div>
 
             <div className="relative z-10 mt-8 pt-6 border-t border-white/10">
                 <span className="text-xs font-bold tracking-widest uppercase text-brand-red">
-                    Pilar 0{index + 1}
+                    {t('pillar')} 0{index + 1}
                 </span>
             </div>
         </motion.div>
@@ -94,6 +88,8 @@ const ESGCard: React.FC<ESGCardProps> = ({ item, index }) => {
 };
 
 const ESGSection: React.FC = () => {
+    const t = useTranslations('Corporate.esg');
+
     return (
         <section className="relative w-full py-24 px-4 md:px-8 bg-white overflow-hidden">
 
@@ -136,7 +132,7 @@ const ESGSection: React.FC = () => {
                         transition={{ duration: 0.6 }}
                         className="text-4xl md:text-5xl lg:text-6xl font-sans font-bold text-brand-dark mb-6 tracking-tight"
                     >
-                        Compromisso ESG
+                        {t('title')}
                     </motion.h2>
 
                     <motion.p
@@ -146,9 +142,9 @@ const ESGSection: React.FC = () => {
                         transition={{ duration: 0.6, delay: 0.1 }}
                         className="max-w-3xl text-lg md:text-xl text-brand-slate font-sans leading-relaxed"
                     >
-                        Alinhamos nossas operações às metas de sustentabilidade da sua empresa.
-                        Utilizamos <span className="text-brand-red font-semibold">produtos biodegradáveis</span> e equipamentos de
-                        baixo consumo energético.
+                        {t.rich('description', {
+                            highlight: (chunks) => <span className="text-brand-red font-semibold">{chunks}</span>
+                        })}
                     </motion.p>
                 </div>
 
@@ -169,7 +165,7 @@ const ESGSection: React.FC = () => {
                 >
                     <button className="group relative px-8 py-3 bg-brand-red text-white font-bold rounded-lg overflow-hidden shadow-lg shadow-brand-red/20 transition-transform hover:scale-105 active:scale-95">
                         <span className="relative z-10 flex items-center gap-2">
-                            VER RELATÓRIO COMPLETO
+                            {t('cta')}
                             <span className="text-white/70 group-hover:translate-x-1 transition-transform">→</span>
                         </span>
                         <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />

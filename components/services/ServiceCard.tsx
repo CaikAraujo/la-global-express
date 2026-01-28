@@ -1,8 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { Link } from '@/navigation';
 import { ServiceItem } from './types';
 import { ArrowRightIcon } from './Icons';
+import { useTranslations } from 'next-intl';
 
 interface ServiceCardProps {
     service: ServiceItem;
@@ -10,6 +11,8 @@ interface ServiceCardProps {
 }
 
 export const ServiceCard: React.FC<ServiceCardProps> = ({ service, isHighlighted }) => {
+    const t = useTranslations('Services');
+
     return (
         <div
             className={`
@@ -57,11 +60,11 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, isHighlighted
                         href={`/agendar?service=${encodeURIComponent(service.id)}`}
                         className="flex items-center gap-2 text-xs font-bold tracking-widest text-brand-dark group-hover:text-brand-red transition-all duration-300 uppercase group/btn"
                     >
-                        Solicitar Proposta
+                        {t('cta')}
                         <ArrowRightIcon className="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform" />
                     </Link>
                 </div>
             </div>
-        </div >
+        </div>
     );
 };

@@ -104,7 +104,7 @@ export function UserMenu() {
         )
     }
 
-    const firstName = profile.full_name?.split(' ')[0] || 'Usuário'
+    const firstName = profile.full_name?.split(' ')[0] || 'Utilisateur'
 
     return (
         <div className="relative z-50">
@@ -120,7 +120,7 @@ export function UserMenu() {
 
                 <div className="text-left hidden sm:block">
                     <div className="text-[10px] uppercase font-bold text-slate-400 leading-tight">
-                        {profile.user_type === 'company' ? 'Corporativo' : 'Bem-vindo(a)'}
+                        {profile.user_type === 'company' ? 'Entreprise' : 'Bienvenue'}
                     </div>
                     <div className="text-sm font-bold text-slate-800 flex items-center gap-1 group-hover:text-brand-600 transition-colors">
                         {firstName}
@@ -139,7 +139,7 @@ export function UserMenu() {
                         onMouseLeave={() => setIsOpen(false)}
                     >
                         <div className="px-4 py-3 border-b border-slate-50 bg-slate-50/50">
-                            <p className="text-xs text-slate-500 font-medium uppercase tracking-wider mb-0.5">Logado como</p>
+                            <p className="text-xs text-slate-500 font-medium uppercase tracking-wider mb-0.5">Connecté en tant que</p>
                             <p className="text-sm font-bold text-slate-900 truncate">{profile.full_name}</p>
                         </div>
 
@@ -150,7 +150,7 @@ export function UserMenu() {
                                 className="flex items-center gap-3 px-3 py-2.5 text-sm text-slate-600 hover:text-brand-600 hover:bg-slate-50 rounded-lg transition-colors font-medium"
                             >
                                 <LayoutDashboard size={18} />
-                                Meu Painel
+                                Mon Tableau de Bord
                             </Link>
 
                             <button
@@ -158,7 +158,7 @@ export function UserMenu() {
                                 className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium"
                             >
                                 <LogOut size={18} />
-                                Sair da conta
+                                Déconnexion
                             </button>
                         </div>
                     </motion.div>

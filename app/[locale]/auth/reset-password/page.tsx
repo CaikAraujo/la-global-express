@@ -33,10 +33,10 @@ export default function ResetPasswordPage() {
                     <Lock className="h-6 w-6 text-brand-600" />
                 </div>
                 <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-                    Redefinir Senha
+                    Réinitialiser le Mot de Passe
                 </h2>
                 <p className="mt-2 text-center text-sm text-gray-600">
-                    Digite sua nova senha abaixo.
+                    Entrez votre nouveau mot de passe ci-dessous.
                 </p>
             </div>
 
@@ -45,7 +45,7 @@ export default function ResetPasswordPage() {
                     <form action={handleSubmit} className="space-y-6">
                         <div>
                             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                                Nova Senha
+                                Nouveau Mot de Passe
                             </label>
                             <div className="mt-1">
                                 <input
@@ -60,7 +60,7 @@ export default function ResetPasswordPage() {
 
                         <div>
                             <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                                Confirmar Nova Senha
+                                Confirmer le Nouveau Mot de Passe
                             </label>
                             <div className="mt-1">
                                 <input
@@ -88,7 +88,7 @@ export default function ResetPasswordPage() {
                                 {loading ? (
                                     <Loader2 className="animate-spin h-5 w-5" />
                                 ) : (
-                                    'Alterar Senha'
+                                    'Changer le Mot de Passe'
                                 )}
                             </button>
                         </div>

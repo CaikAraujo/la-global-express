@@ -1,7 +1,10 @@
 import React from 'react';
 import { Instagram, Linkedin, MapPin, Mail, Phone } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 const Footer: React.FC = () => {
+  const t = useTranslations('Footer');
+
   return (
     <footer className="bg-brand-dark text-white pt-20 pb-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -13,7 +16,7 @@ const Footer: React.FC = () => {
               <span className="text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase">EXPRESS</span>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
-              Excelência em serviços globais. Trazendo o padrão suíço de qualidade e precisão para a gestão do seu patrimônio.
+              {t('description')}
             </p>
             <div className="flex space-x-4">
               <a href="#" className="border border-gray-700 p-2 text-gray-400 hover:border-brand-600 hover:text-brand-600 transition-colors"><Instagram size={18} /></a>
@@ -22,27 +25,27 @@ const Footer: React.FC = () => {
           </div>
 
           <div>
-            <h4 className="font-bold text-white text-sm uppercase tracking-widest mb-6 border-l-2 border-brand-600 pl-3">Institucional</h4>
+            <h4 className="font-bold text-white text-sm uppercase tracking-widest mb-6 border-l-2 border-brand-600 pl-3">{t('sections.institutional')}</h4>
             <ul className="space-y-3 text-sm text-gray-400">
-              <li><a href="#" className="hover:text-white transition-colors">Manifesto de Qualidade</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Nossa História</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Governança Corporativa</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Trabalhe Conosco</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">{t('links.quality')}</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">{t('links.history')}</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">{t('links.governance')}</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">{t('links.careers')}</a></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-bold text-white text-sm uppercase tracking-widest mb-6 border-l-2 border-brand-600 pl-3">Serviços</h4>
+            <h4 className="font-bold text-white text-sm uppercase tracking-widest mb-6 border-l-2 border-brand-600 pl-3">{t('sections.services')}</h4>
             <ul className="space-y-3 text-sm text-gray-400">
-              <li><a href="#" className="hover:text-white transition-colors">Concierge</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Limpeza Industrial</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Déchetterie</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Profissionais para Escritório</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">{t('services.concierge')}</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">{t('services.cleaning')}</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">{t('services.waste')}</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">{t('services.staff')}</a></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-bold text-white text-sm uppercase tracking-widest mb-6 border-l-2 border-brand-600 pl-3">Contato</h4>
+            <h4 className="font-bold text-white text-sm uppercase tracking-widest mb-6 border-l-2 border-brand-600 pl-3">{t('sections.contact')}</h4>
             <ul className="space-y-4 text-sm text-gray-400">
               <li className="flex items-start gap-3">
                 <MapPin size={18} className="text-brand-600 mt-0.5" />
@@ -62,10 +65,10 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500 font-medium">
-          <p>© 2024 LA Global Express. All rights reserved.</p>
+          <p>{t('copyright')}</p>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-white">Privacy Policy</a>
-            <a href="#" className="hover:text-white">Terms of Service</a>
+            <a href="#" className="hover:text-white">{t('links.privacy')}</a>
+            <a href="#" className="hover:text-white">{t('links.terms')}</a>
           </div>
         </div>
       </div>

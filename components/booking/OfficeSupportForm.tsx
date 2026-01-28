@@ -56,22 +56,22 @@ export const OfficeSupportForm: React.FC<OfficeSupportFormProps> = ({ onUpdate, 
             <div className="bg-gradient-to-r from-brand-red/5 to-white p-6 rounded-2xl border border-brand-red/10">
                 <h1 className="text-2xl font-display font-bold text-brand-dark mb-2 flex items-center gap-3">
                     <Users className="text-brand-red" size={28} />
-                    Profissionais para Escritório
+                    Personnel de Bureau
                 </h1>
                 <p className="text-slate-600">
-                    Terceirização de equipes operacionais fixas ou temporárias.
+                    Externalisation d'équipes opérationnelles fixes ou temporaires.
                 </p>
             </div>
 
             {/* 1. Role Selection */}
             <section>
-                <h2 className="text-lg font-bold text-brand-dark mb-4">1. Escolha a Função</h2>
+                <h2 className="text-lg font-bold text-brand-dark mb-4">1. Choisissez la Fonction</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {[
-                        { id: 'pantry', label: 'Copa & Café', icon: Coffee, desc: 'Preparo de café, serviço de copa e reuniões.', color: 'bg-amber-50 border-amber-200 text-amber-700' },
-                        { id: 'cleaning', label: 'Limpeza Fina', icon: Sparkles, desc: 'Manutenção contínua de banheiros e mesas.', color: 'bg-rose-50 border-rose-200 text-rose-700' },
-                        { id: 'organizer', label: 'Organização', icon: Briefcase, desc: 'Apoio administrativo e organização de ambientes.', color: 'bg-red-50 border-red-100 text-brand-red' },
-                        { id: 'maintenance', label: 'Manutenção', icon: Settings, desc: 'Reparos rápidos e zeladoria predial.', color: 'bg-slate-50 border-slate-200 text-slate-700' },
+                        { id: 'pantry', label: 'Service Café & Repas', icon: Coffee, desc: 'Préparation café, service et réunions.', color: 'bg-amber-50 border-amber-200 text-amber-700' },
+                        { id: 'cleaning', label: 'Nettoyage Fin', icon: Sparkles, desc: 'Entretien continu sanitaires et bureaux.', color: 'bg-rose-50 border-rose-200 text-rose-700' },
+                        { id: 'organizer', label: 'Organisation', icon: Briefcase, desc: 'Soutien administratif et organisation.', color: 'bg-red-50 border-red-100 text-brand-red' },
+                        { id: 'maintenance', label: 'Maintenance', icon: Settings, desc: 'Réparations rapides et conciergerie.', color: 'bg-slate-50 border-slate-200 text-slate-700' },
                     ].map((item) => {
                         const isSelected = state.role === item.id;
                         const Icon = item.icon;
@@ -116,7 +116,7 @@ export const OfficeSupportForm: React.FC<OfficeSupportFormProps> = ({ onUpdate, 
                 <div className="flex flex-col md:flex-row gap-8">
                     <div className="flex-1">
                         <h2 className="text-lg font-bold text-brand-dark mb-4 flex items-center gap-2">
-                            <Users size={20} className="text-brand-red" /> Tamanho da Equipe
+                            <Users size={20} className="text-brand-red" /> Taille de l'Équipe
                         </h2>
                         <div className="flex items-center gap-4 bg-slate-50 p-2 rounded-xl border border-slate-200 w-fit">
                             <button
@@ -146,8 +146,8 @@ export const OfficeSupportForm: React.FC<OfficeSupportFormProps> = ({ onUpdate, 
                                 {state.uniform && <CheckCircle2 size={16} className="text-white" />}
                             </div>
                             <div>
-                                <h3 className="font-bold text-brand-dark text-sm">Incluir Uniforme Completo</h3>
-                                <p className="text-xs text-slate-500">Padrão Executivo (+ CHF 15/dia)</p>
+                                <h3 className="font-bold text-brand-dark text-sm">Inclure Uniforme Complet</h3>
+                                <p className="text-xs text-slate-500">Standard Exécutif (+ CHF 15/jour)</p>
                             </div>
                         </div>
                     </div>
@@ -157,13 +157,13 @@ export const OfficeSupportForm: React.FC<OfficeSupportFormProps> = ({ onUpdate, 
             {/* 3. Hours Selection */}
             <section>
                 <h2 className="text-lg font-bold text-brand-dark mb-4 flex items-center gap-2">
-                    <Clock size={20} className="text-brand-red" /> Carga Horária Diária
+                    <Clock size={20} className="text-brand-red" /> Heures par Jour
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {[
-                        { value: 4, label: '4 Horas', desc: 'Meio Período' },
-                        { value: 8, label: '8 Horas', desc: 'Horário Comercial' },
-                        { value: 12, label: '12 Horas', desc: 'Plantão / Turno' },
+                        { value: 4, label: '4 Heures', desc: 'Demi-journée' },
+                        { value: 8, label: '8 Heures', desc: 'Heures de Bureau' },
+                        { value: 12, label: '12 Heures', desc: 'Garde / Quart' },
                     ].map((item) => {
                         const isSelected = state.hoursPerDay === item.value;
                         return (

@@ -1,8 +1,11 @@
 import React from 'react';
 import { ShieldCheck, CheckSquare, Clock, Star } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from '@/navigation';
+import { useTranslations } from 'next-intl';
 
 const Hero: React.FC = () => {
+  const t = useTranslations('Hero');
+
   return (
     <section className="relative pt-16 pb-24 overflow-hidden bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -11,16 +14,18 @@ const Hero: React.FC = () => {
           {/* Left Content */}
           <div className="space-y-10 relative z-10">
             <div className="inline-block border-l-4 border-brand-600 pl-4">
-              <span className="text-xs font-bold tracking-[0.2em] text-brand-600 uppercase">Padrão Suíço de Qualidade</span>
+              <span className="text-xs font-bold tracking-[0.2em] text-brand-600 uppercase">{t('badge')}</span>
             </div>
 
             <h1 className="text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight tracking-tight">
-              Excelência em <br />
-              <span className="text-brand-600">Serviços Globais</span>.
+              {t.rich('title', {
+                brand: (chunks) => <span className="text-brand-600">{chunks}</span>,
+                br: () => <br />
+              })}
             </h1>
 
             <p className="text-lg text-gray-600 leading-relaxed max-w-lg">
-              Soluções integradas de facilities para residências e empresas exigentes. Pontualidade, discrição e eficiência técnica.
+              {t('description')}
             </p>
 
             <div className="space-y-4 pt-2">
@@ -28,19 +33,19 @@ const Hero: React.FC = () => {
                 <div className="bg-brand-50 p-2 group-hover:bg-brand-600 transition-colors duration-300">
                   <CheckSquare className="w-5 h-5 text-brand-600 group-hover:text-white transition-colors" />
                 </div>
-                <p className="font-medium text-gray-800">Protocolos rigorosos de execução</p>
+                <p className="font-medium text-gray-800">{t('features.protocols')}</p>
               </div>
               <div className="flex items-center gap-4 group">
                 <div className="bg-brand-50 p-2 group-hover:bg-brand-600 transition-colors duration-300">
                   <ShieldCheck className="w-5 h-5 text-brand-600 group-hover:text-white transition-colors" />
                 </div>
-                <p className="font-medium text-gray-800">Profissionais certificados e segurados</p>
+                <p className="font-medium text-gray-800">{t('features.certified')}</p>
               </div>
               <div className="flex items-center gap-4 group">
                 <div className="bg-brand-50 p-2 group-hover:bg-brand-600 transition-colors duration-300">
                   <Clock className="w-5 h-5 text-brand-600 group-hover:text-white transition-colors" />
                 </div>
-                <p className="font-medium text-gray-800">Pontualidade garantida ou reembolso</p>
+                <p className="font-medium text-gray-800">{t('features.punctuality')}</p>
               </div>
             </div>
 
@@ -49,13 +54,13 @@ const Hero: React.FC = () => {
                 href="#servicos"
                 className="inline-flex justify-center items-center bg-brand-600 text-white font-bold py-4 px-10 text-sm uppercase tracking-widest hover:bg-black transition-all rounded-lg"
               >
-                Nossos Serviços
+                {t('buttons.services')}
               </a>
               <Link
                 href="/contact"
                 className="inline-flex justify-center items-center bg-white text-gray-900 border-2 border-gray-900 font-bold py-4 px-10 text-sm uppercase tracking-widest hover:bg-gray-50 transition-all rounded-lg"
               >
-                Fale Conosco
+                {t('buttons.contact')}
               </Link>
             </div>
           </div>
@@ -67,7 +72,7 @@ const Hero: React.FC = () => {
 
             <img
               src="https://images.unsplash.com/photo-1613545325278-f24b0cae1224?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80"
-              alt="Interior Luxuoso"
+              alt="Intérieur Luxueux"
               className="w-full h-full object-cover shadow-2xl relative z-10 grayscale-[20%] contrast-125 rounded-2xl"
             />
 
@@ -81,9 +86,9 @@ const Hero: React.FC = () => {
                 <Star className="fill-white text-white" size={16} />
               </div>
               <p className="font-bold text-lg leading-tight">
-                "Serviço impecável. A atenção aos detalhes é surpreendente."
+                {t('testimonial.text')}
               </p>
-              <p className="text-xs uppercase tracking-wider mt-4 opacity-80">— Philippe G., CEO</p>
+              <p className="text-xs uppercase tracking-wider mt-4 opacity-80">— {t('testimonial.author')}</p>
             </div>
           </div>
 

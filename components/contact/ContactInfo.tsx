@@ -1,17 +1,21 @@
-
 import React from 'react';
 import { MapPin, Phone, Mail, ArrowRight } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 const ContactInfo: React.FC = () => {
+    const t = useTranslations('Contact.info');
+
     return (
         <div className="flex flex-col justify-between h-full py-8 md:py-0">
             <div>
                 <h1 className="font-display font-bold text-5xl md:text-7xl leading-tight text-brand-navy mb-6">
-                    Vamos elevar <br />
-                    <span className="text-brand-red">o padrão.</span>
+                    {t.rich('title', {
+                        brand: (chunks) => <span className="text-brand-red">{chunks}</span>,
+                        br: () => <br />
+                    })}
                 </h1>
                 <p className="text-brand-gray text-lg md:max-w-md leading-relaxed mb-12">
-                    Estamos prontos para otimizar a logística da sua empresa com soluções globais personalizadas.
+                    {t('description')}
                 </p>
             </div>
 
@@ -37,7 +41,7 @@ const ContactInfo: React.FC = () => {
                             <Phone className="w-5 h-5 text-brand-red" />
                         </div>
                         <div>
-                            <h3 className="font-bold text-xs uppercase tracking-widest text-brand-navy mb-1">Telefone</h3>
+                            <h3 className="font-bold text-xs uppercase tracking-widest text-brand-navy mb-1">{t('labels.phone')}</h3>
                             <p className="text-brand-navy font-medium font-display text-lg">
                                 +55 11 3000-0000
                             </p>
@@ -51,7 +55,7 @@ const ContactInfo: React.FC = () => {
                             <Mail className="w-5 h-5 text-brand-red" />
                         </div>
                         <div>
-                            <h3 className="font-bold text-xs uppercase tracking-widest text-brand-navy mb-1">Email Corporativo</h3>
+                            <h3 className="font-bold text-xs uppercase tracking-widest text-brand-navy mb-1">{t('labels.email')}</h3>
                             <a href="mailto:corporate@laglobal.com" className="text-brand-navy font-medium hover:text-brand-red transition-colors flex items-center gap-2">
                                 corporate@laglobal.com
                                 <ArrowRight className="w-3 h-3 -rotate-45" />

@@ -15,9 +15,9 @@ interface TruckOption {
 const TRUCK_OPTIONS = [
     {
         id: 'car',
-        name: 'Carro',
-        description: 'Pequenos volumes e caixas.',
-        capacity: 'Até 400kg • 1.5m³',
+        name: 'Voiture',
+        description: 'Petits volumes et cartons.',
+        capacity: 'Jusqu\'à 400kg • 1.5m³',
         price4h: 80,
         price8h: 80,
         isFixedPrice: true,
@@ -25,27 +25,27 @@ const TRUCK_OPTIONS = [
     },
     {
         id: 'van',
-        name: 'Furgão',
-        description: 'Ideal para pequenas cargas e caixas.',
-        capacity: 'Até 600kg • 3m³',
+        name: 'Fourgon',
+        description: 'Idéal pour petites charges et cartons.',
+        capacity: 'Jusqu\'à 600kg • 3m³',
         price4h: 120,
         price8h: 220,
         icon: Truck
     },
     {
         id: 'truck',
-        name: 'Caminhão',
-        description: 'Mudanças de apartamentos médios.',
-        capacity: 'Até 3.500kg • 15m³',
+        name: 'Camion',
+        description: 'Déménagements d\'appartements moyens.',
+        capacity: 'Jusqu\'à 3.500kg • 15m³',
         price4h: 150,
         price8h: 280,
         icon: Truck
     },
     {
         id: 'lift',
-        name: 'Monte-charge',
-        description: 'Elevador de móveis + Operador.',
-        capacity: 'Até 400kg • 8º Andar',
+        name: 'Monte-meuble',
+        description: 'Monte-meuble + Opérateur.',
+        capacity: 'Jusqu\'au 8ème étage',
         price4h: 400,
         price8h: 400,
         isFixedPrice: true,
@@ -54,12 +54,12 @@ const TRUCK_OPTIONS = [
 ];
 
 const TRUCK_EXTRAS_OPTIONS = [
-    { id: 'driver', label: 'Motorista Profissional (8h)', price: 320, icon: User, description: 'Motorista especializado' },
-    { id: 'assembler', label: 'Montador e Embalador (8h)', price: 270, icon: Package, description: 'Mão de obra para montagem' },
-    { id: 'helper', label: 'Ajudante (8h)', price: 240, icon: User, description: 'Auxiliar para carga e descarga' },
-    { id: 'trolley', label: 'Carrinho de Mão', price: 50, icon: ShoppingCart, description: 'Facilita o transporte' },
-    { id: 'bubble_wrap', label: 'Plástico Bolha', price: 80, icon: Package, description: 'Proteção extra' },
-    { id: 'boxes', label: 'Kit 10 Caixas', price: 120, icon: Box, description: 'Caixas 60x40x40' },
+    { id: 'driver', label: 'Chauffeur Professionnel (8h)', price: 320, icon: User, description: 'Chauffeur spécialisé' },
+    { id: 'assembler', label: 'Monteur et Emballeur (8h)', price: 270, icon: Package, description: 'Main d\'œuvre pour montage' },
+    { id: 'helper', label: 'Aide-déménageur (8h)', price: 240, icon: User, description: 'Aide pour chargement/déchargement' },
+    { id: 'trolley', label: 'Diable', price: 50, icon: ShoppingCart, description: 'Facilite le transport' },
+    { id: 'bubble_wrap', label: 'Papier Bulles', price: 80, icon: Package, description: 'Protection supplémentaire' },
+    { id: 'boxes', label: 'Kit 10 Cartons', price: 120, icon: Box, description: 'Cartons 60x40x40' },
 ];
 
 interface TruckRentalFormProps {
@@ -95,8 +95,8 @@ export const TruckRentalForm: React.FC<TruckRentalFormProps> = ({ onUpdate, show
 
         const totalDuration = truck.isFixedPrice ? 24 + extraHours : period + extraHours;
 
-        let details = `Veículo: ${truck.name} (${truck.isFixedPrice ? '24h' : period + 'h'})`;
-        if (extraHours > 0) details += ` + ${extraHours}h extras`;
+        let details = `Véhicule: ${truck.name} (${truck.isFixedPrice ? '24h' : period + 'h'})`;
+        if (extraHours > 0) details += ` + ${extraHours}h suppl.`;
         if (selectedExtras.length > 0) {
             details += `\nExtras: ${selectedExtras.map(e => e.label).join(', ')}`;
         }
@@ -123,12 +123,12 @@ export const TruckRentalForm: React.FC<TruckRentalFormProps> = ({ onUpdate, show
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
             <div>
-                <h2 className="text-2xl font-bold text-brand-dark mb-2">Configure o Transporte</h2>
-                <p className="text-gray-500 text-sm">Escolha o tamanho e o período.</p>
+                <h2 className="text-2xl font-bold text-brand-dark mb-2">Configurez le Transport</h2>
+                <p className="text-gray-500 text-sm">Choisissez la taille et la durée.</p>
             </div>
 
             <div className="space-y-4">
-                <label className="text-xs font-bold uppercase tracking-widest text-gray-500">1. Escolha o Veículo</label>
+                <label className="text-xs font-bold uppercase tracking-widest text-gray-500">1. Choisissez le Véhicule</label>
                 <div className="grid grid-cols-1 gap-4">
                     {TRUCK_OPTIONS.map(truck => (
                         <div
@@ -188,7 +188,7 @@ export const TruckRentalForm: React.FC<TruckRentalFormProps> = ({ onUpdate, show
 
             {/* Extras Section */}
             <div className="space-y-4">
-                <label className="text-xs font-bold uppercase tracking-widest text-gray-500">2. Mão de Obra e Equipamentos</label>
+                <label className="text-xs font-bold uppercase tracking-widest text-gray-500">2. Main d'œuvre et Équipements</label>
                 <div className="grid grid-cols-1 gap-4">
                     {TRUCK_EXTRAS_OPTIONS.map((extra) => {
                         const isSelected = extras.includes(extra.id);
@@ -229,7 +229,7 @@ export const TruckRentalForm: React.FC<TruckRentalFormProps> = ({ onUpdate, show
             <div className="space-y-6">
                 <div>
                     <div className="flex justify-between mb-3">
-                        <label className="text-xs font-bold uppercase tracking-widest text-gray-500">3. Horas Extras (+30 CHF/h)</label>
+                        <label className="text-xs font-bold uppercase tracking-widest text-gray-500">3. Heures Supplémentaires (+30 CHF/h)</label>
                         {extraHours > 0 && <span className="text-brand-red font-bold">+{extraHours}h</span>}
                     </div>
                     <div className="flex items-center gap-4 bg-white border border-gray-200 p-2 rounded-xl w-fit">
@@ -251,7 +251,7 @@ export const TruckRentalForm: React.FC<TruckRentalFormProps> = ({ onUpdate, show
 
                 <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 flex gap-3 text-blue-800 text-xs leading-relaxed">
                     <Info className="shrink-0 w-4 h-4 mt-0.5" />
-                    <p>O tempo começa a contar na chegada. Motorista e ajudantes (se contratados) cumprem o turno selecionado.</p>
+                    <p>Le temps commence à compter à l'arrivée. Le chauffeur et les aides (si engagés) effectuent le service sélectionné.</p>
                 </div>
             </div>
         </div>

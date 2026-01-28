@@ -34,7 +34,7 @@ export default function LoginPage() {
                 className="absolute top-8 left-8 text-slate-500 hover:text-brand-600 flex items-center gap-2 transition-all duration-200 font-medium hover:-translate-x-1"
             >
                 <ArrowLeft size={18} />
-                Voltar para a Home
+                Retour à l'accueil
             </Link>
 
             <div className="sm:mx-auto sm:w-full sm:max-w-[450px]">
@@ -54,7 +54,7 @@ export default function LoginPage() {
                                     }`}
                             >
                                 <User size={18} />
-                                Pessoa Física
+                                Particulier
                             </button>
                             <button
                                 onClick={() => setLoginType('company')}
@@ -64,7 +64,7 @@ export default function LoginPage() {
                                     }`}
                             >
                                 <Building2 size={18} />
-                                Pessoa Jurídica
+                                Entreprise
                             </button>
                         </div>
 
@@ -73,12 +73,12 @@ export default function LoginPage() {
                                 {loginType === 'individual' ? <LogIn size={24} /> : <Building2 size={24} />}
                             </div>
                             <h2 className="text-2xl font-bold tracking-tight text-slate-900">
-                                {loginType === 'individual' ? 'Acesse sua conta pessoal' : 'Portal Corporativo'}
+                                {loginType === 'individual' ? 'Accédez à votre compte personnel' : 'Portail Entreprise'}
                             </h2>
                             <p className="mt-2 text-sm text-slate-500">
                                 {loginType === 'individual'
-                                    ? 'Insira suas credenciais para continuar'
-                                    : 'Gerencie seus serviços empresariais'
+                                    ? 'Entrez vos identifiants pour continuer'
+                                    : 'Gérez vos services d\'entreprise'
                                 }
                             </p>
                         </div>
@@ -86,7 +86,7 @@ export default function LoginPage() {
                         <form action={handleSubmit} className="space-y-6">
                             <div>
                                 <label htmlFor="email" className="block text-sm font-semibold text-slate-700 mb-2">
-                                    {loginType === 'individual' ? 'Email' : 'Email Corporativo'}
+                                    {loginType === 'individual' ? 'Email' : 'Email Professionnel'}
                                 </label>
                                 <input
                                     id="email"
@@ -94,7 +94,7 @@ export default function LoginPage() {
                                     type="email"
                                     autoComplete="email"
                                     required
-                                    placeholder={loginType === 'individual' ? 'seu@email.com' : 'nome@empresa.ch'}
+                                    placeholder={loginType === 'individual' ? 'votre@email.com' : 'nom@entreprise.ch'}
                                     className="block w-full rounded-lg border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:ring-brand-500 transition-all duration-200 sm:text-sm"
                                 />
                             </div>
@@ -102,7 +102,7 @@ export default function LoginPage() {
                             <div>
                                 <div className="flex items-center justify-between mb-2">
                                     <label htmlFor="password" className="block text-sm font-semibold text-slate-700">
-                                        Senha
+                                        Mot de passe
                                     </label>
                                 </div>
                                 <input
@@ -119,7 +119,7 @@ export default function LoginPage() {
                                         href="/forgot-password"
                                         className="text-xs font-medium text-slate-500 hover:text-brand-600 transition-colors"
                                     >
-                                        Esqueceu sua senha?
+                                        Mot de passe oublié ?
                                     </Link>
                                 </div>
                             </div>
@@ -146,19 +146,19 @@ export default function LoginPage() {
                                 {loading ? (
                                     <Loader2 className="animate-spin h-5 w-5" />
                                 ) : (
-                                    'Entrar na Plataforma'
+                                    'Accéder à la Plateforme'
                                 )}
                             </button>
                         </form>
 
                         <div className="mt-8 pt-6 border-t border-slate-100">
                             <p className="text-center text-sm text-slate-500">
-                                Não tem uma conta?{' '}
+                                Vous n'avez pas de compte ?{' '}
                                 <Link
                                     href="/signup"
                                     className="font-semibold text-brand-600 hover:text-brand-500 transition-colors"
                                 >
-                                    Criar conta gratuitamente
+                                    Créer un compte gratuitement
                                 </Link>
                             </p>
                         </div>

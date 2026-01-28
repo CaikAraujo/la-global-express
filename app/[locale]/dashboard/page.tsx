@@ -85,10 +85,10 @@ export default function DashboardPage() {
 
     const getStatusLabel = (status: string) => {
         switch (status) {
-            case 'pending': return 'Pendente'
-            case 'confirmed': return 'Confirmado'
-            case 'completed': return 'Concluído'
-            case 'cancelled': return 'Cancelado'
+            case 'pending': return 'En attente'
+            case 'confirmed': return 'Confirmé'
+            case 'completed': return 'Terminé'
+            case 'cancelled': return 'Annulé'
             default: return status
         }
     }
@@ -112,18 +112,18 @@ export default function DashboardPage() {
                             </div>
                             <div>
                                 <h1 className="text-3xl font-bold text-gray-900">
-                                    Olá, {profile?.full_name?.split(' ')[0]}!
+                                    Bonjour, {profile?.full_name?.split(' ')[0]} !
                                 </h1>
                                 <p className="text-slate-500 mt-1 flex items-center gap-2">
                                     <span className="inline-block w-2 h-2 rounded-full bg-green-500"></span>
-                                    {profile?.user_type === 'company' ? 'Conta Corporativa' : 'Conta Pessoal'} • {profile?.email}
+                                    {profile?.user_type === 'company' ? 'Compte Entreprise' : 'Compte Personnel'} • {profile?.email}
                                 </p>
                             </div>
                         </div>
                         <div className="flex items-center gap-4">
                             <Link href="/#servicos">
                                 <button className="px-5 py-2.5 bg-brand-600 text-white rounded-lg font-semibold shadow-lg shadow-brand-600/20 hover:bg-brand-700 transition-all hover:-translate-y-0.5">
-                                    Novo Agendamento
+                                    Nouvelle Réservation
                                 </button>
                             </Link>
                         </div>
@@ -134,7 +134,7 @@ export default function DashboardPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
                     <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-start justify-between group hover:border-brand-200 transition-all">
                         <div>
-                            <p className="text-sm font-medium text-slate-500 uppercase tracking-wide">Serviços Ativos</p>
+                            <p className="text-sm font-medium text-slate-500 uppercase tracking-wide">Services Actifs</p>
                             <h3 className="text-3xl font-bold text-slate-900 mt-1">{activeServices}</h3>
                         </div>
                         <div className="p-3 bg-blue-50 text-blue-600 rounded-lg group-hover:bg-blue-100 transition-colors">
@@ -143,7 +143,7 @@ export default function DashboardPage() {
                     </div>
                     <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-start justify-between group hover:border-brand-200 transition-all">
                         <div>
-                            <p className="text-sm font-medium text-slate-500 uppercase tracking-wide">Total de Serviços</p>
+                            <p className="text-sm font-medium text-slate-500 uppercase tracking-wide">Total des Services</p>
                             <h3 className="text-3xl font-bold text-slate-900 mt-1">{totalServices}</h3>
                         </div>
                         <div className="p-3 bg-brand-50 text-brand-600 rounded-lg group-hover:bg-brand-100 transition-colors">
@@ -152,8 +152,8 @@ export default function DashboardPage() {
                     </div>
                     <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-start justify-between group hover:border-brand-200 transition-all">
                         <div>
-                            <p className="text-sm font-medium text-slate-500 uppercase tracking-wide">Status da Conta</p>
-                            <h3 className="text-3xl font-bold text-green-600 mt-1">Verificada</h3>
+                            <p className="text-sm font-medium text-slate-500 uppercase tracking-wide">Statut du Compte</p>
+                            <h3 className="text-3xl font-bold text-green-600 mt-1">Vérifié</h3>
                         </div>
                         <div className="p-3 bg-green-50 text-green-600 rounded-lg group-hover:bg-green-100 transition-colors">
                             <ShieldCheck size={24} />
@@ -164,7 +164,7 @@ export default function DashboardPage() {
                 {/* Recent Services List */}
                 <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
                     <div className="px-6 py-5 border-b border-slate-50 flex items-center justify-between">
-                        <h2 className="text-lg font-bold text-slate-900">Histórico de Serviços</h2>
+                        <h2 className="text-lg font-bold text-slate-900">Historique des Services</h2>
                     </div>
 
                     {bookings.length === 0 ? (
@@ -172,9 +172,9 @@ export default function DashboardPage() {
                             <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400">
                                 <Package size={32} />
                             </div>
-                            <h3 className="text-lg font-medium text-slate-900">Nenhum serviço recente</h3>
+                            <h3 className="text-lg font-medium text-slate-900">Aucun service récent</h3>
                             <p className="text-slate-500 mt-2 max-w-sm mx-auto">
-                                Você ainda não realizou nenhum serviço conosco. Que tal começar um novo agendamento hoje?
+                                Vous n'avez encore effectué aucun service avec nous. Pourquoi ne pas commencer une nouvelle réservation aujourd'hui ?
                             </p>
                         </div>
                     ) : (
@@ -190,7 +190,7 @@ export default function DashboardPage() {
                                             <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mt-1 text-sm text-slate-500">
                                                 <span className="flex items-center gap-1">
                                                     <Calendar size={14} />
-                                                    {new Date(booking.data).toLocaleDateString('pt-BR')} às {booking.horario}
+                                                    {new Date(booking.data).toLocaleDateString('fr-CH')} à {booking.horario}
                                                 </span>
                                                 <span className="hidden sm:inline">•</span>
                                                 <span className="flex items-center gap-1">
@@ -203,7 +203,7 @@ export default function DashboardPage() {
 
                                     <div className="flex items-center justify-between md:justify-end gap-4 w-full md:w-auto mt-2 md:mt-0">
                                         <div className="text-right mr-4">
-                                            <p className="text-xs text-slate-400 font-medium uppercase">Valor Estimado</p>
+                                            <p className="text-xs text-slate-400 font-medium uppercase">Valeur Estimée</p>
                                             <p className="font-bold text-slate-900">CHF {booking.price}</p>
                                         </div>
                                         <div className={`px-3 py-1 rounded-full text-xs font-bold border ${getStatusColor(booking.status)}`}>

@@ -1,0 +1,398 @@
+{
+    "Navbar": {
+        "links": {
+            "solutions": "Lösungen",
+            "corporate": "Firmen",
+            "about": "Über Uns",
+            "contact": "Kontakt"
+        },
+        "cta": {
+            "quote": "Angebot",
+            "requestQuote": "Angebot Anfordern"
+        }
+    },
+    "Hero": {
+        "badge": "Schweizer Qualitätsstandard",
+        "title": "Exzellenz in <brand>Globalen Diensten</brand>.",
+        "description": "Integrierte Facility-Lösungen für anspruchsvolle Haushalte und Unternehmen. Pünktlichkeit, Diskretion und technische Effizienz.",
+        "features": {
+            "protocols": "Strenge Ausführungsprotokolle",
+            "certified": "Zertifizierte und versicherte Fachkräfte",
+            "punctuality": "Pünktlichkeit garantiert oder Rückerstattung"
+        },
+        "buttons": {
+            "services": "Unsere Dienstleistungen",
+            "contact": "Kontaktieren Sie uns"
+        },
+        "testimonial": {
+            "text": "\"Tadelloser Service. Die Liebe zum Detail ist überraschend.\"",
+            "author": "Philippe G., CEO"
+        }
+    },
+    "Stats": {
+        "history": "Jahre Geschichte",
+        "continents": "Kontinente",
+        "projects": "Projekte",
+        "precision": "Präzision"
+    },
+    "Services": {
+        "header": {
+            "subtitle": "Exzellenz bis ins kleinste Detail",
+            "title": "Integrierte Lösungen"
+        },
+        "tabs": {
+            "RESIDENCIAL": "WOHNEN",
+            "CORPORATIVO": "FIRMEN"
+        },
+        "bottomCta": {
+            "text": "Finden Sie nicht, was Sie suchen?",
+            "link": "Sprechen Sie mit einem Berater"
+        },
+        "cta": "Angebot Anfordern",
+        "items": {
+            "res-cleaning": {
+                "title": "Executive Reinigung",
+                "description": "Tiefenreinigung für anspruchsvolle Wohnsitze. Wir verwenden biologisch abbaubare Produkte und modernste Technologie.",
+                "tag": "24/7 Verfügbar"
+            },
+            "res-truck-rental": {
+                "title": "LKW-Vermietung",
+                "description": "Moderne Flotte für Lastentransporte und Umzüge. Qualifizierte Fahrer und Vollversicherung.",
+                "tag": "Saubere Flotte"
+            },
+            "res-material": {
+                "title": "Materiallieferung",
+                "description": "Hochwertige Bau- und Ausbaumaterialien für Ihre Baustelle. Geplante Lieferung.",
+                "tag": "Sofortige Lieferung"
+            },
+            "res-assembly": {
+                "title": "Technische Montage",
+                "description": "Spezialisten für Designermöbel und komplexe Installationen. Absolute Sorgfalt für Ihre Stücke.",
+                "tag": "Totale Garantie"
+            },
+            "corp-concierge": {
+                "title": "Concierge",
+                "description": "Executive Empfangsdienste, Zugangsmanagement und erstklassige administrative Unterstützung für Ihr Büro.",
+                "tag": "Premium Service"
+            },
+            "corp-cleaning": {
+                "title": "Industriereinigung",
+                "description": "Spezialisierte Teams für große Flächen, Lagerhallen und Großraumbüros mit spezifischen Maschinen.",
+                "tag": "Dedizierte Teams"
+            },
+            "corp-waste": {
+                "title": "Abfallmanagement",
+                "description": "Nachhaltiges Abfallmanagement, Mülltrennung und zertifizierte Entsorgung von Unternehmensmaterialien.",
+                "tag": "Nachhaltigkeit"
+            },
+            "corp-office-staff": {
+                "title": "Büropersonal",
+                "description": "Tägliche Unterstützung für Cafeteria, Büroorganisation, Reinigung der Sanitäranlagen und Aufrechterhaltung der Ordnung am Arbeitsplatz.",
+                "tag": "Operative Unterstützung"
+            }
+        }
+    },
+    "SwissSection": {
+        "badge": "Warum La Global?",
+        "title": "Der Schweizer Standard der <muted>Dienstleistung</muted>",
+        "description": "Wir reinigen oder reparieren nicht nur. Wir kümmern uns mit größter Diskretion und technischer Präzision um Ihr Vermögen.",
+        "cta": "Entdecken Sie unsere Methode",
+        "features": {
+            "punctuality": {
+                "title": "Absolute Pünktlichkeit",
+                "description": "Strikte Einhaltung Ihrer Zeit. Unsere Fachkräfte folgen genauen Plänen und garantieren, dass jeder Schritt des Service zum exakten Zeitpunkt ausgeführt wird."
+            },
+            "excellence": {
+                "title": "Technische Exzellenz",
+                "description": "Fachkräfte, die nach den höchsten globalen Facility-Standards ausgebildet sind. Wir verwenden Schweizer Methoden, um ein tadelloses Finish in jedem Detail zu gewährleisten."
+            },
+            "discretion": {
+                "title": "Totale Diskretion",
+                "description": "Vertraulichkeit und Respekt für Ihre Privatsphäre sind grundlegende Pfeiler. Unser Team ist geschult, unsichtbar zu sein, wenn nötig, und präsent, wenn gewünscht."
+            },
+            "guarantee": {
+                "title": "La Global Garantie",
+                "description": "Haftpflichtversicherung und Zufriedenheitsgarantie für alle Dienstleistungen. Ihre Ruhe ist unser wichtigster Erfolgsindikator."
+            }
+        }
+    },
+    "Footer": {
+        "description": "Exzellenz in globalen Dienstleistungen. Wir bringen den Schweizer Qualitätsstandard und Präzision in Ihre Vermögensverwaltung.",
+        "sections": {
+            "institutional": "Institutionell",
+            "services": "Dienstleistungen",
+            "contact": "Kontakt"
+        },
+        "links": {
+            "quality": "Qualitätsmanifest",
+            "history": "Unsere Geschichte",
+            "governance": "Unternehmensführung",
+            "careers": "Karriere",
+            "privacy": "Datenschutzrichtlinie",
+            "terms": "Nutzungsbedingungen"
+        },
+        "services": {
+            "concierge": "Concierge",
+            "cleaning": "Industriereinigung",
+            "waste": "Abfallentsorgung",
+            "staff": "Büropersonal"
+        },
+        "copyright": "© 2024 LA Global Express. Alle Rechte vorbehalten."
+    },
+    "Contact": {
+        "info": {
+            "title": "Wir heben <brand>den Standard.</brand>",
+            "description": "Wir sind bereit, die Logistik Ihres Unternehmens mit personalisierten globalen Lösungen zu optimieren.",
+            "labels": {
+                "address": "Adresse",
+                "phone": "Telefon",
+                "email": "E-Mail"
+            }
+        },
+        "form": {
+            "title": "Senden Sie eine Nachricht",
+            "description": "Füllen Sie das untenstehende Formular aus und unsere Berater werden Sie innerhalb von 24 Stunden kontaktieren.",
+            "labels": {
+                "firstName": "Vorname",
+                "lastName": "Nachname",
+                "email": "E-Mail geschäftlich",
+                "phone": "Telefon",
+                "optional": "Optional",
+                "interest": "Interesse",
+                "message": "Nachricht",
+                "suggested": "KI-Vorschlag",
+                "analyzing": "Analysieren..."
+            },
+            "placeholders": {
+                "firstName": "Max",
+                "lastName": "Mustermann",
+                "email": "max@firma.com",
+                "phone": "+41 79 000 00 00",
+                "interest": "Wählen Sie einen Service",
+                "message": "Beschreiben Sie Ihren Bedarf..."
+            },
+            "submit": {
+                "default": "Anfrage Senden",
+                "sending": "Senden..."
+            },
+            "interests": {
+                "CORPORATE": "Unternehmensberatung",
+                "LOGISTICS": "Logistiklösungen",
+                "SUPPORT": "Technischer Support",
+                "PARTNERSHIP": "Partnerschaften",
+                "OTHER": "Andere Themen"
+            },
+            "success": {
+                "received": "Erhalten.",
+                "message": "Ihre Anfrage wurde an unser Expertenteam gesendet. Wir werden Sie bald kontaktieren.",
+                "newMessage": "Neue Nachricht"
+            },
+            "errors": {
+                "required": "Pflichtfeld",
+                "email": "Ungültige E-Mail",
+                "min": "Zu kurz"
+            }
+        }
+    },
+    "Booking": {
+        "steps": {
+            "services": "Was benötigen Sie?",
+            "servicesDesc": "Personalisieren Sie den idealen Service für Ihre Bedürfnisse.",
+            "checkout": "Abschließen",
+            "checkoutDesc": "Geben Sie Ihre Daten zur Bestätigung ein."
+        },
+        "buttons": {
+            "backToServices": "Zurück zu unseren Dienstleistungen",
+            "addService": "Mehr Services hinzufügen",
+            "cancel": "Abbrechen",
+            "addAnother": "+ Weiteren Service wählen (Zur Bestellung hinzufügen)",
+            "modify": "Ändern",
+            "next": "Weiter",
+            "finalize": "Buchung abschließen",
+            "back": "Zurück"
+        },
+        "labels": {
+            "serviceType": "Art der Dienstleistung",
+            "availableServices": "Verfügbare Dienstleistungen",
+            "from": "Ab",
+            "address": "Service-Adresse",
+            "fullName": "Vollständiger Name",
+            "email": "E-Mail",
+            "phone": "Mobil / WhatsApp",
+            "observations": "Bemerkungen (Optional)",
+            "observationsPlaceholder": "z.B.: Schlüssel an der Rezeption, Achtung Hund, etc.",
+            "terms": "Ich habe die <terms>Nutzungsbedingungen</terms> und <privacy>Datenschutzrichtlinie</privacy> gelesen und akzeptiere sie.",
+            "securePayment": "Sichere Zahlung",
+            "securePaymentDesc": "Sie werden erst nach Bestätigung durch den Fachmann belastet. Wir akzeptieren Kreditkarten und TWINT."
+        },
+        "summary": {
+            "title": "Bestellübersicht",
+            "service": "Dienstleistung",
+            "totalDuration": "Gesamtdauer",
+            "frequency": "Häufigkeit",
+            "estimatedTotal": "Geschätzter Gesamtbetrag",
+            "secure": "100% Sicherer Einkauf",
+            "hours": "Stunden",
+            "estimated": "geschätzt",
+            "frequencies": {
+                "once": "Einmalig",
+                "weekly": "Wöchentlich",
+                "biweekly": "Zweiwöchentlich",
+                "monthly": "Monatlich"
+            }
+        },
+        "dateTime": {
+            "frequencyTitle": "Häufigkeit",
+            "frequencySubtitle": "Jederzeit ändern oder stornieren",
+            "timeTitle": "Zeitplan",
+            "locationTitle": "Wo soll der Service stattfinden?",
+            "locationPlaceholder": "PLZ oder vollständige Adresse eingeben",
+            "calendar": "Kalender",
+            "today": "Heute",
+            "unavailable": "Nicht verfügbar",
+            "until": "bis",
+            "highDemand": "Hoch",
+            "frequencies": {
+                "once": {
+                    "title": "Einmalig",
+                    "subtitle": "Einmaliger Besuch",
+                    "features": {
+                        "verified": "Geprüfter Fachmann",
+                        "insurance": "Versicherung inklusive"
+                    }
+                },
+                "weekly": {
+                    "title": "Wöchentlich",
+                    "subtitle": "Jede Woche",
+                    "features": {
+                        "samePro": "Immer der gleiche Fachmann",
+                        "priority": "Terminpriorität",
+                        "vip": "VIP WhatsApp Support"
+                    }
+                },
+                "biweekly": {
+                    "title": "Zweiwöchentlich",
+                    "subtitle": "Alle 2 Wochen",
+                    "features": {
+                        "samePro": "Immer der gleiche Fachmann",
+                        "priority": "Terminpriorität"
+                    }
+                },
+                "monthly": {
+                    "title": "Monatlich",
+                    "subtitle": "Einmal im Monat",
+                    "features": {
+                        "recurring": "Wiederkehrender Fachmann",
+                        "insurance": "Versicherung inklusive"
+                    }
+                }
+            }
+        }
+    },
+    "Corporate": {
+        "hero": {
+            "badge": "B2B-Abteilung",
+            "title": "Facility Management <br/> <gradient>für Höchstleistung.</gradient>",
+            "description": "Integrierte Lösungen für Großunternehmen. Senken Sie Ihre Betriebskosten um bis zu 20% mit unserem datengestützten Management und Schweizer Qualitätsprozessen.",
+            "cta": "Termin vereinbaren",
+            "testimonial": "\"Die Effizienz von LA GLOBAL hat unseren Betrieb in 3 Monaten verändert.\"",
+            "role": "Betriebsleiter, TechGiant"
+        },
+        "services": {
+            "badge": "Unsere Dienstleistungen",
+            "title": "360º-Lösungen",
+            "cta": "Vollständigen Katalog ansehen",
+            "items": {
+                "concierge": {
+                    "title": "Concierge",
+                    "desc": "Executive Empfangsdienste, Zugangsmanagement und erstklassige administrative Unterstützung für Ihr Büro."
+                },
+                "cleaning": {
+                    "title": "Industriereinigung",
+                    "desc": "Spezialisierte Teams für große Flächen, Lagerhallen und Großraumbüros mit spezifischen Maschinen."
+                },
+                "waste": {
+                    "title": "Abfallmanagement",
+                    "desc": "Nachhaltiges Abfallmanagement, Mülltrennung und zertifizierte Entsorgung von Unternehmensmaterialien."
+                },
+                "support": {
+                    "title": "Büro-Support",
+                    "desc": "Tägliche Unterstützung für Cafeteria, Büroorganisation, Reinigung der Sanitäranlagen und Aufrechterhaltung der Ordnung am Arbeitsplatz."
+                }
+            }
+        },
+        "methodology": {
+            "title": "Schweizer Qualitätsstandard",
+            "description": "Wir liefern nicht nur Dienstleistungen, wir liefern Sorgenfreiheit. Unsere proprietäre Methodik kombiniert strenge Ausführungsprotokolle mit einer Kultur der Gastfreundschaft.",
+            "cards": {
+                "certified": {
+                    "title": "Zertifizierte Prozesse",
+                    "desc": "ISO 9001 und 14001 in allen Operationen."
+                },
+                "tolerance": "Fehlertoleranz"
+            },
+            "list": {
+                "l1": "Dedizierte Account Manager für jeden Vertrag",
+                "l2": "Benutzerdefinierte KPIs und Echtzeit-Dashboard",
+                "l3": "Uniformiertes, geschultes und geprüftes Team",
+                "l4": "Umfassende Haftpflichtversicherung"
+            }
+        },
+        "esg": {
+            "title": "ESG-Engagement",
+            "description": "Wir richten unsere Tätigkeiten an den Nachhaltigkeitszielen Ihres Unternehmens aus. Wir verwenden <highlight>biologisch abbaubare Produkte</highlight> und energieeffiziente Geräte.",
+            "items": {
+                "eco": {
+                    "title": "Umweltfreundlich",
+                    "desc": "Green-Label-Produkte, reduzierter Wasserverbrauch und energiesparende Geräte für eine sauberere Zukunft."
+                },
+                "social": {
+                    "title": "Sozial",
+                    "desc": "Kontinuierliche Weiterbildungsprogramme, vielfältige Inklusion und klare soziale Aufstiegspläne für alle Mitarbeiter."
+                },
+                "gov": {
+                    "title": "Governance",
+                    "desc": "Totale Transparenz mit vierteljährlichen Audits, strenger Compliance und nicht verhandelbarer Ethik in allen Operationen."
+                }
+            },
+            "cta": "VOLLSTÄNDIGEN BERICHT ANSEHEN",
+            "pillar": "Säule"
+        },
+        "trustedBy": "Vertrauen der Marktführer",
+        "hospitality": {
+            "badge": "Workplace Experience",
+            "title": "Vom Unternehmen zum <highlight>Hotel.</highlight>",
+            "description": "Verwandeln Sie Ihr Büro in ein Reiseziel. Unser Hospitality-Team ist nach denselben Standards wie Schweizer Luxushotels ausgebildet, um Ihre Kunden willkommen zu heißen und Ihre Mitarbeiter zu betreuen.",
+            "features": {
+                "concierge": {
+                    "title": "Zweisprachiger Concierge",
+                    "desc": "Executive Empfang mit zweisprachigen Fachkräften, die in Unternehmensetikette geschult sind."
+                },
+                "pantry": {
+                    "title": "Premium Kaffee & Pantry",
+                    "desc": "Komplettes Cafeteria-Management mit Baristas und Auswahl an gesunden Snacks."
+                },
+                "events": {
+                    "title": "Event-Support",
+                    "desc": "Operative Unterstützung für Vorstandssitzungen und interne Firmenveranstaltungen."
+                }
+            },
+            "card": {
+                "team": "Premium Team",
+                "quote": "\"Das Team von LA GLOBAL hat die Qualitätswahrnehmung unseres Büros verändert.\""
+            }
+        },
+        "cta": {
+            "title": "Bereit, das Niveau Ihrer <gradient>Infrastruktur zu heben?</gradient>",
+            "description": "Fordern Sie ein kostenloses Audit Ihrer aktuellen Einrichtungen an und entdecken Sie, wo Sie mit unseren Hochleistungslösungen sparen können.",
+            "phone": "Jetzt anrufen",
+            "button": "ANGEBOT ANFORDERN",
+            "form": {
+                "title": "Schnellkontakt",
+                "email": "Ihre geschäftliche E-Mail",
+                "submit": "GESPRÄCH BEGINNEN",
+                "online": "Experten jetzt online"
+            }
+        }
+    }
+}

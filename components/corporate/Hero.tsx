@@ -2,7 +2,10 @@ import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
+import { useTranslations } from 'next-intl';
+
 const Hero = () => {
+    const t = useTranslations('Corporate');
     return (
         <section className="relative pt-32 lg:pt-48 pb-20 overflow-hidden bg-white">
             {/* Background decoration - Swiss Grid */}
@@ -13,21 +16,23 @@ const Hero = () => {
                     <div>
                         <div className="flex items-center gap-3 mb-6 reveal-text" style={{ animationDelay: '0.1s' }}>
                             <div className="w-1 h-8 bg-brand-red"></div>
-                            <span className="text-xs font-bold tracking-[0.2em] text-brand-red uppercase">B2B Division</span>
+                            <span className="text-xs font-bold tracking-[0.2em] text-brand-red uppercase">{t('hero.badge')}</span>
                         </div>
 
                         <h1 className="font-display text-5xl lg:text-7xl font-bold text-brand-dark leading-[0.95] mb-8 reveal-text" style={{ animationDelay: '0.2s' }}>
-                            Facility Management <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-red-800">de Alta Performance.</span>
+                            {t.rich('hero.title', {
+                                br: () => <br />,
+                                gradient: (chunks) => <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-red-800">{chunks}</span>
+                            })}
                         </h1>
 
                         <p className="text-lg text-gray-500 leading-relaxed max-w-lg mb-10 reveal-text" style={{ animationDelay: '0.3s' }}>
-                            Soluções integradas para grandes corporações. Reduza custos operacionais em até 20% com nossa gestão baseada em dados e processos suíços de qualidade.
+                            {t('hero.description')}
                         </p>
 
                         <div className="flex flex-wrap gap-4 reveal-text" style={{ animationDelay: '0.4s' }}>
                             <Link href="/contact" className="group bg-brand-dark text-white px-8 py-4 text-sm font-bold uppercase tracking-wider hover:bg-brand-red transition-all duration-300 flex items-center gap-2 rounded-lg">
-                                Agendar Consultoria
+                                {t('hero.cta')}
                                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                             </Link>
 
@@ -51,9 +56,9 @@ const Hero = () => {
                                     {[1, 2, 3, 4, 5].map(i => <div key={i} className="w-2 h-2 bg-brand-red rounded-full"></div>)}
                                 </div>
                                 <p className="font-display font-bold text-xl leading-tight">
-                                    "A eficiência da LA GLOBAL transformou nossa operação em 3 meses."
+                                    {t('hero.testimonial')}
                                 </p>
-                                <p className="mt-4 text-xs font-bold text-gray-400 uppercase tracking-widest">— Diretor de Operações, TechGiant</p>
+                                <p className="mt-4 text-xs font-bold text-gray-400 uppercase tracking-widest">— {t('hero.role')}</p>
                             </div>
                         </div>
                     </div>

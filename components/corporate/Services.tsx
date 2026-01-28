@@ -3,33 +3,32 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronRight, ArrowRight } from 'lucide-react';
 
+import { useTranslations } from 'next-intl';
+
 const Services = () => {
+    const t = useTranslations('Corporate.services');
     const [activeService, setActiveService] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
 
     const services = [
         {
             id: "01",
-            title: "Concierge",
-            desc: "Serviços de recepção executiva, gestão de acessos e suporte administrativo premium para seu escritório.",
+            titleKey: "concierge",
             image: "/concierge_service.png"
         },
         {
             id: "02",
-            title: "Limpeza Industrial",
-            desc: "Equipes especializadas para grandes áreas, galpões e escritórios de grande porte com maquinário específico.",
+            titleKey: "cleaning",
             image: "/corporate-cleaning.png"
         },
         {
             id: "03",
-            title: "Déchetterie",
-            desc: "Gestão sustentável de resíduos, coleta seletiva e descarte certificado de materiais corporativos.",
+            titleKey: "waste",
             image: "/waste_management.png"
         },
         {
             id: "04",
-            title: "Profissionais para Escritório",
-            desc: "Suporte diário para copa, organização de mesas, limpeza de banheiros e manutenção da ordem no ambiente de trabalho.",
+            titleKey: "support",
             image: "/office_support.png"
         }
     ];
@@ -59,10 +58,10 @@ const Services = () => {
                     >
                         <div className="mb-12">
                             <div className="flex items-center gap-3 mb-4">
-                                <div className="w-12 h-[2px] bg-brand-red"></div>
-                                <span className="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase">Nossos Serviços</span>
+                                <div className="w-12 h-12 bg-brand-red"></div>
+                                <span className="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase">{t('badge')}</span>
                             </div>
-                            <h2 className="font-display text-4xl lg:text-5xl font-bold text-brand-dark">Soluções 360º</h2>
+                            <h2 className="font-display text-4xl lg:text-5xl font-bold text-brand-dark">{t('title')}</h2>
                         </div>
 
                         <div className="space-y-8">
@@ -77,12 +76,12 @@ const Services = () => {
                                             {service.id}
                                         </span>
                                         <h3 className={`font-display text-2xl lg:text-3xl font-bold transition-colors duration-300 ${activeService === index ? 'text-brand-dark' : 'text-gray-300 group-hover:text-gray-400'}`}>
-                                            {service.title}
+                                            {t(`items.${service.titleKey}.title`)}
                                         </h3>
                                     </div>
                                     <div className={`overflow-hidden transition-all duration-500 ease-out ${activeService === index ? 'max-h-24 opacity-100' : 'max-h-0 opacity-0'}`}>
                                         <p className="text-gray-500 pl-10 max-w-md border-l-2 border-gray-100 ml-2 py-2">
-                                            {service.desc}
+                                            {t(`items.${service.titleKey}.desc`)}
                                         </p>
                                     </div>
                                 </div>
@@ -90,7 +89,7 @@ const Services = () => {
                         </div>
 
                         <a href="#" className="mt-12 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-brand-dark hover:text-brand-red transition-colors group w-max">
-                            Ver catálogo completo
+                            {t('cta')}
                             <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </a>
                     </div>
@@ -100,7 +99,7 @@ const Services = () => {
                         <div className="absolute inset-0 z-10">
                             <img
                                 src={services[activeService].image}
-                                alt={services[activeService].title}
+                                alt={t(`items.${services[activeService].titleKey}.title`)}
                                 className="w-full h-full object-cover transition-transform duration-1000 scale-105"
                                 key={activeService} // Force re-render on change
                             />

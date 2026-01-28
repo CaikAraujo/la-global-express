@@ -23,7 +23,7 @@ export async function POST(request: Request) {
         const { data, error } = await resend.emails.send({
             from: 'La Global Express <Anderson@laglobal.ch>',
             to: ['Anderson@laglobal.ch'], // Client email
-            subject: `Novo contato: ${formData.interest}`,
+            subject: `Nouveau contact: ${formData.interest}`,
             react: <ContactEmailTemplate data={formData} />,
         });
 

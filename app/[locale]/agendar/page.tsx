@@ -10,7 +10,10 @@ import { createClient } from '@/utils/supabase/client'; // Import Supabase Clien
 
 import { BookingFormData } from '@/types/booking';
 
+import { useTranslations } from 'next-intl';
+
 export default function BookingPage() {
+    const t = useTranslations('Booking');
     const [step, setStep] = useState(1);
     const [subStep, setSubStep] = useState(1); // 1: Config, 2: Extras
     const [initialUserData, setInitialUserData] = useState<{ name: string, email: string, phone: string } | null>(null); // New State
@@ -109,13 +112,13 @@ export default function BookingPage() {
             const result = await createBooking(bookingData);
 
             if (result.success) {
-                alert('Pedido enviado com sucesso! Nosso time entrará em contato. ID: ' + result.bookingId);
+                alert('Demande envoyée avec succès ! Notre équipe vous contactera. ID : ' + result.bookingId);
                 // Redirect or reset form could go here
             } else {
-                alert('Erro ao enviar pedido: ' + result.error);
+                alert('Erreur lors de l\'envoi de la demande : ' + result.error);
             }
         } catch (error) {
-            alert('Ocorreu um erro inesperado.');
+            alert('Une erreur inattendue s\'est produite.');
             console.error(error);
         } finally {
             setIsSubmitting(false);
@@ -186,7 +189,7 @@ export default function BookingPage() {
                         <div className="bg-white rounded-2xl p-6 lg:p-12 shadow-sm border border-gray-100 min-h-[500px]">
                             {(step > 1 || subStep === 2) && (
                                 <button onClick={prevStep} className="mb-6 text-gray-400 hover:text-brand-dark flex items-center gap-1 text-sm font-bold">
-                                    <ArrowLeft className="w-4 h-4" /> Voltar etapa
+                                    <ArrowLeft className="w-4 h-4" /> {t('buttons.back')}
                                 </button>
                             )}
 
@@ -205,10 +208,10 @@ export default function BookingPage() {
                         <BookingSummary
                             serviceName={bookingData.serviceName}
                             frequency={
-                                bookingData.frequency === 'once' ? 'Uma vez' :
-                                    bookingData.frequency === 'weekly' ? 'Semanal' :
-                                        bookingData.frequency === 'biweekly' ? 'Quinzenal' :
-                                            bookingData.frequency === 'monthly' ? 'Mensal' : 'Uma vez'
+                                bookingData.frequency === 'once' ? 'Une fois' :
+                                    bookingData.frequency === 'weekly' ? 'Hebdomadaire' :
+                                        bookingData.frequency === 'biweekly' ? 'Bihebdomadaire' :
+                                            bookingData.frequency === 'monthly' ? 'Mensuel' : 'Une fois'
                             }
                             duration={bookingData.duration}
                             price={bookingData.price}

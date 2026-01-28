@@ -40,9 +40,9 @@ export interface ValidationErrors {
 }
 
 export enum InterestType {
-  CORPORATE = "Consultoria Corporativa",
-  LOGISTICS = "Soluções Logísticas",
-  SUPPORT = "Suporte Técnico",
-  PARTNERSHIP = "Parcerias",
-  OTHER = "Outros Assuntos"
+  CORPORATE = "Conseil d'Entreprise",
+  LOGISTICS = "Solutions Logistiques",
+  SUPPORT = "Support Technique",
+  PARTNERSHIP = "Partenariats",
+  OTHER = "Autres Sujets"
 }

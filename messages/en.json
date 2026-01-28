@@ -1,0 +1,398 @@
+{
+    "Navbar": {
+        "links": {
+            "solutions": "Solutions",
+            "corporate": "Corporate",
+            "about": "About",
+            "contact": "Contact"
+        },
+        "cta": {
+            "quote": "Quote",
+            "requestQuote": "Request Quote"
+        }
+    },
+    "Hero": {
+        "badge": "Swiss Quality Standard",
+        "title": "Excellence in <brand>Global Services</brand>.",
+        "description": "Integrated facility solutions for demanding residences and businesses. Punctuality, discretion, and technical efficiency.",
+        "features": {
+            "protocols": "Rigorous execution protocols",
+            "certified": "Certified and insured professionals",
+            "punctuality": "Guaranteed punctuality or refund"
+        },
+        "buttons": {
+            "services": "Our Services",
+            "contact": "Contact Us"
+        },
+        "testimonial": {
+            "text": "\"Impeccable service. The attention to detail is surprising.\"",
+            "author": "Philippe G., CEO"
+        }
+    },
+    "Stats": {
+        "history": "Years of History",
+        "continents": "Continents",
+        "projects": "Projects",
+        "precision": "Precision"
+    },
+    "Services": {
+        "header": {
+            "subtitle": "Excellence in the Smallest Details",
+            "title": "Integrated Solutions"
+        },
+        "tabs": {
+            "RESIDENCIAL": "RESIDENTIAL",
+            "CORPORATIVO": "CORPORATE"
+        },
+        "bottomCta": {
+            "text": "Can't find what you're looking for?",
+            "link": "Talk to a consultant"
+        },
+        "cta": "Request Offer",
+        "items": {
+            "res-cleaning": {
+                "title": "Executive Cleaning",
+                "description": "Deep sanitation for high-standard residences. We use biodegradable products and state-of-the-art technology.",
+                "tag": "Available 24/7"
+            },
+            "res-truck-rental": {
+                "title": "Truck Rental",
+                "description": "Modern fleet for transporting loads and moving. Qualified drivers and full insurance.",
+                "tag": "Clean Fleet"
+            },
+            "res-material": {
+                "title": "Material Supply",
+                "description": "High-quality construction and finishing materials for your site. Scheduled delivery.",
+                "tag": "Immediate Delivery"
+            },
+            "res-assembly": {
+                "title": "Technical Assembly",
+                "description": "Specialists in designer furniture and complex installations. Absolute care for your pieces.",
+                "tag": "Total Guarantee"
+            },
+            "corp-concierge": {
+                "title": "Concierge",
+                "description": "Executive reception services, access management, and premium administrative support for your office.",
+                "tag": "Premium Service"
+            },
+            "corp-cleaning": {
+                "title": "Industrial Cleaning",
+                "description": "Specialized teams for large areas, warehouses, and large offices with specific machinery.",
+                "tag": "Dedicated Teams"
+            },
+            "corp-waste": {
+                "title": "Waste Management",
+                "description": "Sustainable waste management, selective sorting, and certified disposal of corporate materials.",
+                "tag": "Sustainability"
+            },
+            "corp-office-staff": {
+                "title": "Office Staff",
+                "description": "Daily support for cafeteria, office organization, restroom cleaning, and workplace order maintenance.",
+                "tag": "Operational Support"
+            }
+        }
+    },
+    "SwissSection": {
+        "badge": "Why La Global?",
+        "title": "The Swiss Standard of <muted>Service Delivery</muted>",
+        "description": "We don't just clean or repair. We take care of your assets with the utmost discretion and technical precision.",
+        "cta": "Discover our method",
+        "features": {
+            "punctuality": {
+                "title": "Absolute Punctuality",
+                "description": "Strict respect for your time. Our professionals follow precise schedules, ensuring that every step of the service is executed at the exact moment."
+            },
+            "excellence": {
+                "title": "Technical Excellence",
+                "description": "Professionals trained to the highest global facility standards. We use Swiss methodologies to ensure an impeccable finish in every detail."
+            },
+            "discretion": {
+                "title": "Total Discretion",
+                "description": "Confidentiality and respect for your privacy are fundamental pillars. Our team is trained to be invisible if necessary and present if requested."
+            },
+            "guarantee": {
+                "title": "La Global Guarantee",
+                "description": "Liability insurance and satisfaction guarantee for all services. Your peace of mind is our main success indicator."
+            }
+        }
+    },
+    "Footer": {
+        "description": "Excellence in global services. Bringing the Swiss quality standard and precision to your asset management.",
+        "sections": {
+            "institutional": "Institutional",
+            "services": "Services",
+            "contact": "Contact"
+        },
+        "links": {
+            "quality": "Quality Manifesto",
+            "history": "Our History",
+            "governance": "Corporate Governance",
+            "careers": "Careers",
+            "privacy": "Privacy Policy",
+            "terms": "Terms of Service"
+        },
+        "services": {
+            "concierge": "Concierge",
+            "cleaning": "Industrial Cleaning",
+            "waste": "Waste Management",
+            "staff": "Office Staff"
+        },
+        "copyright": "© 2024 LA Global Express. All rights reserved."
+    },
+    "Contact": {
+        "info": {
+            "title": "Let's Raise <brand>the Standard.</brand>",
+            "description": "We are ready to optimize your company's logistics with personalized global solutions.",
+            "labels": {
+                "address": "Address",
+                "phone": "Phone",
+                "email": "Professional Email"
+            }
+        },
+        "form": {
+            "title": "Send a Message",
+            "description": "Fill out the form below and our consultants will contact you within 24h.",
+            "labels": {
+                "firstName": "First Name",
+                "lastName": "Last Name",
+                "email": "Professional Email",
+                "phone": "Phone",
+                "optional": "Optional",
+                "interest": "Interest",
+                "message": "Message",
+                "suggested": "AI Suggested",
+                "analyzing": "Analyzing..."
+            },
+            "placeholders": {
+                "firstName": "John",
+                "lastName": "Doe",
+                "email": "john@company.com",
+                "phone": "+41 79 000 00 00",
+                "interest": "Select a service",
+                "message": "Describe your needs..."
+            },
+            "submit": {
+                "default": "Send Request",
+                "sending": "Sending..."
+            },
+            "interests": {
+                "CORPORATE": "Business Consulting",
+                "LOGISTICS": "Logistics Solutions",
+                "SUPPORT": "Technical Support",
+                "PARTNERSHIP": "Partnerships",
+                "OTHER": "Other Topics"
+            },
+            "success": {
+                "received": "Received.",
+                "message": "Your request has been sent to our team of experts. We will contact you soon.",
+                "newMessage": "New Message"
+            },
+            "errors": {
+                "required": "Required field",
+                "email": "Invalid email",
+                "min": "Too short"
+            }
+        }
+    },
+    "Booking": {
+        "steps": {
+            "services": "What do you need?",
+            "servicesDesc": "Customize the ideal service for your needs.",
+            "checkout": "To Finalize",
+            "checkoutDesc": "Provide your details for confirmation."
+        },
+        "buttons": {
+            "backToServices": "Back to services",
+            "addService": "Add more services",
+            "cancel": "Cancel",
+            "addAnother": "+ Choose another service (Add to order)",
+            "modify": "Modify",
+            "next": "Next",
+            "finalize": "Finalize Booking",
+            "back": "Back"
+        },
+        "labels": {
+            "serviceType": "Service Type",
+            "availableServices": "Available Services",
+            "from": "From",
+            "address": "Service Address",
+            "fullName": "Full Name",
+            "email": "Email",
+            "phone": "Mobile / WhatsApp",
+            "observations": "Notes (Optional)",
+            "observationsPlaceholder": "Ex: Key at reception, beware of dog, etc.",
+            "terms": "I have read and agree to the <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>.",
+            "securePayment": "Secure Payment",
+            "securePaymentDesc": "You will only be charged after professional confirmation. We accept credit cards and TWINT."
+        },
+        "summary": {
+            "title": "Order Summary",
+            "service": "Service",
+            "totalDuration": "Total Duration",
+            "frequency": "Frequency",
+            "estimatedTotal": "Estimated Total",
+            "secure": "100% Secure Purchase",
+            "hours": "hours",
+            "estimated": "estimated",
+            "frequencies": {
+                "once": "One-time",
+                "weekly": "Weekly",
+                "biweekly": "Bi-weekly",
+                "monthly": "Monthly"
+            }
+        },
+        "dateTime": {
+            "frequencyTitle": "Frequency",
+            "frequencySubtitle": "Change or cancel anytime",
+            "timeTitle": "Schedule",
+            "locationTitle": "Where will the service take place?",
+            "locationPlaceholder": "Enter ZIP code or full address",
+            "calendar": "Calendar",
+            "today": "Today",
+            "unavailable": "Unavailable",
+            "until": "until",
+            "highDemand": "High",
+            "frequencies": {
+                "once": {
+                    "title": "One-time",
+                    "subtitle": "Single visit",
+                    "features": {
+                        "verified": "Verified professional",
+                        "insurance": "Insurance included"
+                    }
+                },
+                "weekly": {
+                    "title": "Weekly",
+                    "subtitle": "Every week",
+                    "features": {
+                        "samePro": "Always the same professional",
+                        "priority": "Schedule priority",
+                        "vip": "VIP WhatsApp Support"
+                    }
+                },
+                "biweekly": {
+                    "title": "Bi-weekly",
+                    "subtitle": "Every 2 weeks",
+                    "features": {
+                        "samePro": "Always the same professional",
+                        "priority": "Schedule priority"
+                    }
+                },
+                "monthly": {
+                    "title": "Monthly",
+                    "subtitle": "Once a month",
+                    "features": {
+                        "recurring": "Recurring professional",
+                        "insurance": "Insurance included"
+                    }
+                }
+            }
+        }
+    },
+    "Corporate": {
+        "hero": {
+            "badge": "B2B Division",
+            "title": "Facility Management <br/> <gradient>of High Performance.</gradient>",
+            "description": "Integrated solutions for large companies. Reduce your operational costs by up to 20% with our data-driven management and Swiss quality processes.",
+            "cta": "Schedule Meeting",
+            "testimonial": "\"LA GLOBAL's efficiency transformed our operation in 3 months.\"",
+            "role": "Director of Operations, TechGiant"
+        },
+        "services": {
+            "badge": "Our Services",
+            "title": "360º Solutions",
+            "cta": "View full catalog",
+            "items": {
+                "concierge": {
+                    "title": "Concierge",
+                    "desc": "Executive reception services, access management, and premium administrative support for your office."
+                },
+                "cleaning": {
+                    "title": "Industrial Cleaning",
+                    "desc": "Specialized teams for large areas, warehouses, and large offices with specific machinery."
+                },
+                "waste": {
+                    "title": "Waste Management",
+                    "desc": "Sustainable waste management, selective sorting, and certified disposal of corporate materials."
+                },
+                "support": {
+                    "title": "Office Support",
+                    "desc": "Daily support for cafeteria, office organization, restroom cleaning, and workplace order maintenance."
+                }
+            }
+        },
+        "methodology": {
+            "title": "Swiss Quality Standard",
+            "description": "We don't just deliver services, we deliver peace of mind. Our proprietary methodology combines rigorous execution protocols with a culture of hospitality.",
+            "cards": {
+                "certified": {
+                    "title": "Certified Processes",
+                    "desc": "ISO 9001 and 14001 in all operations."
+                },
+                "tolerance": "Fault Tolerance"
+            },
+            "list": {
+                "l1": "Dedicated account managers for each contract",
+                "l2": "Custom KPIs and real-time dashboard",
+                "l3": "Uniformed, trained, and vetted team",
+                "l4": "Comprehensive liability insurance"
+            }
+        },
+        "esg": {
+            "title": "ESG Commitment",
+            "description": "We align our operations with your company's sustainability goals. We use <highlight>biodegradable products</highlight> and energy-efficient equipment.",
+            "items": {
+                "eco": {
+                    "title": "Eco-Friendly",
+                    "desc": "Green-label products, reduced water consumption, and low-energy equipment for a cleaner future."
+                },
+                "social": {
+                    "title": "Social",
+                    "desc": "Continuous training programs, diverse inclusion, and clear social ascension plans for all employees."
+                },
+                "gov": {
+                    "title": "Governance",
+                    "desc": "Total transparency with quarterly audits, rigorous compliance, and non-negotiable ethics in all operations."
+                }
+            },
+            "cta": "VIEW FULL REPORT",
+            "pillar": "Pillar"
+        },
+        "trustedBy": "Trusted by market leaders",
+        "hospitality": {
+            "badge": "Workplace Experience",
+            "title": "From Corporate to <highlight>Hospitality.</highlight>",
+            "description": "Transform your office into a destination. Our hospitality team is trained to the same standards as Swiss luxury hotels to welcome your clients and care for your employees.",
+            "features": {
+                "concierge": {
+                    "title": "Bilingual Concierge",
+                    "desc": "Executive reception with bilingual professionals trained in corporate etiquette."
+                },
+                "pantry": {
+                    "title": "Premium Coffee & Pantry",
+                    "desc": "Complete cafeteria management, with baristas and healthy snack selection."
+                },
+                "events": {
+                    "title": "Event Support",
+                    "desc": "Operational support for board meetings and internal corporate events."
+                }
+            },
+            "card": {
+                "team": "Premium Team",
+                "quote": "\"The LA GLOBAL team changed the quality perception of our office.\""
+            }
+        },
+        "cta": {
+            "title": "Ready to raise the level of your <gradient>infrastructure?</gradient>",
+            "description": "Request a free audit of your current facilities and discover where you can save with our high-performance solutions.",
+            "phone": "Call Now",
+            "button": "REQUEST QUOTE",
+            "form": {
+                "title": "Quick Contact",
+                "email": "Your Professional Email",
+                "submit": "START CONVERSATION",
+                "online": "Experts online now"
+            }
+        }
+    }
+}

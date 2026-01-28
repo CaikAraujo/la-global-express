@@ -29,7 +29,7 @@ export const HeroSection: React.FC = () => {
                 <div className="max-w-4xl">
                     <div className="flex items-center gap-4 mb-6">
                         <div className="h-[1px] w-12 bg-brand-red"></div>
-                        <span className="text-brand-red font-bold tracking-widest uppercase text-sm">Desde 2010</span>
+                        <span className="text-brand-red font-bold tracking-widest uppercase text-sm">Depuis 2010</span>
                     </div>
 
                     <h1 className="font-display font-bold text-6xl md:text-8xl text-white leading-[0.9] mb-8">
@@ -38,9 +38,9 @@ export const HeroSection: React.FC = () => {
                     </h1>
 
                     <p className="text-gray-400 max-w-xl text-lg md:text-xl font-light leading-relaxed border-l-2 border-brand-red pl-6">
-                        Não vendemos apenas serviços, entregamos tempo.
-                        Unimos a precisão suíça ao calor humano para cuidar do invisível,
-                        enquanto você aproveita o essencial.
+                        Nous ne vendons pas seulement des services, nous livrons du temps.
+                        Nous unissons la précision suisse à la chaleur humaine pour prendre soin de l'invisible,
+                        pendant que vous profitez de l'essentiel.
                     </p>
                 </div>
             </div>

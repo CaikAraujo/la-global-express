@@ -17,14 +17,14 @@ const Plans: React.FC = () => {
             {/* Section Header */}
             <div className="text-center max-w-3xl mx-auto mb-16">
                <h2 className="text-brand-red font-bold text-xs tracking-[0.2em] uppercase mb-4">
-                  Assinaturas Exclusivas
+                  Abonnements Exclusifs
                </h2>
                <h1 className="text-4xl md:text-5xl font-serif font-medium text-brand-dark mb-6 leading-tight">
-                  Planos de Manutenção Continuada <br className="hidden md:block" /> para quem exige excelência.
+                  Plans de Maintenance Continue <br className="hidden md:block" /> pour ceux qui exigent l'excellence.
                </h1>
                <p className="text-gray-500 text-lg font-light leading-relaxed">
-                  Garanta a valorização do seu patrimônio com a nossa gestão de facilities.
-                  Escolha o nível de cuidado que sua residência ou empresa merece.
+                  Garantissez la valorisation de votre patrimoine avec notre gestion de facilities.
+                  Choisissez le niveau de soin que votre résidence ou entreprise mérite.
                </p>
             </div>
 
@@ -32,8 +32,8 @@ const Plans: React.FC = () => {
             <Switch
                checked={isYearly}
                onChange={setIsYearly}
-               leftLabel="Mensal"
-               rightLabel="Anual"
+               leftLabel="Mensuel"
+               rightLabel="Annuel"
             />
 
             {/* Cards Grid */}
@@ -52,11 +52,11 @@ const Plans: React.FC = () => {
 
                <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
                   <div className="text-center md:text-left">
-                     <h3 className="text-2xl md:text-3xl font-serif text-white mb-2">Precisa de uma solução para grandes corporações?</h3>
-                     <p className="text-gray-400 font-sans">Desenvolvemos projetos personalizados para indústrias, condomínios e redes de varejo.</p>
+                     <h3 className="text-2xl md:text-3xl font-serif text-white mb-2">Besoin d'une solution pour grandes entreprises ?</h3>
+                     <p className="text-gray-400 font-sans">Nous développons des projets personnalisés pour industries, copropriétés et réseaux de vente au détail.</p>
                   </div>
-                  <Link href="/contact" className="flex items-center gap-2 bg-white/10 hover:bg-white text-white hover:text-brand-dark px-8 py-4 rounded-lg font-bold text-sm uppercase tracking-wider transition-all duration-300 backdrop-blur-sm border border-white/20">
-                     Falar com Consultor Corporativo
+                  <Link href="/contact" className="flex items-center gap-2 bg-white/10 hover:bg-white text-white hover:text-brand-dark px-8 py-4 rounded-lg font-bold text-sm uppercase tracking-wider transition-all duration-300 backdrop-blur-sm border border-white/20 whitespace-nowrap">
+                     Parler à un Conseiller Corporatif
                      <ArrowRight size={16} />
                   </Link>
                </div>
