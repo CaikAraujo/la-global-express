@@ -4,19 +4,21 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { login } from '@/app/actions/auth'
 import Link from 'next/link'
+import Script from 'next/script'
 import { ArrowLeft, Loader2, LogIn, Building2, User } from 'lucide-react'
 
 export default function LoginPage() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [loginType, setLoginType] = useState<'individual' | 'company'>('individual')
+    const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
 
     async function handleSubmit(formData: FormData) {
         setLoading(true)
         setError(null)
         const result = await login(formData)
 
-        if (result?.error) {
+        if (result && 'error' in result) {
             setError(result.error)
             setLoading(false)
         }
@@ -24,6 +26,9 @@ export default function LoginPage() {
 
     return (
         <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+            {turnstileSiteKey ? (
+                <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
+            ) : null}
             {/* Decorative Background Elements */}
             <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-brand-600/5 to-transparent -z-10" />
             <div className="absolute -top-24 -right-24 w-96 h-96 bg-brand-600/10 rounded-full blur-3xl -z-10" />
@@ -137,6 +142,12 @@ export default function LoginPage() {
                                     </div>
                                 </motion.div>
                             )}
+
+                            {turnstileSiteKey ? (
+                                <div className="flex justify-center">
+                                    <div className="cf-turnstile" data-sitekey={turnstileSiteKey} />
+                                </div>
+                            ) : null}
 
                             <button
                                 type="submit"

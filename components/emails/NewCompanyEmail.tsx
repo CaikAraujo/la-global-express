@@ -55,11 +55,11 @@ export const NewCompanyEmailTemplate = ({
                         </Section>
 
                         <Text className="text-gray-700 mb-6">
-                            Por favor, verifique os dados e aprove o usuário no painel do Supabase se estiver tudo correto.
+                            Por favor, verifique os dados e aprove o usuário no painel do Odoo se estiver tudo correto.
                         </Text>
 
                         <Link
-                            href="https://supabase.com/dashboard/project/_/editor/profiles"
+                            href="https://la-global-express.odoo.com/odoo"
                             className="bg-brand-600 text-white px-6 py-3 rounded-md font-semibold text-center block w-full"
                         >
                             Acessar Painel Admin

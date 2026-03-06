@@ -1,6 +1,9 @@
 'use server'
 
-import { createAdminClient } from '@/utils/supabase/admin'
+import { odooExecute } from '@/lib/odooClient'
+import { createLead, findOrCreatePartner } from '@/lib/odoo/crm'
+import { createDraftSaleOrder } from '@/lib/odoo/sales'
+import { getBookingFields } from '@/lib/odoo/bookingFields'
 import {
     BookingFormData,
     BookingResponse,
@@ -20,15 +23,21 @@ import {
     calculateCleaningPrice
 } from '@/components/booking/logic/pricing'
 
-export async function createBooking(formData: BookingFormData): Promise<BookingResponse> {
-    const supabase = createAdminClient()
+const ODOO_BOOKING_MODEL = process.env.ODOO_BOOKING_MODEL || 'x_agendamentos'
+const ODOO_DEFAULT_SERVICE_PRODUCT_ID = Number(process.env.ODOO_DEFAULT_SERVICE_PRODUCT_ID || 0)
+const ODOO_ENABLE_SALE_SYNC = process.env.ODOO_ENABLE_SALE_SYNC === 'true'
+const fields = getBookingFields()
 
-    // Basic validation
+function toOdooDatetime(value: Date): string {
+    // Odoo datetime espera "YYYY-MM-DD HH:mm:ss" (sem timezone ISO).
+    return value.toISOString().slice(0, 19).replace('T', ' ')
+}
+
+export async function createBooking(formData: BookingFormData): Promise<BookingResponse> {
     if (!formData.name || !formData.email || !formData.serviceId) {
         return { error: 'Dados incompletos: Nome, Email e ID do Serviço são obrigatórios.' }
     }
 
-    // [SECURITY] Server-Side Price Validation
     let finalPrice = formData.price;
 
     if (formData.serviceId !== 'unknown' && formData.config) {
@@ -78,38 +87,72 @@ export async function createBooking(formData: BookingFormData): Promise<BookingR
         }
     }
 
-    const { data, error } = await supabase
-        .from('agendamentos')
-        .insert([
-            {
-                service_id: formData.serviceId,
-                service_name: formData.serviceName,
-                frequency: formData.frequency,
-                duration: formData.duration,
-                price: finalPrice, // Use validated price
-                data: formData.date,
-                horario: formData.time,
-                address: formData.address,
+    const payload: Record<string, unknown> = {
+        [fields.serviceId]: formData.serviceId,
+        [fields.serviceName]: formData.serviceName,
+        [fields.frequency]: formData.frequency,
+        [fields.duration]: formData.duration,
+        [fields.price]: finalPrice,
+        [fields.date]: formData.date,
+        [fields.time]: formData.time,
+        [fields.address]: formData.address,
+        [fields.customerName]: formData.name,
+        [fields.email]: formData.email,
+        [fields.phone]: formData.phone,
+        [fields.canton]: formData.canton || '',
+        [fields.observations]: formData.observations,
+        [fields.serviceDetails]: typeof formData.serviceDetails === 'string'
+            ? formData.serviceDetails
+            : JSON.stringify(formData.serviceDetails),
+        [fields.status]: 'pending',
+        [fields.createdAt]: toOdooDatetime(new Date()),
+    }
+
+    try {
+        const bookingId = await odooExecute(ODOO_BOOKING_MODEL, 'create', [[payload]]) as number
+
+        // Sync comercial: tenta criar/relacionar lead no CRM sem bloquear o agendamento.
+        try {
+            const partnerId = await findOrCreatePartner({
                 name: formData.name,
                 email: formData.email,
                 phone: formData.phone,
-                canton: formData.canton || null,
-                observations: formData.observations,
-                service_details: typeof formData.serviceDetails === 'string'
-                    ? formData.serviceDetails
-                    : JSON.stringify(formData.serviceDetails),
-                status: 'pending',
-                created_at: new Date().toISOString(),
-                // Optionally save the trusted config to a JSONB column if exists
-                // config: formData.config 
-            },
-        ])
-        .select()
+                street: formData.address,
+            })
 
-    if (error) {
-        console.error('Supabase Error:', error)
-        return { error: error.message || 'Erro ao salvar agendamento.' }
+            await createLead({
+                name: `Agendamento Web - ${formData.serviceName}`,
+                contactName: formData.name,
+                email: formData.email,
+                phone: formData.phone,
+                description: [
+                    `Servico: ${formData.serviceName}`,
+                    `Data: ${formData.date} ${formData.time}`,
+                    `Endereco: ${formData.address}`,
+                    `Valor estimado: CHF ${finalPrice}`,
+                    formData.observations ? `Observacoes: ${formData.observations}` : '',
+                ].filter(Boolean).join('\n'),
+                origin: `Booking ${bookingId}`,
+                partnerId,
+            })
+
+            if (ODOO_ENABLE_SALE_SYNC && partnerId && ODOO_DEFAULT_SERVICE_PRODUCT_ID > 0) {
+                await createDraftSaleOrder({
+                    partnerId,
+                    origin: `Booking ${bookingId}`,
+                    note: `Gerado automaticamente do portal (${formData.serviceName}).`,
+                    productId: ODOO_DEFAULT_SERVICE_PRODUCT_ID,
+                    quantity: 1,
+                    unitPrice: finalPrice,
+                })
+            }
+        } catch (crmError) {
+            console.error('CRM sync warning:', crmError)
+        }
+
+        return { success: true, bookingId }
+    } catch (error) {
+        console.error('Odoo Error:', error)
+        return { error: 'Erro ao salvar agendamento. Tente novamente em instantes.' }
     }
-
-    return { success: true, bookingId: data[0].id }
 }

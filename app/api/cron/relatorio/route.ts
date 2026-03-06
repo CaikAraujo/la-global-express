@@ -1,14 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { odooExecute } from '@/lib/odooClient';
-import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 
-// Initialize Clients
 const resend = new Resend(process.env.RESEND_API_KEY);
-const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 export async function GET(request: NextRequest) {
     // 1. Security Check
@@ -23,33 +17,28 @@ export async function GET(request: NextRequest) {
         console.log("Starting Weekly Report Cron Job...");
 
         // 2. Fetch Odoo Data (Parallel requests)
-        const [fleetData, stockData] = await Promise.all([
+        const [fleetDataRaw, stockDataRaw] = await Promise.all([
             // Fleet: Vehicles with low fuel (< 20%)
             // Note: 'fuel_level' is assuming a field exists. If strictly standard Odoo, this might need adjustment.
             // Using generic search_read logic.
             odooExecute('fleet.vehicle', 'search_read', [
-                [['fuel_level', '<', 20]], // Domain: Filter condition
-                ['license_plate', 'fuel_level', 'model_id'] // Fields to retrieve
+                [['fuel_level', '<', 20]],
+                { fields: ['license_plate', 'fuel_level', 'model_id'] }
             ]),
 
             // Stock: Storable products
             odooExecute('product.product', 'search_read', [
-                [['detailed_type', '=', 'product']], // Domain: Storable products
-                ['display_name', 'qty_available'] // Fields
+                [['detailed_type', '=', 'product']],
+                { fields: ['display_name', 'qty_available'] }
             ])
         ]);
+        const fleetData = fleetDataRaw as Array<{ license_plate?: string; fuel_level?: number; model_id?: [number, string] }>;
+        const stockData = stockDataRaw as Array<{ display_name?: string; qty_available?: number }>;
 
         console.log(`Odoo Data Fetched: ${fleetData.length} vehicles, ${stockData.length} products.`);
 
-        // 3. Fetch Supabase Data
-        const { count: userCount, error: supabaseError } = await supabase
-            .from('users')
-            .select('*', { count: 'exact', head: true });
-
-        if (supabaseError) {
-            console.error("Supabase Error:", supabaseError);
-            throw new Error("Failed to fetch Supabase user count");
-        }
+        // 3. Fetch Odoo users count
+        const userCount = await odooExecute('res.users', 'search_count', [[]]) as number;
 
         // 4. Generate HTML Report
         const generateHtml = () => {
@@ -77,7 +66,7 @@ export async function GET(request: NextRequest) {
                 
                 <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
                     <h2 style="margin-top: 0;">📊 Métricas Gerais</h2>
-                    <p style="font-size: 18px;">Total de Usuários Cadastrados: <strong>${userCount}</strong></p>
+                    <p style="font-size: 18px;">Total de Usuários Cadastrados (Odoo): <strong>${userCount}</strong></p>
                 </div>
 
                 <div style="margin: 20px 0;">

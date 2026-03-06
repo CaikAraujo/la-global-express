@@ -123,6 +123,9 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onUpdate, currentStep,
             price: totalPrice,
             duration: maxDuration,
             items,
+            canton: values.length === 1 && values[0]?.canton
+                ? values[0].canton
+                : formData.canton,
             ...(values.length === 1 ? {
                 serviceDetails: values[0].serviceDetails,
                 config: values[0].config

@@ -11,10 +11,10 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['"Inter"', 'sans-serif'],
-                serif: ['"Playfair Display"', 'serif'],
-                manrope: ['Manrope', 'sans-serif'],
-                display: ['Space Grotesk', 'sans-serif'],
+                sans: ['var(--font-inter)', 'sans-serif'],
+                serif: ['var(--font-playfair)', 'serif'],
+                manrope: ['var(--font-manrope)', 'sans-serif'],
+                display: ['var(--font-space-grotesk)', 'sans-serif'],
             },
             colors: {
                 brand: {

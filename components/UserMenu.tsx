@@ -1,8 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { createClient } from '@/utils/supabase/client'
-import { logout } from '@/app/actions/auth'
+import { getCurrentUser, logout } from '@/app/actions/auth'
 import Link from 'next/link'
 import { LogOut, User, LayoutDashboard, ChevronDown, Building2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -19,73 +18,34 @@ export function UserMenu() {
     const [isOpen, setIsOpen] = useState(false)
     const pathname = usePathname()
     const router = useRouter()
-    const supabase = createClient()
 
     useEffect(() => {
-        let mounted = true
-
         async function loadUser() {
             try {
-                const { data: { user } } = await supabase.auth.getUser()
-
-                if (user && mounted) {
-                    const { data } = await supabase
-                        .from('profiles')
-                        .select('full_name, user_type')
-                        .eq('id', user.id)
-                        .single()
-
-                    if (mounted) setProfile(data)
-                } else if (mounted) {
+                const { user } = await getCurrentUser()
+                if (!user) {
                     setProfile(null)
+                } else {
+                    setProfile({
+                        full_name: user.name,
+                        user_type: user.userType,
+                    })
                 }
             } catch (err) {
                 console.error('Error loading user:', err)
             } finally {
-                if (mounted) setLoading(false)
+                setLoading(false)
             }
         }
 
-        // Load initially
         loadUser()
-
-        // Listen for auth state changes
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-            if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
-                if (session?.user) {
-                    const { data } = await supabase
-                        .from('profiles')
-                        .select('full_name, user_type')
-                        .eq('id', session.user.id)
-                        .single()
-                    if (mounted) setProfile(data)
-                    router.refresh() // Force server components to refresh
-                }
-            } else if (event === 'SIGNED_OUT') {
-                if (mounted) setProfile(null)
-                router.refresh() // Force server components to refresh
-            }
-        })
-
-        return () => {
-            mounted = false
-            subscription.unsubscribe()
-        }
-    }, [supabase, pathname, router])
+    }, [pathname])
 
     const handleLogout = async () => {
-        // 1. Optimistically clear state
         setProfile(null)
         setIsOpen(false)
-
-        // 2. Clear client-side session logic
-        await supabase.auth.signOut()
-
-        // 3. Force router refresh to clear any server-side protected state
-        router.refresh()
-
-        // 4. Call server action to clear cookies and redirect
         await logout()
+        router.refresh()
     }
 
     if (loading) return <div className="h-8 w-20 bg-slate-100 animate-pulse rounded-md" />

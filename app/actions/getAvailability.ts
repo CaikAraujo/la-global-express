@@ -1,31 +1,26 @@
 'use server'
 
-import { createAdminClient } from '@/utils/supabase/admin'
+import { odooExecute } from '@/lib/odooClient'
+import { getBookingFields } from '@/lib/odoo/bookingFields'
+
+const ODOO_BOOKING_MODEL = process.env.ODOO_BOOKING_MODEL || 'x_agendamentos'
+const fields = getBookingFields()
 
 export async function getAvailability(date: string, serviceName: string) {
-    const supabase = createAdminClient()
+    try {
+        const bookings = (await odooExecute(ODOO_BOOKING_MODEL, 'search_read', [
+            [[fields.date, '=', date], [fields.serviceName, '=ilike', serviceName]],
+            { fields: [fields.time, fields.duration] },
+        ])) as Array<Record<string, unknown>>
 
-    // 1. Fetch bookings for the specific date AND service
-    const { data: bookings, error } = await supabase
-        .from('agendamentos')
-        .select('horario, duration')
-        .eq('data', date)
-        .ilike('service_name', serviceName) // Case insensitive match just in case
-
-    if (error) {
-        console.error('Error fetching availability:', error)
+        return bookings.map((b) => {
+            const [h, m] = String(b[fields.time] ?? '').split(':').map(Number)
+            const start = h + (m / 60)
+            const end = start + Number(b[fields.duration] ?? 0)
+            return { start, end }
+        })
+    } catch (error) {
+        console.error('Error fetching availability from Odoo:', error)
         return []
     }
-
-    // 2. Map to a simpler format
-    // agendamentos.horario is text like "08:00"
-    // agendamentos.duration is numeric like 4 or 4.5
-    return bookings.map(b => {
-        const [h, m] = b.horario.split(':').map(Number)
-        // Convert everything to decimal hours for easier math (08:30 = 8.5)
-        const start = h + (m / 60)
-        const end = start + Number(b.duration)
-
-        return { start, end }
-    })
 }

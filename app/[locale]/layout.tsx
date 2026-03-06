@@ -4,10 +4,32 @@ import { getMessages } from 'next-intl/server';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import '../../index.css';
+import { Inter, Playfair_Display, Manrope, Space_Grotesk } from 'next/font/google';
 
-// Metadata needs to be static or generated. For now, we can leave the exported metadata object 
-// but note that next-intl usually requires generateMetadata for localized titles.
-// We'll keep the static one for now, but update the lang attribute dynamically.
+// Font configurations
+const inter = Inter({
+    subsets: ['latin'],
+    variable: '--font-inter',
+    display: 'swap',
+});
+
+const playfair = Playfair_Display({
+    subsets: ['latin'],
+    variable: '--font-playfair',
+    display: 'swap',
+});
+
+const manrope = Manrope({
+    subsets: ['latin'],
+    variable: '--font-manrope',
+    display: 'swap',
+});
+
+const spaceGrotesk = Space_Grotesk({
+    subsets: ['latin'],
+    variable: '--font-space-grotesk',
+    display: 'swap',
+});
 
 export const metadata = {
     metadataBase: new URL('https://laglobal.express'),
@@ -19,7 +41,6 @@ export const metadata = {
     keywords: ['facility management', 'nettoyage', 'conciergerie', 'déménagements', 'suisse', 'brésil'],
     openGraph: {
         type: 'website',
-        // locale: 'fr_CH', // This should be dynamic ideally
         url: 'https://laglobal.express',
         title: 'LA Global Express | Excellence Suisse',
         description: 'Leader en Facility Management Premium. Solutions intégrées pour résidences et entreprises.',
@@ -51,7 +72,7 @@ export default async function LocaleLayout({
     const { locale } = await params;
 
     return (
-        <html lang={locale}>
+        <html lang={locale} className={`${inter.variable} ${playfair.variable} ${manrope.variable} ${spaceGrotesk.variable}`}>
             <body className="font-sans antialiased bg-white text-neutral-900">
                 <NextIntlClientProvider messages={messages}>
                     <div className="min-h-screen flex flex-col">

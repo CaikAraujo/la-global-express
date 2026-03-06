@@ -1,58 +1,130 @@
 import xmlrpc from 'xmlrpc';
 
-const ODOO_URL = process.env.ODOO_URL;
-const ODOO_DB = process.env.ODOO_DB;
-const ODOO_EMAIL = process.env.ODOO_EMAIL;
-const ODOO_API_KEY = process.env.ODOO_API_KEY;
+type OdooConfig = {
+    url: URL;
+    db: string;
+    adminLogin: string;
+    adminApiKey: string;
+};
 
-/**
- * Executes a method on an Odoo model using XML-RPC.
- * 
- * @param model The Odoo model name (e.g., 'res.partner', 'fleet.vehicle')
- * @param method The method to call (e.g., 'search_read', 'create')
- * @param params The parameters for the method
- * @returns Promise resolving to the result
- */
-export async function odooExecute(model: string, method: string, params: any[] = []): Promise<any> {
-    if (!ODOO_URL || !ODOO_DB || !ODOO_EMAIL || !ODOO_API_KEY) {
-        throw new Error('Odoo credentials are missing in environment variables.');
+function getRequiredEnv(name: string): string {
+    const value = process.env[name];
+    if (!value) {
+        throw new Error(`Missing required environment variable: ${name}`);
     }
+    return value;
+}
 
-    // Parse URL to determine if secure (https) or not
-    const url = new URL(ODOO_URL);
-    const clientCreator = url.protocol === 'https:' ? xmlrpc.createSecureClient : xmlrpc.createClient;
+function getOdooConfig(): OdooConfig {
+    return {
+        url: new URL(getRequiredEnv('ODOO_URL')),
+        db: getRequiredEnv('ODOO_DB'),
+        adminLogin: getRequiredEnv('ODOO_EMAIL'),
+        adminApiKey: getRequiredEnv('ODOO_API_KEY'),
+    };
+}
 
-    // 1. Common Endpoint for Authentication
-    const commonClient = clientCreator({
-        host: url.hostname,
-        port: Number(url.port) || (url.protocol === 'https:' ? 443 : 80),
-        path: '/xmlrpc/2/common'
+function createXmlRpcClient(config: OdooConfig, path: string) {
+    const isSecure = config.url.protocol === 'https:';
+    const clientCreator = isSecure ? xmlrpc.createSecureClient : xmlrpc.createClient;
+
+    return clientCreator({
+        host: config.url.hostname,
+        port: Number(config.url.port) || (isSecure ? 443 : 80),
+        path,
     });
+}
+
+async function authenticate(login: string, password: string): Promise<number> {
+    const config = getOdooConfig();
+    const commonClient = createXmlRpcClient(config, '/xmlrpc/2/common');
 
     return new Promise((resolve, reject) => {
-        // Authenticate to get UID
-        commonClient.methodCall('authenticate', [ODOO_DB, ODOO_EMAIL, ODOO_API_KEY, {}], (error, uid) => {
+        commonClient.methodCall('authenticate', [config.db, login, password, {}], (error, uid) => {
             if (error) {
-                return reject(new Error(`Odoo Authentication Failed: ${(error as any).message}`));
+                return reject(new Error(`Odoo authentication failed: ${(error as Error).message}`));
             }
-            if (!uid) {
-                return reject(new Error('Odoo Authentication Failed: Invalid credentials or database.'));
+            if (!uid || typeof uid !== 'number') {
+                return reject(new Error('Invalid Odoo credentials.'));
             }
-
-            // 2. Object Endpoint for Execution
-            const objectClient = clientCreator({
-                host: url.hostname,
-                port: Number(url.port) || (url.protocol === 'https:' ? 443 : 80),
-                path: '/xmlrpc/2/object'
-            });
-
-            // Execute the requested method
-            objectClient.methodCall('execute_kw', [ODOO_DB, uid, ODOO_API_KEY, model, method, params], (err, value) => {
-                if (err) {
-                    return reject(new Error(`Odoo Execution Error (${model}.${method}): ${(err as any).message}`));
-                }
-                resolve(value);
-            });
+            resolve(uid);
         });
     });
+}
+
+async function executeKwWithCredentials(
+    uid: number,
+    passwordOrApiKey: string,
+    model: string,
+    method: string,
+    params: unknown[] = [],
+    kwargs?: Record<string, unknown>
+): Promise<unknown> {
+    const config = getOdooConfig();
+    const objectClient = createXmlRpcClient(config, '/xmlrpc/2/object');
+
+    return new Promise((resolve, reject) => {
+        const rpcArgs = kwargs
+            ? [config.db, uid, passwordOrApiKey, model, method, params, kwargs]
+            : [config.db, uid, passwordOrApiKey, model, method, params];
+
+        objectClient.methodCall('execute_kw', rpcArgs, (error, value) => {
+            if (error) {
+                return reject(new Error(`Odoo execution error (${model}.${method}): ${(error as Error).message}`));
+            }
+            resolve(value);
+        });
+    });
+}
+
+export async function odooAuthenticate(login: string, password: string): Promise<number> {
+    return authenticate(login, password);
+}
+
+export async function odooExecute(model: string, method: string, params: unknown[] = []): Promise<unknown> {
+    const config = getOdooConfig();
+    const uid = await authenticate(config.adminLogin, config.adminApiKey);
+
+    // Backward-compatible adapter for search_read(domain, {fields, limit, order, ...})
+    if (
+        method === 'search_read' &&
+        params.length >= 2 &&
+        Array.isArray(params[0]) &&
+        typeof params[1] === 'object' &&
+        params[1] !== null &&
+        !Array.isArray(params[1])
+    ) {
+        return executeKwWithCredentials(
+            uid,
+            config.adminApiKey,
+            model,
+            method,
+            [params[0]],
+            params[1] as Record<string, unknown>
+        );
+    }
+
+    return executeKwWithCredentials(uid, config.adminApiKey, model, method, params);
+}
+
+export async function odooExecuteKw(
+    model: string,
+    method: string,
+    params: unknown[] = [],
+    kwargs: Record<string, unknown> = {}
+): Promise<unknown> {
+    const config = getOdooConfig();
+    const uid = await authenticate(config.adminLogin, config.adminApiKey);
+    return executeKwWithCredentials(uid, config.adminApiKey, model, method, params, kwargs);
+}
+
+export async function odooExecuteAsUser(
+    login: string,
+    password: string,
+    model: string,
+    method: string,
+    params: unknown[] = []
+): Promise<unknown> {
+    const uid = await authenticate(login, password);
+    return executeKwWithCredentials(uid, password, model, method, params);
 }

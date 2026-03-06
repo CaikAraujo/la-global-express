@@ -4,12 +4,14 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { resetPassword } from '@/app/actions/auth'
 import Link from 'next/link'
+import Script from 'next/script'
 import { ArrowLeft, Loader2, Mail } from 'lucide-react'
 
 export default function ForgotPasswordPage() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [successMessage, setSuccessMessage] = useState<string | null>(null)
+    const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
 
     async function handleSubmit(formData: FormData) {
         setLoading(true)
@@ -20,15 +22,18 @@ export default function ForgotPasswordPage() {
 
         setLoading(false)
 
-        if (result?.error) {
+        if (result && 'error' in result) {
             setError(result.error)
-        } else if (result?.success) {
+        } else if (result && 'success' in result && result.success) {
             setSuccessMessage(result.message!)
         }
     }
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+            {turnstileSiteKey ? (
+                <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
+            ) : null}
             <Link
                 href="/login"
                 className="absolute top-8 left-8 text-gray-500 hover:text-brand-600 flex items-center gap-2 transition-colors"
@@ -92,6 +97,12 @@ export default function ForgotPasswordPage() {
                                     {error}
                                 </div>
                             )}
+
+                            {turnstileSiteKey ? (
+                                <div className="flex justify-center">
+                                    <div className="cf-turnstile" data-sitekey={turnstileSiteKey} />
+                                </div>
+                            ) : null}
 
                             <div>
                                 <button

@@ -7,14 +7,19 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "odoo:check:modules": "node --env-file=.env.local scripts/odoo/checkModules.mjs",
+    "odoo:inspect": "node --env-file=.env.local scripts/odoo/inspectModel.mjs",
+    "odoo:install": "node --env-file=.env.local scripts/odoo/installModules.mjs",
+    "odoo:bootstrap:model": "node --env-file=.env.local scripts/odoo/bootstrapBookingModel.mjs",
+    "odoo:cleanup:model": "node --env-file=.env.local scripts/odoo/cleanupBookingModel.mjs",
+    "odoo:clear:ratelimits": "node --env-file=.env.local scripts/odoo/clearRateLimits.mjs",
+    "odoo:configure:views": "node --env-file=.env.local scripts/odoo/configureBookingViews.mjs"
   },
   "dependencies": {
     "@google/genai": "^1.31.0",
     "@react-email/components": "^1.0.2",
     "@react-email/tailwind": "^2.0.2",
-    "@supabase/ssr": "^0.8.0",
-    "@supabase/supabase-js": "^2.88.0",
     "@types/xmlrpc": "^1.3.10",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.23.25",

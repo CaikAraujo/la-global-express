@@ -136,8 +136,20 @@ export const CleaningForm: React.FC<CleaningFormProps> = ({ onUpdate, showExtras
         onUpdate({
             price: total,
             duration: finalDuration,
+            canton: state.canton,
             serviceDetails: detailsText,
             isIroning: state.serviceCategory === 'ironing', // Emit logic flag
+            config: {
+                serviceCategory: state.serviceCategory,
+                heavyType: state.heavyType,
+                propertyType: state.propertyType,
+                bedrooms: state.bedrooms,
+                bathrooms: state.bathrooms,
+                ironingHours: state.ironingHours,
+                canton: state.canton,
+                extras: state.extras,
+                manualDuration: state.manualDuration,
+            },
             isValid: true
         });
     }, [state, onUpdate]);

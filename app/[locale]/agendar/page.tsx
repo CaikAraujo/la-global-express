@@ -6,7 +6,7 @@ import { ArrowLeft } from 'lucide-react';
 import { BookingForm } from '@/components/booking/BookingForm';
 import { BookingSummary } from '@/components/booking/BookingSummary';
 import { createBooking } from '@/app/actions/createBooking';
-import { createClient } from '@/utils/supabase/client'; // Import Supabase Client
+import { getCurrentUser } from '@/app/actions/auth';
 
 import { BookingFormData } from '@/types/booking';
 
@@ -37,30 +37,19 @@ export default function BookingPage() {
         items: []
     });
 
-    const supabase = createClient();
-
-    // Fetch User Data on Mount
     useEffect(() => {
         async function fetchUser() {
-            const { data: { user } } = await supabase.auth.getUser();
+            const { user } = await getCurrentUser();
             if (user) {
-                const { data: profile } = await supabase
-                    .from('profiles')
-                    .select('full_name, email') // We might add phone later if available
-                    .eq('id', user.id)
-                    .single();
-
-                if (profile) {
-                    setInitialUserData({
-                        name: profile.full_name || '',
-                        email: profile.email || user.email || '',
-                        phone: '' // Check if phone exists in profile later
-                    });
-                }
+                setInitialUserData({
+                    name: user.name || '',
+                    email: user.email || '',
+                    phone: ''
+                });
             }
         }
         fetchUser();
-    }, [supabase]);
+    }, []);
 
     const handleFormUpdate = useCallback((data: BookingFormData) => {
         setBookingData(prev => {

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { contactSchema } from '@/lib/schemas/contact';
 import { ContactEmailTemplate } from '@/components/emails/ContactTemplate';
+import { createLead, findOrCreatePartner } from '@/lib/odoo/crm';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -19,6 +20,26 @@ export async function POST(request: Request) {
         }
 
         const formData = result.data;
+
+        try {
+            const partnerId = await findOrCreatePartner({
+                name: `${formData.firstName} ${formData.lastName}`.trim(),
+                email: formData.email,
+                phone: formData.phone,
+            });
+
+            await createLead({
+                name: `Contato Web - ${formData.interest}`,
+                contactName: `${formData.firstName} ${formData.lastName}`.trim(),
+                email: formData.email,
+                phone: formData.phone,
+                description: formData.message,
+                origin: 'Website Contact Form',
+                partnerId,
+            });
+        } catch (odooError) {
+            console.error('Failed to sync lead to Odoo:', odooError);
+        }
 
         const { data, error } = await resend.emails.send({
             from: 'La Global Express <Anderson@laglobal.ch>',

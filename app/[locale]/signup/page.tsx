@@ -20,14 +20,15 @@ export default function SignupPage() {
         setError(null)
         const result = await signupIndividual(formData)
 
-        if (result?.error) {
-            if (result.error.includes('already registered')) {
+        if (result && 'error' in result) {
+            const errorMessage = result.error || 'Erro ao criar conta.'
+            if (errorMessage.includes('already registered')) {
                 setError('Cet email est déjà enregistré. Essayez de vous connecter.')
             } else {
-                setError(result.error)
+                setError(errorMessage)
             }
             setLoading(false)
-        } else if (result?.success) {
+        } else if (result && 'success' in result && result.success) {
             setSuccessMessage('Inscription réussie ! Connexion en cours...')
             setTimeout(() => {
                 router.push('/')
@@ -41,9 +42,9 @@ export default function SignupPage() {
         setError(null)
         const result = await signupCompany(formData)
         setLoading(false)
-        if (result?.error) {
-            setError(result.error)
-        } else if (result?.success) {
+        if (result && 'error' in result) {
+            setError(result.error || 'Erro ao criar conta empresarial.')
+        } else if (result && 'success' in result && result.success) {
             setSuccessMessage(result.message!)
         }
     }

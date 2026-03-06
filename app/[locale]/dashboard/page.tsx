@@ -1,17 +1,17 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { User, LogOut, Package, Clock, ShieldCheck, MapPin, Calendar } from 'lucide-react'
+import { Package, Clock, ShieldCheck, MapPin, Calendar } from 'lucide-react'
 import { getUserBookings } from '@/app/actions/dashboard'
+import { getCurrentUser } from '@/app/actions/auth'
 
 type Profile = {
-    full_name: string | null
+    full_name: string
     email: string
-    user_type: 'individual' | 'company' | null
+    user_type: 'individual' | 'company'
 }
 
 type Booking = {
@@ -30,27 +30,22 @@ export default function DashboardPage() {
     const [bookings, setBookings] = useState<Booking[]>([])
     const [loading, setLoading] = useState(true)
     const router = useRouter()
-    const supabase = createClient()
 
     useEffect(() => {
         async function loadData() {
-            // 1. Load User Profile
-            const { data: { user } } = await supabase.auth.getUser()
-
+            const userResponse = await getCurrentUser()
+            const user = userResponse.user
             if (!user) {
                 router.push('/login')
                 return
             }
 
-            const { data: profileData } = await supabase
-                .from('profiles')
-                .select('full_name, user_type, email')
-                .eq('id', user.id)
-                .single()
+            setProfile({
+                full_name: user.name,
+                email: user.email,
+                user_type: user.userType,
+            })
 
-            setProfile(profileData)
-
-            // 2. Load Bookings (Server Action)
             const { bookings: userBookings, error } = await getUserBookings()
             if (userBookings) {
                 setBookings(userBookings)
@@ -60,7 +55,7 @@ export default function DashboardPage() {
         }
 
         loadData()
-    }, [supabase, router])
+    }, [router])
 
     if (loading) {
         return (

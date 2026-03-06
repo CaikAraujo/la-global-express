@@ -3,14 +3,23 @@
 import { useState } from 'react'
 import { updatePassword } from '@/app/actions/auth'
 import { Loader2, Lock } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
+import Script from 'next/script'
 
 export default function ResetPasswordPage() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const router = useRouter()
+    const searchParams = useSearchParams()
+    const token = searchParams.get('token') || ''
+    const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
 
     async function handleSubmit(formData: FormData) {
+        if (!token) {
+            setError('Link inválido ou expirado.')
+            return
+        }
+        formData.append('token', token)
         setLoading(true)
         setError(null)
 
@@ -18,7 +27,7 @@ export default function ResetPasswordPage() {
 
         setLoading(false)
 
-        if (result?.error) {
+        if (result && 'error' in result) {
             setError(result.error)
         } else {
             // Success!
@@ -28,6 +37,9 @@ export default function ResetPasswordPage() {
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+            {turnstileSiteKey ? (
+                <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
+            ) : null}
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-brand-100 mb-4">
                     <Lock className="h-6 w-6 text-brand-600" />
@@ -73,11 +85,19 @@ export default function ResetPasswordPage() {
                             </div>
                         </div>
 
+                        <input type="hidden" name="token" value={token} />
+
                         {error && (
                             <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-sm">
                                 {error}
                             </div>
                         )}
+
+                        {turnstileSiteKey ? (
+                            <div className="flex justify-center">
+                                <div className="cf-turnstile" data-sitekey={turnstileSiteKey} />
+                            </div>
+                        ) : null}
 
                         <div>
                             <button
